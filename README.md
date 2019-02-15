@@ -8,7 +8,7 @@ Az anyagrész folyamatosan bővülni fog a félév folyamán.
 # Félév menete
 ## 1.Gyakorlat  
 Követelmények  
-C++ fordítás parancssori eszközökkel, több     forrásfile, object, linkelés  
+C++ fordítás parancssori eszközökkel, több  forrásfile, object, linkelés  
 Hello World C++-ban  
 Névtér, std  
 Típusbiztos I/O: iostream  
@@ -32,7 +32,7 @@ RAII (Resource Acquisition Is Initialization)
 Objektumok másolása STL-ben
 
 ## 4.Gyakorlat
-Osztályok operátorokkal pl.: operator==, operator<
+Osztályok operátorokkal pl.: operator==, operator<  
 Felhasználói operátorok használata STL-ben, find, count algoritmusok  
 Functorok megvalósítása  
 Lamba függvények  
