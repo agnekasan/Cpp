@@ -1,1 +1,1 @@
-# ProgNyelvek_I._C-
+# ProgNyelvek I. Cpp
