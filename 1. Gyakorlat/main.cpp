@@ -1,5 +1,7 @@
 #include <iostream>
 
+#define log(x) std:: cout << x << std::endl
+
 // névtereket azért használhatunk a legtöbb esteben, hogy elkerüljük a név ütközést
 namespace A
 {
@@ -59,6 +61,13 @@ void swapRef(int& a, int& b)
     b = tmp;
 }
 
+// a függvény leírása a 136. sortól
+const std::string& refRet(const std::string& str_)
+{
+    // str_[0] = 'A'; fordítási idejű hiba, konstans referenciakénr kapjuk az str_-t ezért a függvényen belül nem megengedett annak a módosítása
+    return str_;
+}
+
 int main() {
     
     int q = 1;
@@ -116,7 +125,7 @@ int main() {
     int** ppI; // mutatóra mutató mutató értékül adhatjuk neki egy másik mutató memóriacímét, kiíráskor kétszer kell dereferálni, hogy a mutatott értéket kapjuk
     const int * const *  b; // b egy konstans int-re mutató konstans mutatóra mutató mutató
     const int * const * const * const a = &b; // a egy konstans int-re mutató konstans mutatóra mutató konstans mutatóra mutató konstans mutató
-                                              // ami mutat egy konstans int-re mutató konstans mutatóra mutató mutatóra
+                                              // ami mutat egy konstans int-re mutató mutatóra konstans mutatóra mutató mutatóra
     // megjegyzés: mutatóknál a * nem számít, hogy hol szerepel pl int* a vagy int *a, vagy int * a mind a három ugyan azt jelenti
     // potenciális vizsgakérdés, helyes-e az alábbi kód? Ha igen miért? Ha nem miért?
     /*
@@ -125,5 +134,20 @@ int main() {
     int const* ppC = &rC;
     const int * const * const ppccC = &ppC;
     */
+    
+    // Függvény visszatérési éréke referenciával vagy konstans referenciával, konstnas referencia függvény paraméter. Mit jelent az első és mit a második const kulcsszó?
+    // az első const a függvény visszatérési értékénél azt mondja hogy a vissza adott értéken nem változtathatunk, a második const arra szolgál, hogy a paraméterül kapott változó a függvény
+    // belsejében nem módosulhat. Miért hasznos? Ha nagy adatstruktúrákkal dolgozunk pl. egy 10000000 elemű vektort vagy egy osztályt aminek rengeteg adattagja van és ezt szeretnénk
+    // a függvénynek átadni, ezeknek érték szerinti átadása nagyon sok számításba kerülne (tárhely allokáció, másolás, felszabadítás...) ezért ikább csak egy  aliast adjunk át, így
+    // elkerüljük a felesleges másolásokat. Az, hogy a bemeneti paraméter konstans miért lehet hasznos? Képzeljük el, hogy szeretnénk megszámolni egy 10000000 elemű tömbben hány olyan szám van
+    // ami osztható 3-al és 11-el is, viszont magán a tömbön nem szeretnénk módosítani. Erre jó, ha konstans a bemeneti paraméter , hogy még véletlenül se tudjuk elkövetni azt a hibát,
+    // hogy megváltoztatunk egy elemet, mert lehet, hogy a későbbiekben valaki más még szeretné használni ezt a vektort
+    
+    std::string greeting = "Hello World";
+    log(refRet("Hello World"));
+    log(refRet(greeting));
+    // refRet("Hello World")[0] = 'h'; fordítási idejű hiba, mivel a vissza adott referencia konstans, ezért nem engedélyezett annak a megváltoztatása
+    // ha nem konstansként adnánk át a függvénynek a "Hello World"-öt fordítási idejű hibát kapnánk, ekkor célszerű egy változóhoz kötni a stringet és
+    //úgy átadni a függvénynek. refRet(greeting); - működik ha konst ref-et vár a függvény és akkor is ha ref-et.
     
 }
