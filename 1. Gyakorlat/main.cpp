@@ -125,7 +125,7 @@ int main() {
     int** ppI; // mutatóra mutató mutató értékül adhatjuk neki egy másik mutató memóriacímét, kiíráskor kétszer kell dereferálni, hogy a mutatott értéket kapjuk
     const int * const *  b; // b egy konstans int-re mutató konstans mutatóra mutató mutató
     const int * const * const * const a = &b; // a egy konstans int-re mutató konstans mutatóra mutató konstans mutatóra mutató konstans mutató
-                                              // ami mutat egy konstans int-re mutató mutatóra konstans mutatóra mutató mutatóra
+                                              // ami mutat egy konstans int-re mutató konstans mutatóra mutató mutatóra
     // megjegyzés: mutatóknál a * nem számít, hogy hol szerepel pl int* a vagy int *a, vagy int * a mind a három ugyan azt jelenti
     // potenciális vizsgakérdés, helyes-e az alábbi kód? Ha igen miért? Ha nem miért?
     /*
