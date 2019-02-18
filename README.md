@@ -24,7 +24,7 @@ Felhaszálói típusok tárolása STL konténerekben
 
 
 ## 3.Gyakorlat
-Objektuok másolása  
+Objektumok másolása  
 Copy konstruktor, értékadó operátor
 Destruktor  
 New/delete, dinamikus memória kezelés  
