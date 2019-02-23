@@ -1,6 +1,7 @@
 # ProgNyelvek I. Cpp
 
-Az anyagrész folyamatosan bővülni fog a félév folyamán.
+Az anyagrész folyamatosan bővülni fog a félév folyamán.  
+Köszönet __Szabó Miklós__-nak az elméleti rész szerkesztésében való részvételéért.
 
 # Hasznos linkek
 [Dr. Pataki Norbert honlapja](http://patakino.web.elte.hu)  
