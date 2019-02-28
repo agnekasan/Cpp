@@ -5,12 +5,13 @@
 class Player
 {
 private:
-    // ha nem írjuk, hogy private nem baj, mert alapértelmezetten annak veszi,
+    // ha nem írjuk, hogy private nem baj, mert alapértelmezetten annak veszi a fordító,
     // jobb olvashatóság kedvéért tanácsos kiírni
     // adattagok
     std::string name;
     int positionX;
     int positionY;
+    static int objectCounter; // ahányszor új osztályt hozunk létre növelni fogjuk az értékét
     
 public:
     Player(); // alapértelmezett (default) konstruktor
@@ -25,9 +26,15 @@ public:
     inline int getXPosition() const { return positionX; } // explicit inline
     int getYPosition() const { return positionY; } // implicit inline
     
+    //friend deklarációk
+    friend int getObjectCounter();
     friend void playerCollisionDetection(const Player&, const Player&);
     
 };
+
+int Player::objectCounter = 0;
+
+int getObjectCounter() { return Player::objectCounter; }
 
 void playerCollisionDetection(const Player& player_1, const Player& player_2)
 {
@@ -42,6 +49,7 @@ Player::Player()
     name = "Unknow Solider";
     positionX = 0;
     positionY = 0;
+    objectCounter++;
 }
 
 Player::Player(const std::string& name_, int positionX_ = 0, int positionY_ = 0)
@@ -49,6 +57,7 @@ Player::Player(const std::string& name_, int positionX_ = 0, int positionY_ = 0)
     name = name_;
     positionX = positionX_;
     positionY = positionY_;
+    objectCounter++;
 }
 
 // paramétres konstruktor, ha a bemeneti paraméter neve ugyan az, mint az adattagoké
@@ -126,6 +135,8 @@ int main(int argc, char const *argv[])
     
     std::cout << std::endl;
     playerCollisionDetection(p1, p2);
+
+    std::cout << getObjectCounter() << std::endl;
     
     return 0;
 }
