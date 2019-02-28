@@ -30,7 +30,7 @@ Felhaszálói típusok tárolása STL konténerekben
 
 ## 3.Gyakorlat
 Objektumok másolása  
-Copy konstruktor, értékadó operátor
+Copy konstruktor, értékadó operátor  
 Destruktor  
 New/delete, dinamikus memória kezelés  
 RAII (Resource Acquisition Is Initialization)  
