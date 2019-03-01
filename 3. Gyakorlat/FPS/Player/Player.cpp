@@ -10,16 +10,16 @@ Player::Player()
 }
 
 Player::Player(const std::string& playerFirstName_, const std::string& playerLastName_,
-               double playerWeight_, int playerHeight_, int weaponSlotCapacity)
+               double playerWeight_, int playerHeight_, int weaponSlotCapacity_)
 {
     _playerFullName = playerFirstName_ + " " + playerLastName_;
     _playerWeight = playerWeight_;
     _playerHeight = playerHeight_;
     
-    if(weaponSlotCapacity < 1 || weaponSlotCapacity > 5)
+    if(weaponSlotCapacity_ < 1 || weaponSlotCapacity_ > 5)
         _weaponSlotCapacity = 3;
     else
-        _weaponSlotCapacity = weaponSlotCapacity;
+        _weaponSlotCapacity = weaponSlotCapacity_;
     
     weaponSlot.reserve(_weaponSlotCapacity);
     _playerObjectCounter++;
