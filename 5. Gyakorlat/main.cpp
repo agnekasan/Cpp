@@ -100,7 +100,7 @@ public:
 
 int main(int argc, char const *argv[])
 {
-  // cannot make and instance from abstract class
+  // cannot make an instance from abstract class
   //Shape s("Shape");
   //std::cout << s.getName() << " " << s.getArea() << std::endl;
 
