@@ -18,7 +18,7 @@ protected:
 public:
   Shape(const std::string& name_) 
     : _name(name_) { }
-  ~Shape() {}
+  virtual ~Shape() {}
 
   // setter
   inline void setName(const std::string& name_) { _name = name_; }
