@@ -16,7 +16,7 @@ ___
 # Félév menete
 ## 1.Gyakorlat  
 Követelmények  
-C++ fordítás parancssori eszközökkel, több  forrásfile, object, linkelés  
+C++ fordítás parancssori eszközökkel (CLI), több  forrásfájl, object, linkelés  
 Hello World C++-ban  
 Névtér, std  
 Típusbiztos I/O: iostream  
@@ -35,7 +35,7 @@ Felhaszálói típusok tárolása STL konténerekben
 Objektumok másolása  
 Copy konstruktor, értékadó operátor  
 Destruktor  
-New/delete, dinamikus memória kezelés  
+New / delete, dinamikus memória kezelés  
 RAII (Resource Acquisition Is Initialization)  
 Objektumok másolása STL-ben
 
