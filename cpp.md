@@ -1,4 +1,4 @@
-<center> 
+
 # C++
 
 __"C makes it easy to shoot yourself in the foot; <br>
@@ -6,8 +6,6 @@ C++ makes it harder, but when you do it, it blows your whole leg off."__
 
 ~ Bjarne Stroustrup ~
 
-</center>
-<br>
 
 ## Bevezetés
 
@@ -38,7 +36,61 @@ A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi e
 
 ## Alapok
 
-Tekintsük az alábbi programot. Legyen a neve _main.cpp_:
+### C++ adattípusok
+
+Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
+
+Adattípusok C / C++-ban
+
+* __Primitív__: ezek az adattípusok beépített vagy előre meghatározott adattípusok, és a felhasználó közvetlenül felhasználhatja a változók deklarálására. példa: ```int```, ```char```, ```float```, ```bool``` stb. A C ++-ban rendelkezésre álló primitív adattípusok a következők:
+	* __integer__: Az egész adattípusokhoz használt kulcsszó ```int```. Az egész számok általában __4 bájt__ memóriahelyet igényelnek, és -2147483648-tól 2147483647-ig terjednek.
+	* __character__: A karakter adattípus a karakterek tárolására szolgál. A karakter adattípushoz használt kulcsszó ```char```. A karakterek általában __1 bájt__ memóriahelyet igényelnek, és -128 és 127 vagy 0 és 255 között változhatnak.
+	* __boolean__: A logikai adattípus a logikai vagy logikai értékek tárolására szolgál. A logikai változó valódi vagy hamis értékeket tárolhat. A logikai adattípushoz használt kulcsszó a ```bool```.
+	* __floating point__: A lebegőpontos adattípus a tizedes értékek tárolására szolgál (single precision). A lebegőpontos adattípushoz használt kulcsszó ```float```. Általában __4 bájt__ memóriahelyet igényelnek.
+	* __double floating point__: A dupla lebegőpontos adattípus dupla pontosságú lebegőpontos vagy tizedes értékek tárolására szolgál (double precision). A kettős lebegőpontos adattípushoz használt kulcsszó ```double```. Általában __8 bájt__ memóriahelyet igényelnek.
+	* __void__: azt jelenti: érték nélkül. Az ```void``` adattípus értéktelen entitást jelent. A ```void``` adattípust azoknál a függvényeknél használják, amelyek nem adnak vissza értéket.
+	* __wide character__: szintén egy karakter adattípus, de ennek az adattípusnak a mérete meghaladja a normál 8 bites adattípust. A ```wchar_t``` képviseli. Általában __2 vagy 4 bájt__ hosszú.
+* __Származtatott__: az primitív vagy beépített adattípusokból származó adattípusokat származtatott adattípusoknak nevezzük. Ezek négyféle lehetnek, nevezetesen:
+	* function
+	* array
+	* pointer
+	* reference
+* __Felhasználó által definiált__: ezeket az adattípusokat maga a felhasználó határozza meg. Például egy osztály meghatározása a C++-ban vagy egy struktúra. A C ++ a következő felhasználó által definiált adattípusokat tartalmazza:
+	* class
+	* structure
+	* union
+	* enum
+	* typedef
+
+### Adattípus módosítók
+
+Ahogy a neve is sugallja, az adattípus-módosítókat a beépített adattípusokkal használják az adatok hosszának módosítására, amelyet egy adott adattípus képes tárolni.
+
+__előjeles__ (signed)
+
+* integer
+* char
+* long - prefix
+
+__előjel nélküli__ (unsigned)
+
+* integer
+* char
+* short - prefix
+
+__long__
+
+* integer
+* double  
+
+__short__
+
+* integer
+
+![data types size](img/datatypessize.png)
+
+
+Ezen adatok tudatában nézzük meg az első C++ programunkat. Tekintsük az alábbi programot. Legyen a neve _main.cpp_:
 
 ```cpp
 #include <iostream>
@@ -147,7 +199,7 @@ A fordítás 3 fő lépésből all:
 
 A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk fordítási egységeknek (translation unit). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (object file). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak emgvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (executable file) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (linker) feladata, hogy ki töltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
 
-![alt text](img/compilation.png)
+![compilation](img/compilation.png)
 
 
 ### Preprocesszálás
@@ -407,8 +459,150 @@ Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik k
 
 A szabvány nem köti meg, hogy egy ```int``` egy adott platformon mennyi byte-ból álljon. Ez állandó, egy adott platformon egy adott fordító mindig ugyanakkorát hoz létre, de platform/fordító váltás esetén ez változhat. Ennek az az oka, hogy különböző platformokon különböző választás eredményez hatékony programokat. Ennek köszönhetően hatékony kódot tud generálni a fordító, viszont a fejlesztő dolga, hogy megbizonyosodjon róla, hogy az adott platformon a primitív típúsok méretei megfelelnek a program által elvárt követelményeknek.
 
+### Globális változók
+
+Ténxleg igaz, hogy a program futása a ```main()``` függvény végrehajtásával kezdődik?
+
+```cpp
+#include <iostream>
+
+std::ostream& os = std::cout << "Hello";
+
+int main() { std::cout << " world!" << std::endl; }
+```
+
+Kimenet: Hello world!
+
+A program végrehajtásánál az első lépés az úgynevezett __globális változók__ inicializálása. Ennek az oka az, hogy a globális változók olyan objektumok, melyekre a program bármely pontján hivatkozni lehet. Ebből kifolyólag, ha ```os```-t szeretnénk használni a ```main()``` függvény első sorában, akkor ezt meg lehessen tenni. Az inicializálastlan változó használata nem definiált viselkdes, ezért fontos már a ```main()``` előtt inicializálni a globális változókat.
 
 
+### Globális változók definíciója és deklarációja
 
+Globális változókat úgy tudunk létrehozni, hogy kezvetlenül egy névtéren belül definiáljuk őket.
+
+```cpp
+// main.cpp
+int x;
+int main() {}
+```
+
+```x``` egy globális változó. Azonban mit lehet tenni, ha nem csak a ```main.cpp```-ben szeretnénk használni, hanem egy másik fordítási egységben is?
+
+```cpp
+// other.cpp
+int x;
+void f() { x = 0; }
+```
+
+Abban az esetben, ha a ```main.cpp```-t és az ```other.cpp```-t együtt fordítjuk, fordítási hibát kapunk, ugyanis megsértettük az __ODR__-t, hiszen ```x``` kétszer van definiálva. Ezt úgy tudjuk megoldani, ha forward deklarájuk ```x```-et az ```extern``` kulcsszó segítségével.
+
+```cpp
+// other.cpp
+extern int x;
+void f() { x = 0; }
+```
+
+Egy globális változó deklarációja hasonlít a függvényekéhez, információval látja el a fordítót arról hogy az adott szimbólum egy globális változó, és milyen a típusa.
+
+__Megjegyzés__: a globális változók deklarációit érdemes külön header fájlba gyűjteni.
+
+### Globális változók inicilizációja
+
+Amennyiben egy lokális ```int```-et hozunk létre és nem adunk neki kezdőértéket, annak értéke nem definiált lesz (memóriaszemét).
+
+```cpp
+int x;
+int main() { std::cout << i << std::endl; } // 0
+```
+
+Az eredmény azonban mindig 0 lesz. Ennek az oka az, hogy a globális változók mindig 0-ra inicilaizálódnak (legalábbis az ```int```-ek). A globális változókat csak egyszer hozzuk létre a program futásakor, így érdemes jól definiált kezdőértéket adni neki. A __stack__en rengetegszer létre kell hozni változókat, nem csak egyszer, így ott nem éri meg minden alkalommal egy jól definiált kezdőértékkel inicializálni. Sokkal nagyobb lenne a hatása a futási időre.
+
+A 0-ra való inicializálás oka globális változók esetén az, hogy ezt a modern processzorok gyorsan tudják kivitelezni a legtöbb platformon.
+
+### Problémák a globális változókkal
+
+Vajon a linkelés befolyásolja a program megfigyelhető viselkedését? Tekintsük az alábbi kódot:
+
+```cpp
+// main.cpp
+#include <iostream>
+
+std::ostream& os = std::cout << "Hello";
+int main() { }
+
+// other.cpp
+std::ostream os2 = std::cout << " World";
+```
+
+Itt nem specifikált a két globális változó inicializációs sorrendje, és ha más sorredben linkeljük a
+fordítási egységekből keletkező tárgykódot, mást ír ki.
+
+```clang++ main.cpp other.cpp != clang++ other.cpp main.cpp```
+
+__Megjegyzés__: ez a példa nem számít jó kódnak, mert nem specifikált viselkedése van a programnak, kimenete nem definiált. Ez egy jó elrettentő példa, miért nem érdemes globális változókat használni. Ezen kívül számos egyéb problémát is felvetnek a globális változók: átláthatatlanabb kód, mivel bárhol hozzá lehet férni nem lehetünk biztosak benne, hogy az érték, amit kiolvasunk valaki más nem módosította-e előttünk.
+
+### Hatókör, láthatóság, élettartam
+
+__Hatókör__: Deklarációkor a programozó összekapcsol egy entitást (pl. egy változót vagy egy függvényt) egy névvel. A hatókör alatt a forrásszöveg azt a részét értjük, amíg ez az összekapcsolás érvényben van. Ez általában annak a blokknak a végéig tart, amely tartalmazza az adott deklarációt
+
+__Láthatóság__: a hatókör részhalmaza, a programszöveg azon része, ahol a deklarált névhet a megadott entitás tartozik. Mivel az egymásba ágyazott blokkokban egy korábban már bevezetett nevet más entitáshoz kapcsolhatunk, ezért ilyenkor a külső blokkban deklarált entitás a nevével már nem elérhető. Ezt nevezzük a láthatóság elfedésének.
+
+#### Automatikus, statikus és dinamikus élettartam
+
+__Automatikus élettartam__: a blokkokban deklarált lokális változók automatikus élettartamúak, ami azt jelenti, hogy a deklarációtól a tartalmazó blokk végéig tart, azaz egybeesik a hatókörrel. A helyfoglalás szmukra a végrehajtási verem aktuális aktivációs rekordjában történik meg.
+
+__Statikus élettartam__: a globális változók, illetve egyes nyelvekben a __statikus__ként deklarált változók statikus élettartamúak. Az ilyen változók élettartama a program teljes végrehajtási idejére kiterjed, számukra a helyfoglalás már a fordítási időben megtörténhet.
+
+__Dinamikus élettartam__: a dinamikus élettartamú változók esetén a programozó foglla helyet számukra a dinamikus tárterületen (heap), és a programozó feladata gondoskodni árról is, hogy ezt a tárterületet később felszabadítsa. Amennyiben ez utóbbiról megfeledkezik, azt nevezzük __memória szivárgás__nak (_memory leak_). A dinamikus élettartam esetén a hatókör semmilyen módon nem kapcsolódik össze az élettartammal, az élettartam szűkebb vagy tágabb is lehet a hatókörnél.
+
+Tekintsük az alábbi kódrészletet és figyeljük meg mikor tudunk az ```x``` változóra hivatkozni.
+
+```cpp
+#include <iostream>
+
+int x;
+
+int main() 
+{
+  int x = 1;
+  {
+    int x = 2;
+    std::cout << x << std::endl; // 2
+  }
+}
+```
+
+A ```main()``` elején létrehozott ```x``` az utána következő blokkban teljesen elérhetetlen - nincs olyan szabványos nyelvi eszköz, amivel tudnánk rá hivatkozni. Ezt a folyamatot nevezzük __leárnyékolás__nak (_shadowing_). Azonban a külső globális ```x```-re bármikor tudunk hivatkozni a már korábban említett scope operátor (```::```) segítségével.
+
+```cpp
+#include <iostream>
+
+int x;
+
+int main() 
+{
+  int x = 1;
+  {
+    int x = 2;
+    std::cout << ::x << std::endl; // 0
+  }
+}
+```
+
+### Jobb- és balérték
+
+A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__nek (_left value_, röviden _lvalue_) nevezzük, ha van a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, és __jobbérték__nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
+
+```cpp
+int main()
+{
+  int* p, r;
+  &p; // ok, p pointer memóriacímére mutat
+  &r; // ok, r memóriacímére mutat
+  &1; // nem ok, 1 jobbérték
+  &"Hello"; //nem ok, a "Hello" jobbérték
+  5 = r; // nem ok, jobbértéknek nem lehet értéket adni
+}
+```
 
 
