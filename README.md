@@ -1,6 +1,4 @@
-# ProgNyelvek I. Cpp
-
-Köszönet __Szabó Miklós__-nak az elméleti rész szerkesztésében való részvételéért.
+# Programozási nyelvek C++
 
 # Hasznos linkek
 [Dr. Pataki Norbert honlapja](http://patakino.web.elte.hu)  
@@ -12,45 +10,3 @@ ___
 ### STL algoritmusok
 [STL algoritmusok és használata](https://en.cppreference.com/w/cpp/algorithm)  
 
-
-# Félév menete
-## 1.Gyakorlat  
-Követelmények  
-C++ fordítás parancssori eszközökkel (CLI), több  forrásfájl, object, linkelés  
-Hello World C++-ban  
-Névtér, std  
-Típusbiztos I/O: iostream  
-Referenciák, pointerek  
-Paraméter átadás
-
-## 2.Gyakorlat
-Osztályok  
-Konstruktor  
-Objektumok létrehozása STACK-en  
-STL konténerek  
-Felhaszálói típusok tárolása STL konténerekben
-
-
-## 3.Gyakorlat
-Objektumok másolása  
-Copy konstruktor, értékadó operátor  
-Destruktor  
-New / delete, dinamikus memória kezelés  
-RAII (Resource Acquisition Is Initialization)  
-Objektumok másolása STL-ben
-
-## 4.Gyakorlat
-Osztályok operátorokkal pl.: operator==, operator<  
-Felhasználói operátorok használata STL-ben, find, count algoritmusok  
-Functorok megvalósítása  
-Lamba függvények  
-
-## 5.Gyakorlat
-Öröklődés  
-Polimorfizmus  
-Statikus és dinamikus kötés  
-Smart pointerek  
-Polimorf objektumok STL konténerekben
-
-## 6.Gyakorlat
-Ismétlés
