@@ -1,10 +1,9 @@
-
-# C++
+<img src="img/cppIcon.png" alt="cpp icon" style="width:200px;">
 
 __"C makes it easy to shoot yourself in the foot; <br>
 C++ makes it harder, but when you do it, it blows your whole leg off."__
 
-~ Bjarne Stroustrup ~
+~ _Bjarne Stroustrup_ ~
 
 
 ## Bevezetés
@@ -88,6 +87,8 @@ __short__
 * integer
 
 ![data types size](img/datatypessize.png)
+
+// TODO sizeof() operator
 
 
 Ezen adatok tudatában nézzük meg az első C++ programunkat. Tekintsük az alábbi programot. Legyen a neve _main.cpp_:
@@ -591,7 +592,7 @@ int main()
 
 ### Jobb- és balérték
 
-A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__nek (_left value_, röviden _lvalue_) nevezzük, ha van a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, és __jobbérték__nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
+A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__-nek (_left value_, röviden _lvalue_) nevezzük, ha van a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, és __jobbérték__-nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
 
 ```cpp
 int main()
