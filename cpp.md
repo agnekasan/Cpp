@@ -113,7 +113,7 @@ A fordítás 3 fő lépésből all:
 * __Fordítás__ (a tárgykód létrehozása)
 * __Linkelés__ (szerkesztés)
 
-A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk fordítási egységeknek (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy ki töltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
+A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk __fordítási egységeknek__ (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy ki töltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
 
 ![compilation](img/compilation.png)
 
@@ -242,7 +242,7 @@ Fordítsuk le őket az alábbi sorrendben:
 
 __Megjegyzés__: ```clang++``` helyett használhatjuk a ```g++```-t is, ami nem összekeverendő a ```gcc```-vel, ami C fájlok fordítására alkalmas.
 
-Fordítási hibát fogunk kapni, hiszen vagy csak a ```main.cpp```-ből létrejövő fordítási egységet, vagy a ```symbol.cpp```-ből létrejövő fordítási egységet fogja látni a fordító, egyszerre a kettőt nem. Megoldás az, ha __forward deklarál__unk, azaz ```void symbol();```-t beillesztünk a ```main()``` függvény fölé, mely jelzi a fordítónak, hogy a ```symbol()``` az egy függvény, visszatérési értékének a típusa ```void``` (azaz nema d vissza semmit) és nincs paramétere.
+Fordítási hibát fogunk kapni, hiszen vagy csak a ```main.cpp```-ből létrejövő fordítási egységet, vagy a ```symbol.cpp```-ből létrejövő fordítási egységet fogja látni a fordító, egyszerre a kettőt nem. Megoldás az, ha __forward deklarál__unk, azaz ```void symbol();```-t beillesztünk a ```main()``` függvény fölé, mely jelzi a fordítónak, hogy a ```symbol()``` az egy függvény, visszatérési értékének a típusa ```void``` (azaz nem ad vissza semmit) és nincs paramétere.
 
 ```cpp
 // symbol.cpp
@@ -313,7 +313,7 @@ Hasznos kapcsolók fordításnál:
 Minden C++ kód tokenekből áll. A token a legkisebb nyelvi egység, ami még értelmes a fordító számára. Tokeneknek az alábbiakat tekntjük:
 
 * __Kulcsszavak__: _int_, _return_
-* __Azonosítók__: _number_ - lényegében azok a nevek, melyeket mi hozunk létre. Függvények, osztályok, változó nevei. Ez csak betűkből és számokból állhat, nem kezdődhet számmal es nem lehet kulcsszó. Fontos egjegyezni, hogy a C++ nyelv különbséget tesz kis- és nagybetűk között (case sensitive).
+* __Azonosítók__: _number_ - lényegében azok a nevek, melyeket mi hozunk létre. Függvények, osztályok, változók nevei. Ez csak betűkből és számokból állhat, nem kezdődhet számmal es nem lehet kulcsszó. Fontos egjegyezni, hogy a C++ nyelv különbséget tesz kis- és nagybetűk között (case sensitive).
 * __Literálok__:
 	* egész számliterálok: 0xa23
 	* karakterliterálok: 'a'
@@ -358,7 +358,7 @@ __Megjegyzés__: az a program, amely nem definiált viselkedéseket tartalmaz, _
 
 ### Nem specifikált viselkedés
 
-Amennyiben aszabvány definiál néhány lehetséges opciót, de a fordítóra bízza, hogy az melyiket választja, akkor __nem specifikált__ viselkedésről beszélünk. A nem specifikált viselkedés csak akkor probléma, ha a program végeredményét befolyásolhatja a fordtó választása.
+Amennyiben a szabvány definiál néhány lehetséges opciót, de a fordítóra bízza, hogy az melyiket választja, akkor __nem specifikált__ viselkedésről beszélünk. A nem specifikált viselkedés csak akkor probléma, ha a program végeredményét befolyásolhatja a fordtó választása.
 
 ```cpp
 int main()
@@ -408,7 +408,7 @@ Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé 
 * __Örököltethető__: A C++ ```<iostream>``` mechanizmus olyan valós osztályokból épül fel, mint az ```std::ostream``` vagy az ```std::istream```. A ```<cstdio> FILE*```-al ellentétben ezek valódi osztályok, ezért örököltethetőek. Ez azt jelenti, hogy más felhasználók által definiált dolgok is viselkedhetnek __stream__-ként. Automatikusan használhatjuk a rengeteg soros I/O kódot, amelyet más felhasználók ítak, akik nem is tudják és nem is kell tudniuk a saját magunk által kiterjesztett __stream__ osztályról.
 
 
-### Kiírás és beolvasás, C vs. C++
+### Kiírás és beolvasás, C vs C++
 
 C-ben a kiírásra és beolvasásra elsősorban a ```printf()``` és ```scanf()``` függvényeket használjuk. Ezkellel két fő probléma lehet:
 
@@ -418,7 +418,7 @@ C-ben a kiírásra és beolvasásra elsősorban a ```printf()``` és ```scanf()`
 A ```scanf()``` használatánál arra is oda kell figyelni, hogy cím szerint kell kapnia a változókat, könnyű a ```&``` karaktert lefelejteni, vagy olyankor is kitenni, amikor nincs rá szükség, pl. ```string```-eknél.
 
 ```c
-#include <cstdio.h>
+#include <stdio.h>
 
 int main()
 {
@@ -487,7 +487,7 @@ A ```return``` kulcsszó visszaadja a vezérlést az őt hívó függvénynek, j
 int main() { std::cout << "Hello World!" << std::endl; }
 ```
 
-A __right shift__ operátor (```<<```) alternatív szintaxissal is meghívható:
+A __bitshift left__ operátor (```<<```) alternatív szintaxissal is meghívható:
 
 ```cpp
 #include <iostream>
