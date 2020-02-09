@@ -1,4 +1,5 @@
-<img src="img/cppIcon.png" alt="cpp icon" style="width:200px;">
+<img src="img/cppIcon.png" alt="cpp icon" width=200>
+
 
 __"C makes it easy to shoot yourself in the foot; <br>
 C++ makes it harder, but when you do it, it blows your whole leg off."__
