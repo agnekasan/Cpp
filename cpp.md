@@ -34,13 +34,13 @@ Számos fordító létezik a C++ kódok fordítására, amelyek különböző m�
 
 ### C++ filozófia
 
-A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi eszközt, akkor annak ne legyen negatív hatása a program teljesítményre. Magyarán mondva csak azért "fizessünk", amit használunk is. Fontos megjegyezni, hogy a C++ alapvetően nem objektumorientált nyelv. Ahogy fentebb olvashattuk, kíválóan alkalmas mas prógramozási paradigmák használatára is. A nyelv nem próbál meg ráerőltetni a programozóra egy megközelítést, ellenben próbál minél gazdagabb eszköztárat biztosítani, hogy a megfelelő problémát a megfelelő megközelítéssel lehessen megoldani. Még akkor is, ha ez a különböző paradigmák keverését vonja maga után. Ezért a nyelvet gyakran muldiparadigmás programozási nyelvnek is szokás nevezni.
+A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi eszközt, akkor annak ne legyen negatív hatása a program teljesítményre. Magyarán mondva csak azért "fizessünk", amit használunk is. Fontos megjegyezni, hogy a C++ alapvetően nem objektumorientált nyelv. Ahogy fentebb olvashattuk, kíválóan alkalmas mas programozási paradigmák használatára is. A nyelv nem próbál meg ráerőltetni a programozóra egy megközelítést, ellenben próbál minél gazdagabb eszköztárat biztosítani, hogy a megfelelő problémát a megfelelő megközelítéssel lehessen megoldani. Még akkor is, ha ez a különböző paradigmák keverését vonja maga után. Ezért a nyelvet gyakran muldiparadigmás programozási nyelvnek is szokás nevezni.
 
 ## Alapok
 
 ### C++ adattípusok
 
-A C++ szigorúan típusos nyelv, ami azt jelenti, hogy már fordítási időben ismert kell, hogy legyen a változók típusa. Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
+A C++ szigorúan típusos nyelv, ami azt jelenti, hogy már fordítási időben ismert kell a változók típusát. Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
 
 Adattípusok C++-ban:
 
@@ -64,15 +64,16 @@ Adattípusok C++-ban:
 	* __enum__
 	* __typedef__
 
-A primitív típusok méretének megadásánál azért szerepel mindenhol az _általában_, mert a C++ szabvány nem határozza meg pontosan az egyszerű típusok méretét, így azok fordítótól és hardverkörnyezettől függően eltérőek lehetnek különböző rendszereken. A rendszerünkön érvényes méreteket, tartományokat a ```sizeof()``` operátorral tudjuk meghatározni. Mindenesetre abban biztosak lehetünk, hogy ezek a megkötések minden rendszeren érvényesek C++-ban:
+A primitív típusok méretének megadásánál azért szerepel mindenhol az _általában_, mert a C++ szabvány nem határozza meg pontosan az egyszerű típusok méretét, így azok fordítótól és hardverkörnyezettől függően eltérőek lehetnek különböző rendszereken. A rendszerünkön érvényes méreteket, tartományokat a ```sizeof()``` operátorral tudjuk meghatározni. 
+A ```sizeof()``` operátor megadja a paraméterként megkapott típus, vagy objektum esetében annak típusának méretét. Mindenesetre abban biztosak lehetünk, hogy ezek a megkötések minden rendszeren érvényesek C++-ban:
 
-* 1 == ```sizeof(char)``` <= ```sizeof(short int)``` <= ```sizeof(int)``` <= ```sizeof(long int)```
-* 1 <= ```sizeof(bool)``` <= ```sizeof(long int)```
+* ```1``` == ```sizeof(char)``` <= ```sizeof(short int)``` <= ```sizeof(int)``` <= ```sizeof(long int)```
+* ```1``` <= ```sizeof(bool)``` <= ```sizeof(long int)```
 * ```sizeof(char)``` <= ```sizeof(wchar_t)``` <= ```sizeof(long int)``` <= ```sizeof(long long int)```
 * ```sizeof(float)``` <= ```sizeof(double)``` <= ```sizeof(long double)```
 * ```sizeof(int)``` == ```sizeof(signed int)``` == ```sizeof(unsigned int)``` és ugyanez ```short int```, ```long int```, valamint ```long long int``` esetén is érvényes.
 
-Fontos megjegyezni, hogy az 1 == ```sizeof(char)``` kifejezésben az 1 nem feltétlenül 1 bájtot jelent, hanem egy egységet, ami bizonyos rendszereken lehet például 2 vagy 4 bájt.
+Fontos megjegyezni, hogy az ```1``` == ```sizeof(char)``` kifejezésben az 1 nem feltétlenül 1 bájtot jelent, hanem egy egységet, ami bizonyos rendszereken lehet például 2 vagy 4 bájt.
 
 __Megjegyzés__: a ```sizeof(type)``` kifejezés helyett használható a ```std::numeric_limits<type>::digits```. Ennek használatához azonban szükség van a ```<limits>``` header include-olására.
 
@@ -103,36 +104,29 @@ __short__
 
 ![data types size](img/datatypessize.png)
 
-
-
 ## Fordító működése, fordítás parancssori eszközökkel, több forrásfájl, object, linkelés
 
-A fordítás 3 fő lépésből all:
+A fordítás 3 fő lépésből áll:
 
-* __Preprocesszálás__ (előfeldolgozás)
-* __Fordítás__ (a tárgykód létrehozása)
-* __Linkelés__ (szerkesztés)
+* __Preprocesszálás__ (_előfeldolgozás_)
+* __Fordítás__ (_tárgykód létrehozása_)
+* __Linkelés__ (_szerkesztés_)
 
-A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk __fordítási egységeknek__ (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy ki töltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
+A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk __fordítási egység__-eknek (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állomány__-t (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy kitöltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
 
 ![compilation](img/compilation.png)
 
-
 ### Preprocesszálás
 
-Az __előfeldolgozó__ (_preprocesszor_) használata a legtöbb esetben kerülendő. Ez alól kivételek a __header__ állományok ```include```-olása. A preprocesszor primitív szabályok alapján dolgozik és __nyelvfüggetlen__. Mivel semmit nem tud a C++-ról, ezért sokszor meglepő viselkedést okoz a használata a fejlesztő számára. Emiatt nem egyszerű meghatározni az általa okozott hibákat. Továbbá az automatikus refaktoráló eszközök használatát is megnehezíti a túlzott használata.
+Az __előfeldolgozó__ (_preprocesszor_) használata a legtöbb esetben kerülendő. Ez alól kivételek a __header__ állományok ```include```-olása. A preprocesszor primitív szabályok alapján dolgozik és __nyelvfüggetlen__. Mivel semmit nem tud a C++-ról, ezért sokszor meglepő viselkedést okoz a használata a fejlesztő számára. Emiatt nem egyszerű meghatározni az általa okozott hibákat. Továbbá az automatikus refaktoráló eszközök használatát is megnehezíti a túlzott használatuk.
 
-A következőkben nézzünk meg pár preprocesszor direktívát. Minden direktívá ```#``` jellel kezdődik.
+A következőkben nézzünk meg pár preprocesszor direktívát. Minden direktíva ```#``` jellel kezdődik.
 
 ```cpp
 #define NUMBER 5
 
-NUMBER NUMBER NUMBER
-
 // a #define NUMBER 5 parancs azt jelenti, 
 // hogy minden NUMBER szót ki kell cserélni a fájlban 5-re.
-
-#define NUMBER
 
 #ifndef NUMBER
   std::cout << "Is defined";
@@ -141,7 +135,7 @@ NUMBER NUMBER NUMBER
 #endif
 ```
 
-A fent leírtakon kívül a ```#define``` hatására a preprocesszor az első argumentumot defináltnak fogja tekinteni. A fenti kódban megvizsgáljuk, hogy a ```NUMBER``` makró definiálva van-e (```#ifdef``` parancs), és mivel ezt megtettük, az ```#else```-ig minden beillesztésre kerül, kimenetben csak annyi fog szerepeni, hogy __"Is defined"__.
+A fent leírtakon kívül a ```#define``` hatására a preprocesszor az első argumentumot defináltnak fogja tekinteni. A fenti kódban megvizsgáljuk, hogy a ```NUMBER``` makró definiálva van-e (```#ifndef``` parancs), és mivel ezt megtettük, az ```#else```-ig minden beillesztésre kerül.
 
 ```cpp
 #define NUMBER
@@ -154,7 +148,9 @@ A fent leírtakon kívül a ```#define``` hatására a preprocesszor az első ar
 #endif
 ```
 
-Az ```#undef``` parancssal a paraméterként kapott makrót a preprocesszor nem tekinti tivábbé makrónak, így a kimenetben a __"Not defined"__ fog szerepelni. Definiálni függvényeket is tudunk.
+Az ```#undef``` parancssal a paraméterként kapott makrót a preprocesszor nem tekinti továbbá makrónak.
+
+Definiálni függvényeket is tudunk.
 
 ```cpp
 #include <iostream>
@@ -169,7 +165,9 @@ int main()
 
 Látható, hogy a preprocesszort kódrészletek kivágására is lehet használni. Felmerülhet a kérdés, hogy ha az eredeti forrásszövegből a preprocesszor kivág, illetve beilleszt részleteket, akkor a fordító honnan tudja, hogy a hiba jelentésekor melyik sorra jelezze a hibát? Hiszen az előfeldolgozás előtti és utáni sorszámok egymáshoz képest eltérnek. Ennek a problémának a kiküszöbölése érdekében a preprocesszpr beszúr sorokat a fordító számára, amik hordozzák azt az információt, hogy a feldolgozás előtt az adott sor melyik fájl hányadik sorában volt megtalálható. 
 
-Ezeknek a preprocesszor direktíváknak a használata legtöbb esetben kerülendő, mert gyakran nem azt a viselkedést produkálja amire számítunk. Tekintsük az alábbi kódrészletet:
+További indok a preprocesszor direktívák kerülésére, hogy gyakran nem azt a viselkedést produkálják amire számítunk. 
+
+Tekintsük az alábbi kódrészletet:
 
 ```cpp
 #include <iostream>
@@ -187,11 +185,10 @@ int main()
   i = 1;
   j = 2;
   std::cout << add(i++,j++); // 8
-  return 0;
 }
 ```
 
-Rekurzív include-oknál a preprocesszpr egy bizonyos mélységi limit után leállítja az előfeldolgozást. Ezt egy trükk segítségével megakadályozhatjuk, hogy ugyan az a fájl többször is beillesztésre kerüljön többszörös include esetén.
+Rekurzív include-oknál a preprocesszor egy bizonyos mélységi limit után leállítja az előfeldolgozást. Ezt egy trükk segítségével megakadályozhatjuk, hogy ugyan az a fájl többször is beillesztésre kerüljön többszörös include esetén.
 
 ```cpp
 #ifndef __H_HPP__
@@ -205,9 +202,9 @@ Rekurzív include-oknál a preprocesszpr egy bizonyos mélységi limit után le�
 #include "h.hpp"
 ```
 
-Ellenőrizzük, hogy a ```__H_HPP__``` szimbólum definiálva van-e? Ha nincs, akkor definiáljuk. A második ```#include "h.hpp"```-nál nem fogjuk újra beilleszteni a ```SYMBOL```-t, mert az ```#ifndef __H_HPP__``` kivágja azt a szövegrészt, mivel már egyzer definiálásra került. Ez az úgynevezett __header guard__ vagy __include guard__ technológia. Megvédi a header-t a többszörös include-tól.
+Ellenőrizzük, hogy a ```__H_HPP__``` szimbólum definiálva van-e. Ha nincs, akkor definiáljuk. A második ```#include "h.hpp"```-nál nem fogjuk újra beilleszteni a ```SYMBOL```-t, mert az ```#ifndef __H_HPP__``` kivágja azt a szövegrészt, mivel már egyszer definiálásra került. Ez az úgynevezett __header guard__ vagy __include guard__ technológia. Megvédi a header-t a többszörös include-tól.
 
-Réges régen egy messzi-messzi galaxisban szükséges volt makrókat használni, hogy megvédjük a header fájlokat a többszörös include-tól. Ez nem csak azzal a kockázattal jár, hogy névbeli konfliktusok léphetnek a használt makrók kapcsán, de a fordítónak semmi fogalma sincs a programozó szándékáról, ezért néha nem képes optimalizálni a viselkedést. Van azonban egy ```#pragma once``` amelyet a modern fordítók támogatnak és amelynek a célja az volt, hogy megakadályozza a header-ök többszöri beillesztését egy fordítási egységbe. A fordítók ezt nagyon hatékony és biztonságos módon valósítják meg. Felgyorsítja a fordítási időt, különösen nagy projektek esetén, és elkerüli a névütközések konfliktusának kockázatát. 
+A fenti kódban látható makrók használata olyan kockázattal jár, hogy névbeli konfliktusok léphetnek a használt makrók kapcsán, de a fordítónak semmi fogalma sincs a programozó szándékáról, ezért néha nem képes optimalizálni a viselkedést. Van azonban egy ```#pragma once``` nevezetű makró, amelyet a modern fordítók támogatnak és amelynek a célja az volt, hogy megakadályozza a header-ök többszöri beillesztését egy fordítási egységbe. A fordítók ezt nagyon hatékony és biztonságos módon valósítják meg. Felgyorsítja a fordítási időt, különösen nagy projektek esetén, és elkerüli a névütközések konfliktusának kockázatát. 
 
 ```cpp
 #pragma once
@@ -219,7 +216,7 @@ Réges régen egy messzi-messzi galaxisban szükséges volt makrókat használni
 * Elkerüli a névütközéseket más könyvtárakkal és fejlécekkel.
 * Felgyorsítja a fordítási időt.
 
-__Megjegyzés__: C-ben a globális konstansok definiálsára használták. Ez C++-ban kerülendő. Használjuk a ```const``` kulcsszót és kössük minél jobban a scope-hoz a változóinkat.
+__Megjegyzés__: C-ben a globális konstansok definiálására használták a makrókat. Ez C++-ban kerülendő. Használjuk a ```const``` kulcsszót és a változóinkat kössük minél jobban ahhoz a scope-hoz amelybe tartoznak.
 
 
 ### Linkelés
@@ -236,13 +233,13 @@ int main() { symbol(); }
 
 Fordítsuk le őket az alábbi sorrendben:
 
-```clang++ main.cpp```
+>$ clang++ main.cpp
 
-```clang++ symbol.cpp```
+>$ clang++ symbol.cpp
 
-__Megjegyzés__: ```clang++``` helyett használhatjuk a ```g++```-t is, ami nem összekeverendő a ```gcc```-vel, ami C fájlok fordítására alkalmas.
+__Megjegyzés__: ```clang++``` helyett használhatjuk a ```g++```-t is, ami nem összekeverendő a ```gcc```-vel, ami __C__ fájlok fordítására alkalmas.
 
-Fordítási hibát fogunk kapni, hiszen vagy csak a ```main.cpp```-ből létrejövő fordítási egységet, vagy a ```symbol.cpp```-ből létrejövő fordítási egységet fogja látni a fordító, egyszerre a kettőt nem. Megoldás az, ha __forward deklarál__unk, azaz ```void symbol();```-t beillesztünk a ```main()``` függvény fölé, mely jelzi a fordítónak, hogy a ```symbol()``` az egy függvény, visszatérési értékének a típusa ```void``` (azaz nem ad vissza semmit) és nincs paramétere.
+Fordítási hibát fogunk kapni, hiszen vagy csak a ```main.cpp```-ből létrejövő fordítási egységet, vagy a ```symbol.cpp```-ből létrejövő fordítási egységet fogja látni a fordító, egyszerre a kettőt nem. Megoldás az, ha __forward deklarálunk__, azaz ```void symbol();```-t beillesztünk a ```main()``` függvény elé, mely jelzi a fordítónak, hogy a ```symbol()``` az egy függvény, visszatérési értékének a típusa ```void``` (azaz nem ad vissza semmit) és nincs paramétere.
 
 ```cpp
 // symbol.cpp
@@ -254,23 +251,23 @@ void symbol(); // forward deklaráció
 int main() { symbol(); }
 ```
 
-Ekkor a ```clang++ main.cpp``` paranccsal történő fodítás során a linkelés fázisánál kapunk hibát, mert a linker nem fogja megtalálni a ```void symbol()``` függvény definícióját. Ezt úgy tudjuk megoldani, ha a ```main.cpp```-ből és a ```symbol.cpp```-ből először tárgykódot készítünk, majd ksőbb összelinkeljük őket. Ekkor a  ```main.cpp```-ben lesz egy hivatkozás a ```void symbol();``` függvényre, és a ```symbol.cpp``` fogja tartalmazni a függvény definícióját.
+A fodítás során a linkelés fázisánál kapunk hibát, mert a linker nem fogja megtalálni a ```void symbol()``` függvény definícióját. Ezt úgy tudjuk megoldani, ha a ```main.cpp```-ből és a ```symbol.cpp```-ből először tárgykódot készítünk, majd később összelinkeljük őket. Ekkor a  ```main.cpp```-ben lesz egy hivatkozás a ```void symbol();``` függvényre, és a ```symbol.cpp``` fogja tartalmazni a függvény definícióját.
 
-```clang++ -c main.cpp```
+>$ clang++ -c main.cpp
 
-```clang++ -c symbol.cpp```
+>$ clang++ -c symbol.cpp
 
-A ```-c``` parancs (compile) segítségével jelezzük a fordítónak, hogy még ne linkeljek csak tárgykódot állítsa elő. Majd a 
+A ```-c``` (compile) kapcsoló segítségével jelezzük a fordító számára, hogy még ne linkeljek csak a tárgykódot állítsa elő. Majd a 
 
-```clang++ main.o symbol.o```
+>$ clang++ main.o symbol.o
 
 parancs segítségével az eredményül kapott tárgykódot tudjuk össze linkelni.
 
 Rövidebb, ha egyből a ```.cpp``` fájlokat adjuk meg a fordítónak.
 
-```clang++ main.cpp symbol.cpp```
+>$ clang++ main.cpp symbol.cpp
 
-Egy adott függvényt (objektumot, osztályt) akárhányszor deklarálhatunk, azonban, ha a deklarációk ellentmondanak egymásnak, akkor fordítási hibát kapunk. Definiálni viszont a legtöbb esetben pontosan egyszer szabad. Több definíció vagy épp a definíció hiánya problémát okozhat. Ezt az elvet szokás __One Definition Rule__-nak vagy röviden __ODR__-nek nevezni.
+Egy adott függvényt (objektumot, osztályt) akárhányszor deklarálhatunk, azonban, ha a deklarációk ellentmondanak egymásnak, akkor fordítási hibát kapunk. Definiálni viszont a legtöbb esetben pontosan egyszer szabad. Több definíció, vagy épp a definíció hiánya problémát okozhat. Ezt az elvet szokás __One Definition Rule__-nak vagy röviden __ODR__-nek nevezni.
 
 Ha egy ```.cpp```-ben több függvény is van, akkor nem célszerű ezeket egyesével forward deklarálni minden egyes fájlban, ahol használni szeretnénk. Ennél egyszerűbb egy header fájl megírása, amiben deklaráljuk a függvényünket.
 
@@ -285,7 +282,6 @@ Ha egy ```.cpp```-ben több függvény is van, akkor nem célszerű ezeket egyes
 Ilyenkor elég a ```symbol.hpp```-t include-olni. Szokás a ```symbol.hpp```-t a ```symbol.cpp```-ben is include-olni, mert ha véletlenül ellent mondana egymásnak a definíció a ```cpp``` fájlban és a deklaráció a ```hpp``` fájlban, akkor a fordító hibát fog jelezni (pl.: eltérő visszatérési érteket adunk meg).
 
 Tekintsük az alábbi kódrészletet:
-
 
 ```cpp
 // symbol.hpp
@@ -307,13 +303,12 @@ Hasznos kapcsolók fordításnál:
 * ```-fsanitize=address``` - létrehoz ellenőrzéseket, amik azelőtt észrevesznek bizonyos nem definiált viselkedéseket, mielőtt azok megtörténnek.
 * ```-O2``` - kettes szintű optimalizációt kapcsolja be. Alapértelmezetten nincs bekapcsolva (```-O0```), egészen ```-O3```-ig lehet fokozni.
 
-
 ### A C++ nyelvi elemei
 
 Minden C++ kód tokenekből áll. A token a legkisebb nyelvi egység, ami még értelmes a fordító számára. Tokeneknek az alábbiakat tekntjük:
 
 * __Kulcsszavak__: _int_, _return_
-* __Azonosítók__: _number_ - lényegében azok a nevek, melyeket mi hozunk létre. Függvények, osztályok, változók nevei. Ez csak betűkből és számokból állhat, nem kezdődhet számmal es nem lehet kulcsszó. Fontos egjegyezni, hogy a C++ nyelv különbséget tesz kis- és nagybetűk között (case sensitive).
+* __Azonosítók__: _number_ - lényegében azok a nevek, melyeket mi hozunk létre. Függvények, osztályok, változók nevei. Ez csak betűkből és számokból állhat, nem kezdődhet számmal es nem lehet kulcsszó. Fontos megjegyezni, hogy a C++ nyelv különbséget tesz kis- és nagybetűk között (case sensitive).
 * __Literálok__:
 	* egész számliterálok: 0xa23
 	* karakterliterálok: 'a'
@@ -322,12 +317,11 @@ Minden C++ kód tokenekből áll. A token a legkisebb nyelvi egység, ami még �
 * __Operátorok__: ```<<```, ```::```
 * __Szeparátorok__: ```;```, ```{```, ```}```
 
-
 ![alt tokenek](img/tokens.png)
 
 ### Viselkedések kategorizálása C++-ban
 
-Reménytelen megközelítés lenne a szabványban minden szintaktikusan (nyelvtanilag) helyes kódhoz pontos szemantikát (működést) adni. Ezért a C++ szabvány néhány esetben nem vagy csak részben definiálja egy adott program működését.
+Reménytelen megközelítés lenne a szabványban minden szintaktikusan (nyelvtanilag) helyes kódhoz pontos szemantikát (működést) adni. Ezért a C++ szabvány néhány esetben nem, vagy csak részben definiálja egy adott program működését.
 
 ### Nem definiált viselkedés
 
@@ -341,7 +335,7 @@ int main()
 
 Fordítás és futtatás után különböző fordítókkal különböző eredményeket kaphatunk. Az, hogy mikor értékelődik ki a ```++i``` és az ```i++``` a kifejezésen belül, __nem specifikált__. Amikor a szabvány nem tér ki arra, hogy pontosan milyen viselkedésű kódot generáljon a fordító, akkor a fordító bármit választhat. Ez többek között lehetőséget ad a fordítónak arra, hogy __optimalizáljon__.
 
-A C++-ban vannak úgynevezett __szekvenciapontok__. A szabvány annyit mond ki, hogy a szekvenciapot előtti kód hamarabb kerüljön kiértékelésre mint az utána levő. Mivel itt az ```i``` értékadása után és csak az ```std::endl``` után van szekvenciapont, így az, hogy milyen sorrendben történjen a kettő közötti kifejezés részkifejezéseinek a kiértékelése,a fordítóra van bízva.
+A C++-ban vannak úgynevezett __szekvenciapontok__. A szabvány annyit mond ki, hogy a szekvenciapot előtti kód hamarabb kerül kiértékelésre, mint az utána levő. Mivel itt az ```i``` értékadása után és csak az ```std::endl``` után van szekvenciapont, így az, hogy milyen sorrendben történjen a kettő közötti kifejezés részkifejezéseinek a kiértékelése,a fordítóra van bízva.
 
 A C++-ban nem meghatározott, hogy két szekvenciapont között mi a kifejezések és részkifejezések kiértékelésének a sorrendje. Az adatfüggőségek azonban definiálnak egy sorrenet.
 
@@ -353,8 +347,7 @@ Bár a fenti kódban csak az ```f()``` meghívása után található szekvenciap
 
 Az, hogy két részkifejezés szekvenciaponttal történő elválasztása nélkül ugyanazt a memóriaterületet módosítja, __nem definiált__ viselkedést eredményez. Ilyenkor a fordító vagy a futó program bármit csinálhat. A szabvány semmiféle megkötést nem tesz. 
 
-__Megjegyzés__: az a program, amely nem definiált viselkedéseket tartalmaz, __hibás__.
-
+__Megjegyzés__: az a program, amely nem definiált viselkedéseket tartalmaz, __HIBÁS__.
 
 ### Nem specifikált viselkedés
 
@@ -369,7 +362,7 @@ int main()
 }
 ```
 
-Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik ki előbb (nem specifikált), azt biztosan tudjuk, hogy 11-et fog kiírni (a program végeredménye jól definiált).
+Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik ki előbb (_nem specifikált_), azt biztosan tudjuk, hogy 11-et fog kiírni (a program végeredménye _jól definiált_).
 
 ### Implementáció által definiált viselkedés
 
@@ -377,7 +370,7 @@ A szabvány nem köti meg, hogy egy ```int``` egy adott platformon mennyi byte-b
 
 ## Első C++ program
 
-Ezen információk tudatában megnézhetjük az első C++ programunkat. Tekintsük az alábbi kódot. A forrásfájl neve legyen _main.cpp_:
+Ezen információk tudatában megnézhetjük az első C++ programunkat. Tekintsük az alábbi kódot. A forrásfájl neve legyen ```main.cpp```:
 
 ```cpp
 #include <iostream>
@@ -393,20 +386,21 @@ int main(int argc, const char* argv[])
 
 A _main.cpp_ meghatároz egy __fordítási egységet__ (_compilation unit_). A fordítás folyamata során fordítási egységeket fordítunk gépi kódra. Egy fordítási egységben az a kód található, amelyhez a fordító a fordítás során hozzáfér.
 
-A kód legfelső sorában található az ```#include <iostream>```. A kettős kereszttel (```#```) jelzet sorok az __előfordítónak__ (_precompiler_) szóló utasítások. Ezek az úgynevezett preprocesszor direktívák. Az ```include``` utasítás behelyettesíti a hívás helyére a megadott fájl tartalmát. Ez a helyettesítés __fordítási időben__ történik. Az ```iostream``` fejállomány (_header file_ vagy egyszerűen csak _header_) tartalmazza a megfelelő I/O (Input/Output) utasításokat a kiíratáshoz. Ez maga is ugyanúgy C++ kódot tartalmaz, melyet mi magunk is írunk. Két különböző elérési útvonallal tudjuk megadni az include-okat:
+A kód legfelső sorában található az ```#include <iostream>```. A kettős kereszttel (```#```) jelzet sorok az __előfordítónak__ (_precompiler_) szóló utasítások. Ezek a már korábban említett  preprocesszor direktívák. Az ```include``` utasítás behelyettesíti a hívás helyére a megadott fájl tartalmát. Ez a helyettesítés __fordítási időben__ történik. 
 
-* ```#include <...> // előre bekonfigurált include útvonalban keresi a fájlt```
+Az ```iostream``` fejállomány (_header file_ vagy egyszerűen csak _header_) tartalmazza a megfelelő I/O (Input/Output) utasításokat a kiíratáshoz. Ez maga is ugyanúgy C++ kódot tartalmaz, melyet mi magunk is írunk. Két különböző elérési útvonallal tudjuk megadni az include-okat:
+
+* ```#include <...> // előre bekonfigurált útvonalban keresi a fájlt```
 * ```#include "..." // az útvonal relatív az aktuális fájlokhoz képest```
 
 ### Mik az előnyei az ```iostream```-nek a ```cstdio```-val szemben C++-ban?
 
-Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé teszi a bővíthetőséget és az örökölhetőséget. A ```printf()``` vitathatatlanul jól működik és a ```scanf()``` is működik annak ellenére, hogy nem túl nagy a hibatűrő képessége. Mindazon által mindkettő korlátozzott a C++ I/O-val szemben. Ha szeretnénk összehasonlítani a C++ I/O ```<<``` és ```>>``` operátorai nagyjából megfelelnek a C-s ```printf()``` és ```scanf()``` függvényeinek. Azonban több előnyük is van ezekkel a függvényekkel szemben:
+Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé teszi a bővíthetőséget és az örökölhetőséget. A ```printf()``` vitathatatlanul jól működik és a ```scanf()``` is működik annak ellenére, hogy nem túl nagy a hibatűrő képessége. Mindazon által mindkettő korlátozzott a C++ I/O-val szemben. Ha szeretnénk összehasonlítani a C++ I/O ```<<``` és ```>>``` operátorai nagyjából megfelelnek a C ```printf()``` és ```scanf()``` függvényeinek. Azonban több előnyük is van ezekkel a függvényekkel szemben:
 
 * __Típus biztosabb__: az ```<iostream>``` esetén az objektumok típusai fordítási időben ismertek a fordító számára. Ezzel szemben az ```<cstdio>``` ```%``` mezőket használ a típusok dinamikus meghatározásához.
 * __Kevesebb hibalehetőség__: az ```<iostream>``` használatakor nincsenek redundáns ```%``` tokenek, amelyeknek konzisztensnek kell lenniük az I/O-zni kívánt objektumokkal. Ezen redundancia eltávolítása a hibák eltávolítását is jelenti.
-* __Bővíthető__: a C++ ```<iostream>``` lehetővé teszi az új, felhasználó által definiált típusok I/O-zását, anélkül, hogy brámi problémát okozna a már meglévő kódban.
-* __Örököltethető__: A C++ ```<iostream>``` mechanizmus olyan valós osztályokból épül fel, mint az ```std::ostream``` vagy az ```std::istream```. A ```<cstdio> FILE*```-al ellentétben ezek valódi osztályok, ezért örököltethetőek. Ez azt jelenti, hogy más felhasználók által definiált dolgok is viselkedhetnek __stream__-ként. Automatikusan használhatjuk a rengeteg soros I/O kódot, amelyet más felhasználók ítak, akik nem is tudják és nem is kell tudniuk a saját magunk által kiterjesztett __stream__ osztályról.
-
+* __Bővíthető__: a C++ ```<iostream>``` lehetővé teszi az új, felhasználó által definiált típusok I/O-zását, anélkül, hogy bármi problémát okozna a már meglévő kódban.
+* __Örököltethető__: A C++ ```<iostream>``` mechanizmus olyan valós osztályokból épül fel, mint az ```std::ostream``` vagy az ```std::istream```. A ```<cstdio> FILE*```-al ellentétben ezek valódi osztályok, ezért örököltethetőek. Ez azt jelenti, hogy más felhasználók által definiált dolgok is viselkedhetnek __stream__-ként. Automatikusan használhatjuk a rengeteg soros I/O kódot, amelyet más felhasználók írtak, akik nem is tudják és nem is kell tudniuk a saját magunk által kiterjesztett __stream__ osztályról.
 
 ### Kiírás és beolvasás, C vs C++
 
@@ -427,17 +421,17 @@ int main()
 }
 ```
 
-Ilyenkor a fordító nem ellenőrzi a paraméterek típusát, így lefordul a kód, pedig nyilvánvalóan helytelen. A ```scanf()``` ```string```-et fog beolvasni, ```char*``` paramétert vár és ```int*```-ot fog kapni egyetlen ```int```-nyi hellyel. Hosszabb ```string```-nél a kapott helyet túlírja és a következő mamóriaterület sérül, vagy összeomlik a program. Az újabb fordítók erre már figyelmeztetést adnak.
+Ilyenkor a fordító nem ellenőrzi a paraméterek típusát, így lefordul a kód, pedig nyilvánvalóan helytelen. A ```scanf()``` ```string```-et fog beolvasni, ```char*``` paramétert vár és ```int*```-ot fog kapni egyetlen ```int```-nyi hellyel. Hosszabb ```string```-nél a kapott helyet túlírja és a következő memóriaterület sérül, vagy összeomlik a program. Az újabb fordítók erre már figyelmeztetést adnak.
 
-Mindkét problémára megoldást nyújt a C++ megoldása. Kiíratásta az ```std::cout``` (C-ben az ```stdout```), beolvasásra az ```std::cin``` (C-ben az ```stdin```), míg hiba kezelésére a C-s ```stderr```-hez hasonlóan az ```std::cerr``` való. Használatukhoz az ```iostream``` header szükséges. Sor vége karakter kiírható akár az ```std::endl``` használatával is (kicsit bővebben az ```std::endl``` és a ```\n```-ről később).
+Mindkét problémára megoldást nyújt a C++ megoldása. Kiíratásra az ```std::cout``` (C-ben az ```stdout```), beolvasásra az ```std::cin``` (C-ben az ```stdin```), míg hiba kezelésére a C-s ```stderr```-hez hasonlóan az ```std::cerr``` való. Használatukhoz az ```iostream``` header szükséges. Sor vége karakter kiírható akár az ```std::endl``` használatával is (kicsit bővebben az ```std::endl``` és a ```\n```-ről később).
 
-Az ```std::cin``` a ```scanf()```-től eltérően képes referencia szerint átvenni a változókat, így nincs probléma a címképzéssel. Az ```std::cin``` és az ```std::cout```, és minden azonos típusú objektum automatikusan tud konvertálódni igaz vagy hamis logikai értékekre, attól függően, hogy volt-e hiba.
+Az ```std::cin``` a ```scanf()```-től eltérően képes referencia szerint átvenni a változókat, így nincs probléma a címképzéssel. Az ```std::cin```, ```std::cout``` és minden azonos típusú objektum automatikusan tud konvertálódni igaz vagy hamis logikai értékekre, attól függően, hogy volt-e hiba.
 
-Mindezek az előnyök eltörpülnek amellett, hogy az ```std::cin``` és az ```std::cout``` magtanítható arra, hogyan kezelje a felhasználók által definiált típusokat.
+Mindezek az előnyök eltörpülnek amellett, hogy az ```std::cin``` és az ```std::cout``` megtanítható arra, hogyan kezelje a felhasználók által definiált típusokat.
 
 ### Névterek
 
-A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során szmos gyakran használt nevet is felhasznál mint pl. ```find(), max()``` stb. Ha nem az ```std``` névtérben lennének ezeke a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a neveket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
+A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a neveket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
 
 ```cpp
 #include <iostream>
@@ -449,21 +443,51 @@ int main(int argc, const char* argv[])
 }
 ```
 
-__FONTOS__: a ```using namespace ...;``` SOHA nem kerülhet header állományba. Ezzel ugyanis a header állomány összes felhasználójánál potenciálisan nevütközéseket okozunk. frntebb explicit módon jeleztük a fordítónak, hogy az ```std``` névtérben keresse a ```cout``` és az ```endl``` változókat. Létezik úgynevezett __névtelen névtér__ (_unnamed namespace_), amit arra használhatunk, hogy ne szemeteljük tele a globális névteret, ezáltal megvédjük magunkat a többértelműségtől.
+__FONTOS__: a ```using namespace ...;``` SOHA nem kerülhet header állományba. Ezzel ugyanis a header állomány összes felhasználójánál potenciálisan nevütközéseket okozunk. Fentebb explicit módon jeleztük a fordítónak, hogy az ```std``` névtérben keresse a ```cout``` és az ```endl``` változókat. 
+ 
+#### Névtelen névtér (_unnamed namespace_) 
+
+Létezik úgynevezett __névtelen névtér__ (_unnamed namespace_), amit arra használhatunk, hogy ne szemeteljük tele a globális névteret, ezáltal megvédjük magunkat a többértelműségtől.
+A modul szintű hatókörben a névtelen névterekben hozhatunk létre olyan változókat és függvényeket, amelyek a fordítási egységen kívül nem érhetőek el. Azonban a modulon belül minden korlátozás nélkül felhasználhatók a __hatókör operátor__ (_scope operátor_) ```::``` segítségével.
 
 ```cpp
 namespace 
 {
-  // amit el akarunk keríteni
+  int i = 0;
+}
+
+int main(int argc, const char* argv[])
+{
+  int i = ::i; // hivatkozunk a névtelen névtérben lévő i változóra
+  return 0;
 }
 ```
- Ilyenkor csak a deklarált fájlon belül érhetjük el a névtelen névtérben deklarált változókat a __hatókör operátor__ (_scope operátor_) ```::``` segítségével.
  
-// TODO named and nested namespaces
- 
+#### Egymásba ágyazott névterek (_nested namespaces_)
+
+A programozónak lehetősége van arra, hogy a névtrekben újabb névtereket hozzon létre, vagyis egymásba ágyazza őket. Ezzel a megoldással a globális neveket is strukturált rendszerbe tudjuk szervezni.
+
+```cpp
+namespace A
+{
+  namespace B
+  {
+    int i = 0;
+  }
+}
+```
+
+Ebben az esetben az ```i``` változót a következő módon tudjuk elérni: ```A::B::i```. C++17 óta lehetőség van egymásba ágyazott névtereket egy rövidebb formában írni:
+
+```cpp
+A::B { int i = 0; }
+```
+
+A két kódrészlet funkcionalitásban teljesen megegyezik.
+
 ## A main() függvény
 
-Ez a program belépési pontja (_entry point_). Minden C++ nyelven írt programnak tartalmazni kell __PONTOSAN__ egyet. Ez az egyetlen olyan függvény, amit nem lehet túlterhelni. Paraméterei küzöl az ```argc``` a parancssori paraméterek számát adja meg, míg az ```argv[]``` egy nullpointerrel terminált, karaktermutatókat tartalmazó tömb, amelyben a paraméterek vannak C-stílusú string-ként. A C++-ban a tömböket 0-tól indexeljük, az ```argv[]``` nulladik eleme a futtatható állomány neve, első eleme pedig az első paraméter.
+Ez a program __belépési pontja__ (_entry point_). Minden C++ nyelven írt programnak tartalmazni kell __PONTOSAN__ egyet. Ez az egyetlen olyan függvény, amit nem lehet túlterhelni. Paraméterei küzöl az ```argc``` a parancssori paraméterek számát adja meg, míg az ```argv[]``` egy nullpointerrel terminált, karaktermutatókat tartalmazó tömb, amelyben a parancssori paraméterek vannak C-stílusú string-ként. A C++-ban a tömböket 0-tól indexeljük, így az ```argv[]``` nulladik eleme a futtatható állomány neve, első eleme pedig az első paraméter.
 
 ```./program first second (vagy program.exe first second)```
 
@@ -475,9 +499,8 @@ Ez a program belépési pontja (_entry point_). Minden C++ nyelven írt programn
 
 A két kapcsos zárójel (```{ }```) közti részt blokknak nevezzük. A ```cout``` a C++ standard kimenete. Az ```endl``` pedig beilleszt egy newline karaktert a kiírandó sor végére. Felmerülhet a kérdés, hogy mi a különbség az ```endl``` és a ```\n``` között? Nos,
 
-* az ```\n``` csak egy string aminek a hossza egy és ez adódik hozzá azt ```std::out```-hoz.
+* a ```\n``` csak egy string aminek a hossza egy és ez adódik hozzá azt ```std::out```-hoz.
 * az ```std::endl``` ezzel szemben egy objektum, ami a newline karakter hozzáadásához vezet ÉS ezek után flush-olja az ```std::out``` buffert. Ezért ez több számítással jár. Az ```std::endl``` meghívja az ```os.put(os.widen('\n'))``` függvényt, majd ezt követően az ```os.flush()``` függvényt.
-
 
 A ```return``` kulcsszó visszaadja a vezérlést az őt hívó függvénynek, jelen esetben ez a program befejezését jelenti, ezért az operációs rendszernek. A ```return``` mögé írt szám visszatérési értéke 0. Ez általában azt jelenti, hogy a program rendben lefutott. A ```main()```-ben ez nem kötelező, ha elhagyjuk, akkor automatikusan 0-t ad vissza, továbbá nem muszáj kiírni az ```int argc, const char* argv[]``` bemeneti paramétereket sem. A fordító ezeket automatikusan legenerálja. Ezért a következő program ekvivalens az előzőkkel:
 
@@ -524,14 +547,13 @@ std::ostream& os = std::cout << "Hello";
 int main() { std::cout << " world!" << std::endl; }
 ```
 
-Kimenet: Hello world!
+> Kimenet: "Hello world!"
 
-A program végrehajtásánál az első lépés az úgynevezett __globális változók__ inicializálása. Ennek az oka az, hogy a globális változók olyan objektumok, melyekre a program bármely pontján hivatkozni lehet. Ebből kifolyólag, ha ```os```-t szeretnénk használni a ```main()``` függvény első sorában, akkor ezt meg lehessen tenni. Az inicializálastlan változó használata nem definiált viselkdes, ezért fontos már a ```main()``` előtt inicializálni a globális változókat.
-
+A program végrehajtásánál az első lépés az úgynevezett __globális változók__ inicializálása. Ennek az oka az, hogy a globális változók olyan objektumok, melyekre a program bármely pontján hivatkozni lehet. Ebből kifolyólag, ha ```os```-t szeretnénk használni a ```main()``` függvény első sorában, akkor ezt meg lehessen tenni. Az inicializálatlan változó használata nem definiált viselkedés, ezért fontos már a ```main()``` előtt inicializálni a globális változókat.
 
 ### Globális változók definíciója és deklarációja
 
-Globális változókat úgy tudunk létrehozni, hogy kezvetlenül egy névtéren belül definiáljuk őket.
+Globális változókat úgy tudunk létrehozni, hogy közvetlenül egy névtéren belül definiáljuk őket.
 
 ```cpp
 // main.cpp
@@ -561,14 +583,14 @@ __Megjegyzés__: a globális változók deklarációit érdemes külön header f
 
 ### Globális változók inicilizációja
 
-Amennyiben egy lokális ```int```-et hozunk létre és nem adunk neki kezdőértéket, annak értéke nem definiált lesz (memóriaszemét).
+Amennyiben egy globális ```int```-et hozunk létre és nem adunk neki kezdőértéket, annak értéke nem definiált lesz (memóriaszemét).
 
 ```cpp
 int x;
 int main() { std::cout << i << std::endl; } // 0
 ```
 
-Az eredmény azonban mindig 0 lesz. Ennek az oka az, hogy a globális változók mindig 0-ra inicilaizálódnak (legalábbis az ```int```-ek). A globális változókat csak egyszer hozzuk létre a program futásakor, így érdemes jól definiált kezdőértéket adni neki. A __stack__en rengetegszer létre kell hozni változókat, nem csak egyszer, így ott nem éri meg minden alkalommal egy jól definiált kezdőértékkel inicializálni. Sokkal nagyobb lenne a hatása a futási időre.
+Az eredmény azonban mindig 0 lesz. Ennek az oka az, hogy a globális változók mindig 0-ra inicilaizálódnak (legalábbis az ```int```-ek). A globális változókat csak egyszer hozzuk létre a program futásakor, így érdemes jól definiált kezdőértéket adni neki. A stacken rengetegszer létre kell hozni változókat, nem csak egyszer, így ott nem éri meg minden alkalommal egy jól definiált kezdőértékkel inicializálni. Sokkal nagyobb lenne a hatása a futási időre.
 
 A 0-ra való inicializálás oka globális változók esetén az, hogy ezt a modern processzorok gyorsan tudják kivitelezni a legtöbb platformon.
 
@@ -588,7 +610,7 @@ std::ostream os2 = std::cout << " World";
 ```
 
 Itt nem specifikált a két globális változó inicializációs sorrendje, és ha más sorredben linkeljük a
-fordítási egységekből keletkező tárgykódot, mást ír ki.
+fordítási egységekből keletkező tárgykódot, más eredményt kapunk.
 
 ```clang++ main.cpp other.cpp ≠ clang++ other.cpp main.cpp```
 
@@ -602,11 +624,11 @@ __Láthatóság__: a hatókör részhalmaza, a programszöveg azon része, ahol 
 
 ### Automatikus, statikus és dinamikus élettartam
 
-__Automatikus élettartam__: a blokkokban deklarált lokális változók automatikus élettartamúak, ami azt jelenti, hogy a deklarációtól a tartalmazó blokk végéig tart, azaz egybeesik a hatókörrel. A helyfoglalás szmukra a végrehajtási verem aktuális aktivációs rekordjában történik meg.
+__Automatikus élettartam__: a blokkokban deklarált lokális változók automatikus élettartamúak, ami azt jelenti, hogy a deklarációtól a tartalmazó blokk végéig tart az élettartamuk, ami jelen esetben  egybeesik a hatókörrel. A helyfoglalás számukra a végrehajtási verem aktuális aktivációs rekordjában történik meg.
 
-__Statikus élettartam__: a globális változók, illetve egyes nyelvekben a __statikus__ként deklarált változók statikus élettartamúak. Az ilyen változók élettartama a program teljes végrehajtási idejére kiterjed, számukra a helyfoglalás már a fordítási időben megtörténhet.
+__Statikus élettartam__: a globális változók, illetve egyes nyelvekben a __statikusként__ deklarált változók statikus élettartamúak. Az ilyen változók élettartama a program teljes végrehajtási idejére kiterjed, számukra a helyfoglalás már a fordítási időben megtörténhet.
 
-__Dinamikus élettartam__: a dinamikus élettartamú változók esetén a programozó foglla helyet számukra a dinamikus tárterületen (heap), és a programozó feladata gondoskodni árról is, hogy ezt a tárterületet később felszabadítsa. Amennyiben ez utóbbiról megfeledkezik, azt nevezzük __memória szivárgás__nak (_memory leak_). A dinamikus élettartam esetén a hatókör semmilyen módon nem kapcsolódik össze az élettartammal, az élettartam szűkebb vagy tágabb is lehet a hatókörnél.
+__Dinamikus élettartam__: a dinamikus élettartamú változók esetén a programozó foglal helyet számukra a dinamikus tárterületen (_heap_, bővebben a heapről a későbbiekben lesz szó), és a programozó feladata gondoskodni árról is, hogy ezt a tárterületet később felszabadítsa. Amennyiben ez utóbbiról megfeledkezik, azt nevezzük __memória szivárgásnak__ (_memory leak_). A dinamikus élettartam esetén a hatókör semmilyen módon nem kapcsolódik össze az élettartammal, az élettartam szűkebb vagy tágabb is lehet a hatókörnél.
 
 Tekintsük az alábbi kódrészletet és figyeljük meg mikor tudunk az ```x``` változóra hivatkozni.
 
@@ -625,7 +647,7 @@ int main()
 }
 ```
 
-A ```main()``` elején létrehozott ```x``` az utána következő blokkban teljesen elérhetetlen - nincs olyan szabványos nyelvi eszköz, amivel tudnánk rá hivatkozni. Ezt a folyamatot nevezzük __leárnyékolás__nak (_shadowing_). Azonban a külső globális ```x```-re bármikor tudunk hivatkozni a már korábban említett scope operátor (```::```) segítségével.
+A ```main()``` elején létrehozott ```x``` az utána következő blokkban teljesen elérhetetlen - nincs olyan szabványos nyelvi eszköz, amivel tudnánk rá hivatkozni. Ezt a folyamatot nevezzük __leárnyékolásnak__ (_shadowing_). Azonban a külső globális ```x```-re bármikor tudunk hivatkozni a már korábban említett scope operátor (```::```) segítségével.
 
 ```cpp
 #include <iostream>
@@ -641,6 +663,28 @@ int main()
   }
 }
 ```
+
+Tekintsük a következő programot:
+
+```cpp
+#include <iostream>
+
+int x = 1;
+
+namespace
+{
+  int x = 2;
+}
+
+int main() 
+{
+  std::cout << ::x << std::endl;
+}
+```
+
+> kimenet: 2
+
+Ilyen esetekben, ha azonos nevű változó szerepel a globális névtérben és egy névtelen névtérben a scope operátor __midnig__ a névtelen névtérbeli változóra fog hivatkozni.
 
 ### Jobb- és balérték
 
