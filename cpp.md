@@ -55,7 +55,7 @@ Adattípusok C++-ban:
 	* __Double floating point__ (```double```): dupla pontosságú (__double precision__) tizedes értékek tárolására szolgál. Általában __8 bájt__ memóriahelyet igényelnek. 1 bit az előjelnek, 11 bit a szám egész részének és 52 bit a tizedes résznek van fenntartva, azaz 15 tizedesjegyig képes tárolni az adatokat.
 	* __Void__ (```void```): azt jelenti: érték nélkül. A ```void``` adattípus értéktelen entitást jelent. Azoknál a függvényeknél használják, amelyek nem adnak vissza értéket.
 	* __Wide character__ (```wchar_t```): szintén egy karakter adattípus, de ennek az adattípusnak a mérete meghaladja a normál 8 bites adattípust. Általában __2 vagy 4 bájt__ hosszú.
-* __Származtatott__: az primitív vagy beépített adattípusokból származó adattípusokat származtatott adattípusoknak nevezzük. Ezek négyféle lehetnek, nevezetesen:
+* __Származtatott__: a primitív vagy beépített adattípusokból származó adattípusokat származtatott adattípusoknak nevezzük. Ezek négyféle lehetnek, nevezetesen:
 	* __Function__
 	* __Array__
 	* __Pointer__
@@ -412,7 +412,7 @@ Az ```iostream``` fejállomány (_header file_ vagy egyszerűen csak _header_) t
 
 Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé teszi a bővíthetőséget és az örökölhetőséget. A ```printf()``` vitathatatlanul jól működik és a ```scanf()``` is működik annak ellenére, hogy nem túl nagy a hibatűrő képessége. Mindazon által mindkettő korlátozzott a C++ I/O-val szemben. Ha szeretnénk összehasonlítani a C++ I/O ```<<``` és ```>>``` operátorai nagyjából megfelelnek a C ```printf()``` és ```scanf()``` függvényeinek. Azonban több előnyük is van ezekkel a függvényekkel szemben:
 
-* __Típus biztosabb__: az ```<iostream>``` esetén az objektumok típusai fordítási időben ismertek a fordító számára. Ezzel szemben az ```<cstdio>``` ```%``` mezőket használ a típusok dinamikus meghatározásához.
+* __Típus biztosabb__: az ```<iostream>``` esetén az objektumok típusai fordítási időben ismertek a fordító számára. Ezzel szemben a ```<cstdio>``` ```%``` mezőket használ a típusok dinamikus meghatározásához.
 * __Kevesebb hibalehetőség__: az ```<iostream>``` használatakor nincsenek redundáns ```%``` tokenek, amelyeknek konzisztensnek kell lenniük az I/O-zni kívánt objektumokkal. Ezen redundancia eltávolítása a hibák eltávolítását is jelenti.
 * __Bővíthető__: a C++ ```<iostream>``` lehetővé teszi az új, felhasználó által definiált típusok I/O-zását, anélkül, hogy bármi problémát okozna a már meglévő kódban.
 * __Örököltethető__: A C++ ```<iostream>``` mechanizmus olyan valós osztályokból épül fel, mint az ```std::ostream``` vagy az ```std::istream```. A ```<cstdio> FILE*```-al ellentétben ezek valódi osztályok, ezért örököltethetőek. Ez azt jelenti, hogy más felhasználók által definiált dolgok is viselkedhetnek __stream__-ként. Automatikusan használhatjuk a rengeteg soros I/O kódot, amelyet más felhasználók írtak, akik nem is tudják és nem is kell tudniuk a saját magunk által kiterjesztett __stream__ osztályról.
@@ -433,7 +433,7 @@ A ```scanf()``` használatánál arra is oda kell figyelni, hogy cím szerint ke
 int main()
 {
   int a;
-  scanf("%s", a);
+  scanf("%s", &a);
 }
 ```
 
@@ -484,7 +484,7 @@ int main(int argc, const char* argv[])
 
 ### Egymásba ágyazott névterek (_nested namespaces_)
 
-A programozónak lehetősége van arra, hogy a névtrekben újabb névtereket hozzon létre, vagyis egymásba ágyazza őket. Ezzel a megoldással a globális neveket is strukturált rendszerbe tudjuk szervezni.
+A programozónak lehetősége van arra, hogy a névterekben újabb névtereket hozzon létre, vagyis egymásba ágyazza őket. Ezzel a megoldással a globális neveket is strukturált rendszerbe tudjuk szervezni.
 
 ```cpp
 namespace A
@@ -609,9 +609,17 @@ __Megjegyzés__: a globális változók deklarációit érdemes külön header f
 Amennyiben egy globális ```int```-et hozunk létre és nem adunk neki kezdőértéket, annak értéke nem definiált lesz (memóriaszemét).
 
 ```cpp
+#include <iostream>
+
 int x;
-int main() { std::cout << i << std::endl; } // 0
+
+int main() 
+{ 
+  std::cout << x << std::endl; 
+}
 ```
+
+> kimenet: 0
 
 Az eredmény azonban mindig 0 lesz. Ennek az oka az, hogy a globális változók mindig 0-ra inicilaizálódnak (legalábbis az ```int```-ek). A globális változókat csak egyszer hozzuk létre a program futásakor, így érdemes jól definiált kezdőértéket adni neki. A stacken rengetegszer létre kell hozni változókat, nem csak egyszer, így ott nem éri meg minden alkalommal egy jól definiált kezdőértékkel inicializálni. Sokkal nagyobb lenne a hatása a futási időre.
 
@@ -645,7 +653,7 @@ __Megjegyzés__: ez a példa nem számít jó kódnak, mert nem specifikált vis
 
 __Hatókör__: Deklarációkor a programozó összekapcsol egy entitást (pl. egy változót vagy egy függvényt) egy névvel. A hatókör alatt a forrásszöveg azt a részét értjük, amíg ez az összekapcsolás érvényben van. Ez általában annak a blokknak a végéig tart, amely tartalmazza az adott deklarációt
 
-__Láthatóság__: a hatókör részhalmaza, a programszöveg azon része, ahol a deklarált névhet a megadott entitás tartozik. Mivel az egymásba ágyazott blokkokban egy korábban már bevezetett nevet más entitáshoz kapcsolhatunk, ezért ilyenkor a külső blokkban deklarált entitás a nevével már nem elérhető. Ezt nevezzük a láthatóság elfedésének.
+__Láthatóság__: a hatókör részhalmaza, a programszöveg azon része, ahol a deklarált névhez a megadott entitás tartozik. Mivel az egymásba ágyazott blokkokban egy korábban már bevezetett nevet más entitáshoz kapcsolhatunk, ezért ilyenkor a külső blokkban deklarált entitás a nevével már nem elérhető. Ezt nevezzük a láthatóság elfedésének.
 
 
 ## Automatikus, statikus és dinamikus élettartam
@@ -715,7 +723,7 @@ Ilyen esetekben, ha azonos nevű változó szerepel a globális névtérben és 
 
 ## Jobb- és balérték
 
-A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__-nek (_left value_, röviden _lvalue_) nevezzük, ha van a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, és __jobbérték__-nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
+A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__-nek (_left value_, röviden _lvalue_) nevezzük, ha a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, __jobbérték__-nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
 
 ```cpp
 int main()
@@ -734,9 +742,9 @@ int main()
 
 A C++ szabvány több memóriatípust különít el. Mégpedig:
 
-* __stack__
-* __globális/statikus__
-* __heap/free store__
+* __stack__ (_verem_)
+* __globális / statikus__
+* __heap / free store__ (_kupac_)
 
 
 ## Stack
@@ -889,7 +897,7 @@ int main()
 }
 ```
 
-> Kimenet: _error: call of overloaded ‘f(NULL)’ is ambiguous_. Fordítási idejű hiba.
+> Kimenet: _error: call of overloaded ‘f(NULL)’ is ambiguous_.
 
 ```cpp
 #include <iostream>
@@ -973,7 +981,7 @@ int main()
 ```
 
 
-# Konstans korrektrség (_const-correctness_)
+# Konstans korrektrég (_const-correctness_)
 
 A konstans korrektség egy szabály a C++ nyelvben: ha egy értéket konstansnak jelölünk, azt nem módosíthatjuk a program futása során.
 
