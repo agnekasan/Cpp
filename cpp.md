@@ -9,11 +9,12 @@ C++ makes it harder, but when you do it, it blows your whole leg off."__
 
 ## Bevezetés
 
+
 A __C++__ egy általános célú, magas szintű programozási nyelv. Gyakori tévhit, hogy alacsony szintű (hardver közeli). Noha lehetőséget biztosít arra, hogy alacsony szinten programozzunk, számos absztrakciós lehetőséget tartalmaz. Támogatja a __procedurális__, __objektumorientált__ és a __generikus programozást__ valamint az __adatabsztrakciót__. Legtöbb nyelvhez képest abban emelkedik ki, hogy az itt megvalósított absztrakcióknak ritkán van futási idejű költsége.
 
 __Érdekesség__: [Andrei Alexandrescu](https://en.wikipedia.org/wiki/Andrei_Alexandrescu) azt nyilatkozta, hogy amikor a Facebook-nak a back-end kódján 1%-ot sikerült optimalizálnia, több mint 10 évnyi fizetését spórolta meg a cégnek havonta csak az áramköltségen.
 
-A C++ nyelv fejlesztését még a '80-as években __Bjarne Stroustrup__ kezdte el a C programozási nyelv kiterjesztéseként, más nyelvekből véve át megoldásokat. Az első hivatalos szabványa a nyelvnek 1998-ban jelent meg. Alapvetően a nyelv két összetevőből áll. Az aktuális szabványból és annak implementációjából. A szabvány az, ami meghatározza a nyelv nyelvtanját, valamint a szemantikáját (mit jelentenek a leforduló programok).
+A C++ nyelv fejlesztését még a '80-as években [Bjarne Stroustrup](https://hu.wikipedia.org/wiki/Bjarne_Stroustrup) kezdte el a C programozási nyelv kiterjesztéseként, más nyelvekből véve át megoldásokat. Az első hivatalos szabványa a nyelvnek 1998-ban jelent meg. Alapvetően a nyelv két összetevőből áll. Az aktuális szabványból és annak implementációjából. A szabvány az, ami meghatározza a nyelv nyelvtanját, valamint a szemantikáját (mit jelentenek a leforduló programok).
 
 Eddigi C++ szabványok:
 
@@ -35,6 +36,7 @@ Számos fordító létezik a C++ kódok fordítására, amelyek különböző m�
 
 ### C++ filozófia
 
+
 A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi eszközt, akkor annak ne legyen negatív hatása a program teljesítményre. Magyarán mondva csak azért "fizessünk", amit használunk is. Fontos megjegyezni, hogy a C++ alapvetően nem objektumorientált nyelv. Ahogy fentebb olvashattuk, kíválóan alkalmas mas programozási paradigmák használatára is. A nyelv nem próbál meg ráerőltetni a programozóra egy megközelítést, ellenben próbál minél gazdagabb eszköztárat biztosítani, hogy a megfelelő problémát a megfelelő megközelítéssel lehessen megoldani. Még akkor is, ha ez a különböző paradigmák keverését vonja maga után. Ezért a nyelvet gyakran multiparadigmás programozási nyelvnek is szokás nevezni.
 
 
@@ -42,6 +44,7 @@ A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi e
 
 
 ### C++ adattípusok
+
 
 A C++ szigorúan típusos nyelv, ami azt jelenti, hogy már fordítási időben ismert kell a változók típusát. Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
 
@@ -83,6 +86,7 @@ __Megjegyzés__: a ```sizeof(type)``` kifejezés helyett használható a ```std:
 
 ### Adattípus módosítók
 
+
 Ahogy a neve is mutatja, az adattípus-módosítókat a beépített adattípusokkal használják az adatok hosszának módosítására, amelyet egy adott adattípus képes tárolni.
 
 __előjeles__ (signed)
@@ -111,6 +115,7 @@ __short__
 
 ## Fordító működése, fordítás parancssori eszközökkel, több forrásfájl, object, linkelés
 
+
 A fordítás 3 fő lépésből áll:
 
 * __Preprocesszálás__ (_előfeldolgozás_)
@@ -124,6 +129,7 @@ A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint p�
 
 ### Preprocesszálás
 
+
 Az __előfeldolgozó__ (_preprocesszor_) használata a legtöbb esetben kerülendő. Ez alól kivételek a __header__ állományok ```include```-olása. A preprocesszor primitív szabályok alapján dolgozik és __nyelvfüggetlen__. Mivel semmit nem tud a C++-ról, ezért sokszor meglepő viselkedést okoz a használata a fejlesztő számára. Emiatt nem egyszerű meghatározni az általa okozott hibákat. Továbbá az automatikus refaktoráló eszközök használatát is megnehezíti a túlzott használatuk.
 
 A következőkben nézzünk meg pár preprocesszor direktívát. Minden direktíva ```#``` jellel kezdődik.
@@ -131,7 +137,7 @@ A következőkben nézzünk meg pár preprocesszor direktívát. Minden direktí
 ```cpp
 #define NUMBER 5
 
-// a #define NUMBER 5 parancs azt jelenti, 
+// a #define NUMBER 5 parancs azt jelenti,
 // hogy minden NUMBER szót ki kell cserélni a fájlban 5-re.
 
 #ifndef NUMBER
@@ -229,6 +235,7 @@ __Megjegyzés__: C-ben a globális konstansok definiálására használták a ma
 
 ### Linkelés
 
+
 Tekintsük az alábbi fordítási egységeket:
 
 ```cpp
@@ -241,9 +248,9 @@ int main() { symbol(); }
 
 Fordítsuk le őket az alábbi sorrendben:
 
->$ clang++ main.cpp
+> $ clang++ main.cpp
 
->$ clang++ symbol.cpp
+> $ clang++ symbol.cpp
 
 __Megjegyzés__: ```clang++``` helyett használhatjuk a ```g++```-t is, ami nem összekeverendő a ```gcc```-vel, ami __C__ fájlok fordítására alkalmas.
 
@@ -261,19 +268,19 @@ int main() { symbol(); }
 
 A fodítás során a linkelés fázisánál kapunk hibát, mert a linker nem fogja megtalálni a ```void symbol()``` függvény definícióját. Ezt úgy tudjuk megoldani, ha a ```main.cpp```-ből és a ```symbol.cpp```-ből először tárgykódot készítünk, majd később összelinkeljük őket. Ekkor a  ```main.cpp```-ben lesz egy hivatkozás a ```void symbol();``` függvényre, és a ```symbol.cpp``` fogja tartalmazni a függvény definícióját.
 
->$ clang++ -c main.cpp
+> $ clang++ -c main.cpp
 
->$ clang++ -c symbol.cpp
+> $ clang++ -c symbol.cpp
 
 A ```-c``` (compile) kapcsoló segítségével jelezzük a fordító számára, hogy még ne linkeljek csak a tárgykódot állítsa elő. Majd a 
 
->$ clang++ main.o symbol.o
+> $ clang++ main.o symbol.o
 
 parancs segítségével az eredményül kapott tárgykódot tudjuk össze linkelni.
 
 Rövidebb, ha egyből a ```.cpp``` fájlokat adjuk meg a fordítónak.
 
->$ clang++ main.cpp symbol.cpp
+> $ clang++ main.cpp symbol.cpp
 
 Egy adott függvényt (objektumot, osztályt) akárhányszor deklarálhatunk, azonban, ha a deklarációk ellentmondanak egymásnak, akkor fordítási hibát kapunk. Definiálni viszont a legtöbb esetben pontosan egyszer szabad. Több definíció, vagy épp a definíció hiánya problémát okozhat. Ezt az elvet szokás __One Definition Rule__-nak vagy röviden __ODR__-nek nevezni.
 
@@ -314,6 +321,7 @@ Hasznos kapcsolók fordításnál:
 
 ### A C++ nyelvi elemei
 
+
 Minden C++ kód tokenekből áll. A token a legkisebb nyelvi egység, ami még értelmes a fordító számára. Tokeneknek az alábbiakat tekntjük:
 
 * __Kulcsszavak__: _int_, _return_
@@ -331,10 +339,12 @@ Minden C++ kód tokenekből áll. A token a legkisebb nyelvi egység, ami még �
 
 ## Viselkedések kategorizálása C++-ban
 
+
 Reménytelen megközelítés lenne a szabványban minden szintaktikusan (nyelvtanilag) helyes kódhoz pontos szemantikát (működést) adni. Ezért a C++ szabvány néhány esetben nem, vagy csak részben definiálja egy adott program működését.
 
 
 ### Nem definiált viselkedés
+
 
 ```cpp
 int main()
@@ -363,6 +373,7 @@ __Megjegyzés__: az a program, amely nem definiált viselkedéseket tartalmaz, _
 
 ### Nem specifikált viselkedés
 
+
 Amennyiben a szabvány definiál néhány lehetséges opciót, de a fordítóra bízza, hogy az melyiket választja, akkor __nem specifikált__ viselkedésről beszélünk. A nem specifikált viselkedés csak akkor probléma, ha a program végeredményét befolyásolhatja a fordtó választása.
 
 ```cpp
@@ -379,10 +390,12 @@ Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik k
 
 ### Implementáció által definiált viselkedés
 
+
 A szabvány nem köti meg, hogy egy ```int``` egy adott platformon mennyi bájtból álljon. Ez állandó, egy adott platformon egy adott fordító mindig ugyanakkorát hoz létre, de platform/fordító váltás esetén ez változhat. Ennek az az oka, hogy különböző platformokon különböző választás eredményez hatékony programokat. Ennek köszönhetően hatékony kódot tud generálni a fordító, viszont a fejlesztő dolga, hogy megbizonyosodjon róla, hogy az adott platformon a primitív típúsok méretei megfelelnek a program által elvárt követelményeknek.
 
 
 # Első C++ program
+
 
 Ezen információk tudatában megnézhetjük az első C++ programunkat. Tekintsük az alábbi kódot. A forrásfájl neve legyen ```main.cpp```:
 
@@ -410,6 +423,7 @@ Az ```iostream``` fejállomány (_header file_ vagy egyszerűen csak _header_) t
 
 ## Mik az előnyei az ```iostream```-nek a ```cstdio```-val szemben C++-ban?
 
+
 Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé teszi a bővíthetőséget és az örökölhetőséget. A ```printf()``` vitathatatlanul jól működik és a ```scanf()``` is működik annak ellenére, hogy nem túl nagy a hibatűrő képessége. Mindazon által mindkettő korlátozzott a C++ I/O-val szemben. Ha szeretnénk összehasonlítani a C++ I/O ```<<``` és ```>>``` operátorai nagyjából megfelelnek a C ```printf()``` és ```scanf()``` függvényeinek. Azonban több előnyük is van ezekkel a függvényekkel szemben:
 
 * __Típus biztosabb__: az ```<iostream>``` esetén az objektumok típusai fordítási időben ismertek a fordító számára. Ezzel szemben a ```<cstdio>``` ```%``` mezőket használ a típusok dinamikus meghatározásához.
@@ -419,6 +433,7 @@ Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé 
 
 
 ## Kiírás és beolvasás, C vs C++
+
 
 C-ben a kiírásra és beolvasásra elsősorban a ```printf()``` és ```scanf()``` függvényeket használjuk. Ezkellel két fő probléma lehet:
 
@@ -448,6 +463,7 @@ Mindezek az előnyök eltörpülnek amellett, hogy az ```std::cin``` és az ```s
 
 ## Névterek
 
+
 A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a neveket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
 
 ```cpp
@@ -464,6 +480,7 @@ __FONTOS__: a ```using namespace ...;``` SOHA nem kerülhet header állományba.
  
 
 ### Névtelen névtér (_unnamed namespace_) 
+
 
 Létezik úgynevezett __névtelen névtér__ (_unnamed namespace_), amit arra használhatunk, hogy ne szemeteljük tele a globális névteret, ezáltal megvédjük magunkat a többértelműségtől.
 A modul szintű hatókörben a névtelen névterekben hozhatunk létre olyan változókat és függvényeket, amelyek a fordítási egységen kívül nem érhetőek el. Azonban a modulon belül minden korlátozás nélkül felhasználhatók a __hatókör operátor__ (_scope operátor_) ```::``` segítségével.
@@ -483,6 +500,7 @@ int main(int argc, const char* argv[])
 
 
 ### Egymásba ágyazott névterek (_nested namespaces_)
+
 
 A programozónak lehetősége van arra, hogy a névterekben újabb névtereket hozzon létre, vagyis egymásba ágyazza őket. Ezzel a megoldással a globális neveket is strukturált rendszerbe tudjuk szervezni.
 
@@ -506,6 +524,7 @@ A két kódrészlet funkcionalitásban teljesen megegyezik.
 
 
 ## A ```main()``` függvény
+
 
 Ez a program __belépési pontja__ (_entry point_). Minden C++ nyelven írt programnak tartalmazni kell __PONTOSAN__ egyet. Ez az egyetlen olyan függvény, amit nem lehet túlterhelni. Paraméterei küzöl az ```argc``` a parancssori paraméterek számát adja meg, míg az ```argv[]``` egy nullpointerrel terminált, karaktermutatókat tartalmazó tömb, amelyben a parancssori paraméterek vannak C-stílusú string-ként. A C++-ban a tömböket 0-tól indexeljük, így az ```argv[]``` nulladik eleme a futtatható állomány neve, első eleme pedig az első paraméter.
 
@@ -558,6 +577,7 @@ int foo() // deklaráció és definíció
 
 ## Globális változók
 
+
 Tényleg igaz, hogy a program futása a ```main()``` függvény végrehajtásával kezdődik?
 
 ```cpp
@@ -574,6 +594,7 @@ A program végrehajtásánál az első lépés az úgynevezett __globális vált
 
 
 ### Globális változók definíciója és deklarációja
+
 
 Globális változókat úgy tudunk létrehozni, hogy közvetlenül egy névtéren belül definiáljuk őket.
 
@@ -606,6 +627,7 @@ __Megjegyzés__: a globális változók deklarációit érdemes külön header f
 
 ### Globális változók inicilizációja
 
+
 Amennyiben egy globális ```int```-et hozunk létre és nem adunk neki kezdőértéket, annak értéke nem definiált lesz (memóriaszemét).
 
 ```cpp
@@ -627,6 +649,7 @@ A 0-ra való inicializálás oka globális változók esetén az, hogy ezt a mod
 
 
 ### Problémák a globális változókkal
+
 
 Vajon a linkelés befolyásolja a program megfigyelhető viselkedését? Tekintsük az alábbi kódot:
 
@@ -651,12 +674,14 @@ __Megjegyzés__: ez a példa nem számít jó kódnak, mert nem specifikált vis
 
 # Hatókör, láthatóság, élettartam
 
+
 __Hatókör__: Deklarációkor a programozó összekapcsol egy entitást (pl. egy változót vagy egy függvényt) egy névvel. A hatókör alatt a forrásszöveg azt a részét értjük, amíg ez az összekapcsolás érvényben van. Ez általában annak a blokknak a végéig tart, amely tartalmazza az adott deklarációt
 
 __Láthatóság__: a hatókör részhalmaza, a programszöveg azon része, ahol a deklarált névhez a megadott entitás tartozik. Mivel az egymásba ágyazott blokkokban egy korábban már bevezetett nevet más entitáshoz kapcsolhatunk, ezért ilyenkor a külső blokkban deklarált entitás a nevével már nem elérhető. Ezt nevezzük a láthatóság elfedésének.
 
 
 ## Automatikus, statikus és dinamikus élettartam
+
 
 __Automatikus élettartam__: a blokkokban deklarált lokális változók automatikus élettartamúak, ami azt jelenti, hogy a deklarációtól a tartalmazó blokk végéig tart az élettartamuk, ami jelen esetben  egybeesik a hatókörrel. A helyfoglalás számukra a végrehajtási verem aktuális aktivációs rekordjában történik meg.
 
@@ -723,6 +748,7 @@ Ilyen esetekben, ha azonos nevű változó szerepel a globális névtérben és 
 
 ## Jobb- és balérték
 
+
 A láthatóság és élettartam fogalmával szoros összeköttetésben áll a __jobb- és balérték__ fogalma. Egy objektumot __balérték__-nek (_left value_, röviden _lvalue_) nevezzük, ha a címképző operátorral (```&```) le tudjuk kérni a memóriabeli címét, __jobbérték__-nek (_right value_, röviden _rvalue_) ha nem. A jobbértékek többnyire ideiglenes objektumok, mint pl. az érték szerint visszatérő függvény visszatérési értéke és a literálok. Lévén ezek az objektumok csak ideiglenesen szerepelnek a memóriában ezért hiba lenne a memóriacímükre hivatkozni, így a fordító nem is engedi. Példaképp:
 
 ```cpp
@@ -732,13 +758,14 @@ int main()
   &p; // ok, p mutató memóriacímét tartalmazza
   &r; // ok, r memóriacímét tartalmazza
   &1; // nem ok, 1 jobbérték
-  &"Hello"; //nem ok, a "Hello" jobbérték
+  &"Hello"; // nem ok, a "Hello" jobbérték
   5 = r; // nem ok, jobbértéknek nem lehet értéket adni
 }
 ```
 
 
 # A C++ memóriamodellje
+
 
 A C++ szabvány több memóriatípust különít el. Mégpedig:
 
@@ -748,6 +775,7 @@ A C++ szabvány több memóriatípust különít el. Mégpedig:
 
 
 ## Stack
+
 
 A __stacken__ létrehozott változókat szokás __automatikus változóknak__ (_automatic variable_) is hívni. A stacken létrehozott változók kezelése nagyon kényelmes, mert jól látható, mikor jönnek létre, illetve mikor semmisülnek meg. Ez az alapértelmezett tárolási osztály lokális változók esetén. Az itt létrehozott változók élettartama a definíciójuktól az adott blokk végéig tart. 
 
@@ -767,6 +795,7 @@ __Megjegyzés__: A stacken létrehozott változók elérése gyorsabb, mint a he
 
 
 ## Globális / statikus tárhely
+
 
 Tekintsük az alábbi kódot:
 
@@ -800,7 +829,8 @@ Abban az esetben, ha azt szeretnénk, hogy ```x``` ne semmisüljön meg a blokk 
 
 ## Heap / free store
 
-A __heapen__ létrehozott változókat __dinamikus változóknak__ (_dynamic variable_) is szokás nevezni. A heap segítségével nagy szabadságra tehetünk szert, de ez a szaabdság nagy felelősséggel is jár.
+
+A __heapen__ létrehozott változókat __dinamikus változóknak__ (_dynamic variable_) is szokás nevezni. A heap segítségével nagy szabadságra tehetünk szert, de ez a szababdság nagy felelősséggel is jár.
 
 ```cpp
 int main()
@@ -827,7 +857,62 @@ még lassabb is, mint a stacknél. Felmerülhet a kérdés, hogy akkor miért is
 Ha meg lehet oldani, hogya stacken tudjunk tárolni valamit, tegyük azt. A stack azonban véges, hamar be tud telni (stack overflow), illetve kötött a változók élettartama. A heap-en e téren sokkal nagyobb a szabadságunk.
 
 
+## A ```new``` és a ```delete``` operátorok
+
+
+A dinamikus változóknak a ```new``` operátorral foglalunk helyet a memóriában, megadva annak típusát.
+
+```cpp
+int* ptr = new int(1);
+```
+
+Dinamikusan lefoglalt változók felszabadításáról a ```delete``` operátor gondoskodik.
+
+```cpp
+delete ptr;
+```
+
+A C-ben megszokott ```malloc()``` és ```free()``` műveletek függvényhívások voltak, ám a C++-ban ezek operátorként vannak megadva. További különbség, hogy a ```malloc()``` függvény visszatérési értéke ```void*``` típusú, azaz tetszőleges memóriaterületre mutathatott. A kapott értéket egy __explicit cast__ segítségével szokás konvertálni. Így azonban lehetőség lenne értelmetlen foglalásokra is, mint pl:
+
+```cpp
+int* p = malloc(sizeof(char));
+```
+
+Mivel a C / C++ szabvány csak annyit követel meg, hogy a ```char``` mérete legalább 8 bit, az ```int``` pedig minimum 16 bit legyen, ezért nincs arra garancia, hogy a hívás után a ```*p``` mutató "elég nagy" memóriaterületre mutat.
+
+C++-al ezzel szemben a ```new``` operátor már típusozott - így az
+
+```cpp
+int* p = new char;
+```
+
+utasítás nem fordul le, mivel a típusok nem egyeznek.
+
+További előnye a ```new``` operátornak, hogy a memória lefoglaláson kívül az adott típus (struktúra / osztály) konstruktorát is meghívja, így egyből inicializálni is lehet az adott értéket. Ezzel párban a ```delete``` operátor a destruktort fogja meghívni az adott objektumon. (Konstruktorról és a destruktorról az osztályoknál lesz bővebben szó.)
+
+Abban az esetben, ha egy _n_ elemű tömbnek szeretnénk dinamikusan helyet foglalni a ```new``` operátorral, jeleznünk kell a fordítónak, mégpedig az ```[]``` operátor segítségével.
+
+```cpp
+int* pArray[] = new int[5];
+```
+
+Ebben az esetben, ha a
+
+```cpp
+delete pArray;
+```
+
+kifejezést használjuk még mindig memóriaszivárgás lesz a programunkban. Miért? Mert a ```pArray``` nevű változó egy mutató, ami a tömb első elemére mutat, így az egyszerű ```delete pArray;``` nem elég az egész tömb törlésére.
+
+__Megoldás__: jelezzük a fordítónak, hogy nem csak egy elemet, hanem egy egész tömböt szeretnénk törölni. Ezt szintén az ```[]``` operátor segítségével tehetjük meg.
+
+```cpp
+delete pArray[];
+```
+
+
 # A ```const``` kulcsszó
+
 
 A C++ lehetőséget ad a programozó számára, hogy olyan értékeket definiáljon, amelyek a program futása során nem változtathatják meg az értéküket. Kvázi egy _read-only_ változókként tekinthetük rájuk. Konstansokat C++-ban a ```const``` kulcsszó segítségével adhatunk meg. 
 
@@ -851,10 +936,11 @@ int main()
 }
 ```
 
-Mivel a konstansok már fodítási időben kirétékelődnek, nem köthetjük futási idejű kiértékeléshez az értéküket. Ha ezt megtehetnénk serülne a __konstans korrektség__, amely kimondja, hogy egy konstans változó értéke nem módosulhat a program végrehajtása alatt.
+Mivel a konstansok már fodítási időben kirétékelődnek, nem köthetjük futási idejű kiértékeléshez az értéküket. Ha ezt megtehetnénk sérülne a __konstans korrektség__, amely kimondja, hogy egy konstans változó értéke nem módosulhat a program végrehajtása alatt.
 
 
 # Mutatók (_pointers_)
+
 
 Olyan nyelvi elemek, melyek egy adott típusú memóriaterületre mutatnak. Segítségükkel anélkül is tudunk hivatkozni egy adott objektumra (nem csak a masolatára!), hogy közvetlenül az objektummal dolgoznánk.
 
@@ -893,7 +979,7 @@ void f(bool i) { std::cout << "bool" << std::endl; }
 
 int main()
 {
-    f(NULL);
+  f(NULL);
 }
 ```
 
@@ -908,7 +994,7 @@ void f(bool i) { std::cout << "bool" << std::endl; }
 
 int main()
 {
-    f(nullptr);
+  f(nullptr);
 }
 ```
 
@@ -918,6 +1004,7 @@ int main()
 
 
 ## Mutatóra mutató mutató
+
 
 ```cpp
 int main()
@@ -946,7 +1033,7 @@ int main()
   int i, j;
   int* p = &i;
   int* const * q = &p;
-  *q = &j; // forditási hiba
+  *q = &j; // fordítási idejű hiba
 }
 ```
 
@@ -965,6 +1052,7 @@ int main()
 
 # Referenciák
 
+
 A referencia egy létező objektum alternatív neve. Definiálásakor meg kell adni azt az objektumot is, amelyet alternatív névvel látunk el. A referencia nem egy változó, mint a mutató, hanem csak egy azonosító, ezért nem is változtatható meg, amíg a referencia létezik mindig ugyan oda referál. Már létrehozásakor értéket kell adnunk neki, ami a program futása során nem változhat. Két leggyakoribb felhasználása:
 
 * függvény bemeneti paraméter
@@ -982,6 +1070,7 @@ int main()
 
 
 # Konstans korrektrég (_const-correctness_)
+
 
 A konstans korrektség egy szabály a C++ nyelvben: ha egy értéket konstansnak jelölünk, azt nem módosíthatjuk a program futása során.
 
@@ -1012,15 +1101,16 @@ Annak függvényében, hogy a ```*``` jobb vagy bal oldalán használjuk a ```co
 
 ## Konstansra mutató mutató
 
+
 Abban az esetben, ha a ```*``` bal oldalán van a ```const``` kulcszsó, akkor __konstansra mutató mutatóról__ beszélünk. Ekkor a mutatón keresztül nem tudjuk módosítani a mutatott értéket, viszont a mutatót magát át tudjuk állítani, hogy egy másik memóriacímre mutasson. Deklarálásakor nem kell kezdőértéket adnunk neki, ilyenkor a fordító automatikusan ```nullptr``` étéket fog adni neki.
 
 ```cpp
 int main()
 {
   // a két változat ugyan azt a viselkedést produkálja, a fordító nem tesz különbséget
-  // aközött, hogy az int*-ot vagy a const kulcsszót írjuk ki előbb
+  // aközött, hogy az int-et vagy a const kulcsszót írjuk ki előbb
   const int* i = nullptr;
-  int* const ii = nullptr;
+  int const* ii = nullptr;
 }
 ```
 
@@ -1028,6 +1118,7 @@ Konstansra mutató mutatóval rátudunk mutatni konstans, illetve nem konstans a
 
 
 ## Konstans mutató
+
 
 Konstans mutatóról abban az esetben beszélünk, amikor a ```const``` kulcsszó a ```*``` karakter jobb oldalán van. Ilyenkor tudjuk módosítani a mutatott értéket a mutatón keresztül, viszont nem tudjuk át állítani a mutatót egy másik memóriacímre. 
 
@@ -1044,6 +1135,7 @@ int main()
 
 ## Konstansra mutató konstans mutató
 
+
 Fennállhat olyan helyzet is, amikor egy mutató lehet egy konstansra mutató konstans mutató is, amin keresztül nem lehet megváltoztatni a mutatott értéket és a mutatót sem lehet máshova átállítani.
 
 ```cpp
@@ -1055,7 +1147,8 @@ int main()
 ```
 
 
-# Tömbök (arrays)
+# Tömbök (_arrays_)
+
 
 A tömb a C++ egy beépített adatszerkezete, mellyel több azonos típusú elemet tárolhatunk és kezelhetünk egységesen. 
 
@@ -1095,13 +1188,434 @@ int main()
 
 Szemmel látható, hogy túl fogunk indexelni, ez pedig nem definiált viselkedéshez vezet. Várhatóan memóriaszemetet fogunk kiolvasni az utolsó elem helyett, de ezt nem tudhatjuk pontosan. Fordítási időben ezt a hibát nem veszi észre a fordító. Mivel több memóriához nyúlunk hozzá, mint amihez kellene, nagyobb az esély arra, hogy futási idejű hibába ütközzünk. A programunk ilyen esetekben __szegmentálási hibával__ (_segmentation fault_) állhat le. Ezen hibák elkerülése érdekében használhatunk __sanitizereket__. Ezek létrehoznak ellenőrzéseket, amik azelőtt észrevesznek bizonyos nem definiált viselkedéseket, mielőtt azok megtörténnének.
 
->$ clang++ main.cpp -fsanitize=address
+__Fontos__: a tömbön való túlindexelés nem definált viselkedés.
+
+> $ clang++ main.cpp -fsanitize=address
 
 A sanitizerek csak abban az esetben találnak meg egy hibát, ha a probléma előfordul (azaz futási időben, nem fordítási időben ellenőriz).
 
 
 ## Tömbök méretének meghatározása
 
+
 Mint azt korábban láthattuk a tömb tiszta adat. A ```sizeof()``` operátor segítségével megtudjuk határozni a méretét. Egy olyan tömbben amelyben _n_ darab _T_ típusú elemet tárolunk a tömb mérete _n * sizeof(T)_. Ezt már csak le kellene osztanunk _sizeof(T)_-vel, azaz a tömbben tárol típus méretével tehát a képlet: ```sizeof(array) / sizeof(T)```. Azonban nem biztos, hogy tudjuk, hogy milyen elemek vannak az ```array``` tömbben, így kicsit generikusabban megfogalmazva az előző képletet a _sizeof(T)_ helyett osztjunk le a tömb első elemének méretével, _sizeof(array[0])_. Ezt megtehetjük, mert tudjuk, hogy a tömb azonos típusú elemeket tartalmaz. Tehát a helyes képlet a következő:
 
 ```sizeof(array) / sizeof(array[0]);```
+
+
+## Tömb elemeinek elérése
+
+
+Egy tömb adott elemére többféle módon is hivatkozhatunk:
+
+```*(p+3)``` == ```*(3+p)``` == ```p[3]``` == ```3[p]```
+
+Ahhoz, hogy megértsük a fentebb látható egyenlősséget tudni kell, hogy a tömbök nevei C++-ban konvertálódnak a tömb első elemére mutató mutatóra és, mivel - ahogy az fentebb említettük - a tömbök sorfolytonosan helyezkednek el a memóriában ezért tudunk a ```+``` operátor segítségével ugrálni az adattagjaikon.
+
+__Megjegyzés__: a fentebb látható egyenlősséget nevezzük __pointer aritmetikának__.
+
+Tekintsük az alábbi két dimenziós tömböt:
+
+```cpp
+int main()
+{
+  int t[][3] = {{1,2,3}, {4,5,6}};
+}
+```
+
+Az első ```[]``` jelek között nincs megadva méret, mert a fordító az inicializáció alapján meg tudja állapítani. A második dimenzió méretének megadása kötelező! A pointer aritmetika ekvivalencia mátrixok esetén is érvényes, azaz fennállnak az alábbi egyenlősségek:
+
+```t[1][]``` == ```*(*(t+1)+0)``` == ```*(1[t]+0)``` == ```0[1[t]]``` == ```0[*(t+1)]``` == ```*(t+1)[0]``` == ```1[t][0]```
+
+
+# Paraméter átadási mód, visszatérési érték
+
+
+A C++ három különféle paraméter átadási módot különböztet meg:
+
+* __érték szerint__ (_pass by value_)
+* __referencia szerint__ (_pass by reference_)
+* __mutató szerint__ (_pass by pointer_)
+
+Az értékek átadásának demonstrálásához a ```swap()``` függvényt fogjuk használni.
+
+
+## Érték szerinti paraméter átvétel
+
+
+C++-ban ez az alapértelmezett paraméterátadási mód. Tekintsük a következő kódot:
+
+```cpp
+#include <iostream>
+
+void swapWrong(int a, int b)
+{
+  int tmp = a;
+  a = b;
+  b = tmp;
+}
+
+int main()
+{
+  int c = 1, d = 2;
+  std::cout << c << ", " << d << std::endl;
+  swapWrong(c, d);
+  std::cout << c << ", " << d << std::endl;
+}
+```
+
+Megfigyelhető, hogy az első kiírás eredménye ugyanaz, mint a második kiírásé. Ez azonban egy teljesen jól definiált viselkedés. Ennek oka nem más mint, hogy __érték__ szerint vettük át a paramétereket. Képzeljük el, hogy a stackbe a program berakja a ```c``` és ```d``` változókat. Ezután meghívja a ```swapWrong()``` függvényt, melyben létrehozott ```a``` és ```b``` paraméterek értékét megcseréli, de a függvényhívás után ezeket ki is törli a stackből. Az eredeti ```c``` és ```d``` vltozók értéke nem változott a függvényhívás során.
+
+A stack tartalma érték szerinti paraméterátadás esetén.
+
+![passByValueStack](img/passByValueStack.png)
+
+
+## Mutató szerinti paraméter átadás
+
+
+Írjuk meg helyesen a ```swap()``` függvényt.
+
+```cpp
+#include <iostream>
+
+void swapPointer(int* a, int* b)
+{
+  int tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+
+int main()
+{
+  int c = 1, d = 2;
+  std::cout << c << ", " << d << std::endl;
+  swapPointer(&c, &d);
+  std::cout << c << ", " << d << std::endl;
+}
+```
+
+Amennyiben ezt a függvényt hívjuk meg, valóban megcserélődik a két változó értéke. De ehhez fontos, hogy ne ```swapPointer(c, d)```-t írjunk, az ugyanis fordítási idejű hibához vezetne, hiszen ```c``` és ```d``` változók típusa ```int``` és nem ```int*```, márpedig mi mutatót adtunk meg bemenetként, amiben pedig referenciákat tudunk tárolni, így a helyes választás a ```&c``` és ```&d``` változók referenciája lesz.
+
+A stack tartalma mutató szerinti paraméterátadás esetén.
+
+![passByPointerStack](img/passByPointerStack.png)
+
+```cpp
+#include <iostream>
+
+void swapPointerWRONG(int* a, int* b)
+{
+  int *tmp = a;
+  a = b;
+  b = tmp;
+}
+
+int main()
+{
+  int c = 1, d = 2;
+  std::cout << c << ", " << d << std::endl;
+  swapPointerWRONG(&c, &d);
+  std::cout << c << ", " << d << std::endl;
+}
+```
+
+Ebben a példában nem a mutatók által mutatott értéket, hanem magukat a mutatókat cseréljük meg. Itt az fog történni, hogy a függvény belsejében ```a``` és ```b``` mutató másra fog mutatni. A mutatott értékek viszont nem változnak.
+
+A stack tartalma rossz mutató állítása esetén.
+
+![passbyPointerWrongSwapStack](img/passByPointerWrongSwapStack.png)
+
+
+## Referencia szerinti paraméter átadás
+
+
+Az előző példában láthattuk, hogy nem változtattuk meg, hogy mire mutassanak a mutatók, így azokat akár konstansként is definiálhattuk volna. Emlékezzünk vissza a konstans mutatók módosíthatják a mutatott értéket, de nem lehet őket átállítani egy másik memória címre.
+
+```cpp
+void swap(int* const a, int* const b)
+{
+  // ...
+}
+```
+
+Egy kis szintaktikai cukorkával megúszhatjuk azt, hogy folyton kiírjuk a ```* const```-ot, mivel nem akarjuk megváltoztatni, hogy ilyen esetben a mutató hova mutasson. Erre való a referencia szerinti paraméter átadás. A referencia hasonlóan működik, mintha egy konstans mutató lenne, csak nem lehet sehova se mutató referenciát létrehozni, azaz nullreferenciát.
+
+```cpp
+#include <iostream>
+
+void swapReference(int& a, int& b)
+{
+  int tmp = a;
+  a = b;
+  b = tmp;
+}
+
+int main()
+{
+  int c = 1, d = 2;
+  std::cout << c << ", " << d << std::endl;
+  swapReference(c, d);
+  std::cout << c << ", " << d << std::endl;
+}
+```
+
+Vegyük észre, hogy ilyenkor nem kell jelezni, hogy memóriacímet akarunk átadni, ezért ```swapReference(c, d)```-t kell írnunk. Hátulütője a dolognak, hogy ha más valaki által írt függvényt akarunk használni, aminek nem ismerjük a szignatúráját nem tudjuk explicit megállapítani a hívásból, hogy az átadott paraméterek refenrecia vagy érték szerint lesznek átadca. C#-ban ennek a jelzésére van a ```ref``` kulcsszó.
+
+__Megjegyzés__: bár referencia szerinti értékátadásnak nevezzük, de itt is történik másolás, a memóriacímet itt is érték szerint vesszük át.
+
+__Ökölszabály__: ahol lehet ott használjunk referenciákat, ahol muszáj ott mutatót.
+
+
+## Paraméter átadási módok használata
+
+
+__érték szerinti__: ```f(int x)```
+
+* a függvény nem módosíthatja a paramétert
+* használd ezt, ha __könnyű másolni__
+* Ökölszabály: ha a paraméter mérete legfeljebb 2- vagy 3 szó (word), azaz 32-bit, akkor érdemes érték szerint átadni
+	* egyszerű primitív típusok esetén ajánlott, mint pl.: ```int```, ```double```, ```char```, ```bool```, stb. 
+	* Komplex típusok, saját osztályok, ```std::string``` és a különböző STL konténerek nem ajánlottak (továbbiakban ezeket a példákban T -vel jelöljük)
+
+__mutató szerinti__: ```f(T* x)```
+
+* a függvény __módosíthatja a paramétert__,
+* használd ezt, __ha költséges a másolás__,
+* továbbá ha a __NULL lehet valid érték__
+
+__konstans mutató szerinti__: ```f(const * T x)```
+
+* a függvény __nem módosíthatja a mutató által mutatott értéket__,
+* használd ezt, __ha költséges a másolás__,
+* továbbá ha a __NULL lehet valid érték__
+
+__referencia szerinti__: ```f(T& x)```
+
+* a függvény __módosíthatja a paramétert__
+* használd ezt, ha __költséges a másolás__,
+* továbbá ha a __NULL NEM lehet valid érték__
+
+__konstans referencia szerinti__: ```f(const T& x)```
+
+* függvény __nem módosíthatja a paramétert,__
+* használd ezt, ha __költséges a másolás__
+* továbbá ha a __NULL NEM lehet valid érték__
+	* próbáljuk mindig ezt a változatot használni saját osztályokhoz, ```std::string```-hez és STL adatszerkezetekhez, ha paramétert nem akarjuk módosítani
+		* copy konstruktorok, copy assignmentek paraméterei
+
+
+# Visszatérési érték problémája
+
+
+Nem primitív típusoknál gyakran megeshet, hogy egy adott típushoz tartozó mutató mérete kisebb, mint magának az objektumé, így megérheti mindentől függetlenül a paramétert referencia szerint átvenni. Ezen felbátorodva mondhatnánk azt is, hogy referenciával is térjünk vissza.
+
+```cpp
+#include <iostream>
+
+std::string& concat(std::string& str_)
+{
+  str_ += " world";
+  return str_;
+}
+
+int main()
+{
+  std::string str = "Hello ";
+  std::cout << concat(str) << std::endl;
+}
+```
+
+> kimenet: "Hello world"
+
+Olyan típusoknál amelyeknél nagyon költésges a másolás (pl. ```std::string```), célszerű referenciával átvenni és visszaadni a változókat. Primitív típusoknál nem érdemes referenciával átvenni adattagokat.
+
+Tekintsük az alábbi programot:
+
+```cpp
+#include <iostream>
+
+std::string& concat(std::string& str_)
+{
+  std::string str = str_ + " world";
+  return str;
+}
+
+int main()
+{
+  std::string str = "Hello ";
+  std::cout << concat(str) << std::endl;
+}
+```
+
+Mi ezzel a programmal a baj?
+
+Ha jobban megnézzük az ```add()``` függvény az ```str``` lokális változó referenciájával tér vissza. Ám, mint azt már tudjuk az ```str``` számára a stacken került foglalásra a memóriaterület, így függvény végén fel fog szabadulni, azaz törlődni fog a stackről. Így, amikor visszaadjuk a referenciáját, egy törölt változó referenciáját fogjuk visszaadni, ami valami memóriaszemét lesz. Ilyen esetekben a fordító egy figyelmeztetést ad: olyan objektumra hivatkozó referenciát adunk vissza, amely ```add()```-on belül lokális. Ez azt jelenti, hogy amint a vezérlés visszatér a ```main()``` függvényhez az ```str``` megsemmisül, és a ```main()``` függvény pedig az ```str```-hez tartozó címen lévő értéket próbálná meg lemásolni. Mivel viszont az ```str``` már ezen a ponton megsemmisült, semmi nem garantálja, hogy azon a memóriaterületen ne követekezett volna be módosítás.
+
+Az olyan memóriaterületre való hivatkozás, mely nincs a program számára lefoglalva, __nem definiált viselkedést__ eredményez.
+
+__Megjegyzés__: mutatóknál ugyan ez a probléma áll fent.
+
+
+# Függvény átadása paraméterként
+
+
+C++-ban lehetőségünk van arra is, hogy függvényeket adjunk át paraméterként. Ezeket az objektumokat __függvény mutatóknak__ (_fucntion pointer_) nevezzük. A függvénymutató egy függvény memóriacímét tároló változó, melyen a függvényhívás művelete (```()```) hajtható végre. Mikor lehetnek hasznosak? Nos, előfordulhat az a helyzet, hogy egy osztály ugyanazt a hívást sokféle objektum felé meg szeretné tenni, ám ezeknek __nincs közös őse__. Annak értekében, hogy csökkentsük a függőségeket az osztályok között, nem hozunk létre egy közös őst, hanem függvénymutatókat használunk az osztályban.
+
+```cpp
+#include <iostream>
+
+int multiply(int a, int b)
+{
+  return a * b;
+}
+
+void helper(int a, int b, int(*fptr)(int, int))
+{
+  std::cout << fptr(a,b) << std::endl;
+}
+
+int main()
+{
+  helper(1, 5, &multiply);
+}
+```
+
+> kimenet: 5
+
+Itt a ```helper()``` utolsó paraméterként egy olyan paramétert vár, amely igazából egy függvény, amely ```int```-et ad vissza, és bemeneti paraméterül két ```int```-et vár. Az ```fptr``` egy olyan függvényre mutató mutató, melynek két ```int``` paramétere van és a visszatérési értek is ```int```.
+
+Egy függvény átadásakor csak függvénypointert tudunk átadni. Egy függvénypointeren a függvény hívása az egyetlen értelemes művelet. Így az ```&``` jel elhagyható a függvény hívásakor és az ```fptr``` elől is elhagyható a ```*``` karakter a paramétereknél.
+
+```cpp
+// ...
+void helper(int a, int b, int fptr(int, int))
+{
+  // ...
+}
+
+int main()
+{
+  helper(1, 5, multiply);
+}
+```
+
+> kimenet: 5
+
+Függvény mutatókat értékül adhatunk változóknak is.
+
+```cpp
+
+int multiply (int a, int b)
+{
+  return a * b;
+}
+
+int main()
+{
+  void (*mult)(int, int) = multiply;
+  mult(1,2);
+}
+```
+
+__Megjegyzés__: C++11 óta a ```void (*mult)(int, int)``` helyett használható az ```auto``` kulcsszó, amely fordítási időben végez típus kikövetkeztetést (_type deduction_), annak alapján mivel példányosítottuk az adott változót.
+
+Az ```auto```-tól egy régebbi megoldás a ```typedef``` használata.
+
+```cpp
+// ...
+int main()
+{
+  typedef void(*Multiply)(int, int);
+
+  Multiply mult = multiply;
+  mult(1,2);
+}
+```
+
+A ```typedef``` helyett egy modernebb nyelvi eszköz C++11 óta a ```using``` kulcsszó. Az előző programot ennek a segítségével a következőképpen lehet leírni:
+
+```cpp
+// ...
+int main()
+{
+  using Multiply = void(*)(int, int);
+
+  Multiply mult = multiply;
+  mult(1,2);
+}
+```
+
+Olvashatóbb kódot eredményez és template-ekkel is jobban használható.
+
+
+# Tömb, mint függvény paraméter
+
+
+Próbáljunk meg egy tömböt érték szerint átadni egy függvénynek.
+
+```cpp
+#include <iostream>
+
+void f(int arr[])
+{
+  std::cout << sizeof(arr) << std::endl;
+}
+
+int main()
+{
+  int array[] = {1,2,3,4,5};
+  std::cout << sizeof(array) << std::endl;
+  f(array);
+}
+```
+
+> kimenet: 20 8 (implementáció függő)
+
+Amikor érték szerint próbálunk meg átadni egy tömböt, az átkonvertálódik a tömb első elemére mutató mutatóra. Emlékezzünk a pointer aritmetikánál tanultakra.
+
+Hiába is próbálnánk megadni méretet a függvény bemeneti paraméterében
+
+```cpp
+void f(int arr[8]) { std::cout << sizeof(arr) << std::endl; }
+```
+
+a kimenet akkor is egy mutató méretét fogja tartalmazni. Annak oka, hogy ez így működik visszanyúlik a C-vel való kompatibilitáshoz.
+
+__Megjegyzés__: a szabvány szerint tömböt értékül adni nem is szabad.
+
+Korábban már megismerkedtünk egy módszerrel, amely segítségével megtudjuk állapítani egy tömb méretét, elemszámát.
+
+```cpp
+#include <iostream>
+
+void f(int arr[], size_t arrSize) // arrSize-ban tároljuk a tömb méretét
+{
+  std::cout << sizeof(arr) << std::endl;
+}
+
+int main()
+{
+  int array[] = {1,2,3,4,5};
+  std::cout << sizeof(array) << std::endl;
+  f(array, sizeof(array) / sizeof(array[0]));
+}
+```
+
+__Megjegyzés__: Amennyiben C++11-ben programozunk, érdemes az ```std::array```-t használni, ami rendelkezik a tömb tulajdonságaival, viszont nem tud pointerré konvertálódni és mindig tudja a méretét.
+
+Ha szeretnénk egy tömböt egy darab paraméterként átadni, megpróbálhatunk egy tömbre mutató mutatót létrehozni. Azonban figyelni kell a szintaktikára, ha ```int* t[5]```-t írunk, egy öt elemű ```int```-re mutató mutatókat tároló tömböt kapunk.
+
+Ha tömbre mutató mutatót szeretnénk, akkor a következőt írjuk:
+
+```cpp
+void f(int (*arr)[5]) { std::cout << sizeof(arr) << std::endl; }
+```
+
+Azonban ez még mindig egy mutató méretét fogja kiírni, mert az ```arr``` az egy sima mutató! Ahhoz, hogy megkapjuk, mire mutat, dereferálnunk kell, így a ```sizeof``` paraméterének ```*arr```-t kell megadni, ha a tömb méretére vagyunk kíváncsiak. Ha eltérő méretű tömböt próbálunk meg átadni, akkor nem fordul le a kód, mert nem tud egy 5 elemű tömbre mutató mutatóra konvertálódni például egy 6 elemű tömb.
+
+Ahhoz, hogy egy olyan függvényt írjunk, ami minden méretű tömböt elfogad paraméterül, a legegyszerűbb megoldás, ha hagyjuk, hogy a tömb átkonvertálódjon egy első elemre mutató mutatóra, és átadjuk külön paraméterben a tömb méretét, ahogy azt fentebb tettük.
+
+A tömbök átvétele paraméterként azért ilyen körülményes, mert egy tömbnek a méretét fordítási időben ismernünk kell. Ha változó méretű tömböt várnánk paraméterül, az szembemenne ezzel a követelménnyel.
+
+Könnyű azt hinni (_hibásan_), hogy a mutatók ekvivalensek a tömbökkel. A tömb típusa tartalmazza azt az információt, hogy hány elemű a tömb. Egy mutató típusa csak azt az információt tartalmazza, hogy a mutatott elem mekkora. Számos más különbség is van. A tévhit oka az, hogy tömb könnyen konvertálódik első elemre mutató mutatóra.
