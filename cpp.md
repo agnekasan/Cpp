@@ -1225,7 +1225,7 @@ int main()
 
 Az első ```[]``` jelek között nincs megadva méret, mert a fordító az inicializáció alapján meg tudja állapítani. A második dimenzió méretének megadása kötelező! A pointer aritmetika ekvivalencia mátrixok esetén is érvényes, azaz fennállnak az alábbi egyenlősségek:
 
-```t[1][]``` == ```*(*(t+1)+0)``` == ```*(1[t]+0)``` == ```0[1[t]]``` == ```0[*(t+1)]``` == ```*(t+1)[0]``` == ```1[t][0]```
+```t[1][0]``` == ```*(*(t+1)+0)``` == ```*(1[t]+0)``` == ```0[1[t]]``` == ```0[*(t+1)]``` == ```*(t+1)[0]``` == ```1[t][0]```
 
 
 # Paraméter átadási mód, visszatérési érték
