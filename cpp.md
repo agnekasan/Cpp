@@ -140,7 +140,7 @@ A következőkben nézzünk meg pár preprocesszor direktívát. Minden direktí
 // a #define NUMBER 5 parancs azt jelenti,
 // hogy minden NUMBER szót ki kell cserélni a fájlban 5-re.
 
-#ifndef NUMBER
+#ifdef NUMBER
   std::cout << "Is defined";
 #else
   std::cout << "Not defined";
@@ -175,7 +175,7 @@ int main()
 }
 ```
 
-Látható, hogy a preprocesszort kódrészletek kivágására is lehet használni. Felmerülhet a kérdés, hogy ha az eredeti forrásszövegből a preprocesszor kivág, illetve beilleszt részleteket, akkor a fordító honnan tudja, hogy a hiba jelentésekor melyik sorra jelezze a hibát? Hiszen az előfeldolgozás előtti és utáni sorszámok egymáshoz képest eltérnek. Ennek a problémának a kiküszöbölése érdekében a preprocesszpr beszúr sorokat a fordító számára, amik hordozzák azt az információt, hogy a feldolgozás előtt az adott sor melyik fájl hányadik sorában volt megtalálható. 
+Látható, hogy a preprocesszort kódrészletek kivágására is lehet használni. Felmerülhet a kérdés, hogy ha az eredeti forrásszövegből a preprocesszor kivág, illetve beilleszt részleteket, akkor a fordító honnan tudja, hogy a hiba jelentésekor melyik sorra jelezze a hibát? Hiszen az előfeldolgozás előtti és utáni sorszámok egymáshoz képest eltérnek. Ennek a problémának a kiküszöbölése érdekében a preprocesszor beszúr sorokat a fordító számára, amik hordozzák azt az információt, hogy a feldolgozás előtt az adott sor melyik fájl hányadik sorában volt megtalálható. 
 
 További indok a preprocesszor direktívák kerülésére, hogy gyakran nem azt a viselkedést produkálják amire számítunk. 
 
@@ -358,7 +358,7 @@ Fordítás és futtatás után különböző fordítókkal különböző eredmé
 
 A C++-ban vannak úgynevezett __szekvenciapontok__. A szabvány annyit mond ki, hogy a szekvenciapot előtti kód hamarabb kerül kiértékelésre, mint az utána levő. Mivel itt az ```i``` értékadása után és csak az ```std::endl``` után van szekvenciapont, így az, hogy milyen sorrendben történjen a kettő közötti kifejezés részkifejezéseinek a kiértékelése,a fordítóra van bízva.
 
-A C++-ban nem meghatározott, hogy két szekvenciapont között mi a kifejezések és részkifejezések kiértékelésének a sorrendje. Az adatfüggőségek azonban definiálnak egy sorrenet.
+A C++-ban nem meghatározott, hogy két szekvenciapont között mi a kifejezések és részkifejezések kiértékelésének a sorrendje. Az adatfüggőségek azonban definiálnak egy sorrendet.
 
 ```cpp
 int main() { std::cout << f(); }
@@ -374,16 +374,18 @@ __Megjegyzés__: az a program, amely nem definiált viselkedéseket tartalmaz, _
 ### Nem specifikált viselkedés
 
 
-Amennyiben a szabvány definiál néhány lehetséges opciót, de a fordítóra bízza, hogy az melyiket választja, akkor __nem specifikált__ viselkedésről beszélünk. A nem specifikált viselkedés csak akkor probléma, ha a program végeredményét befolyásolhatja a fordtó választása.
+Amennyiben a szabvány definiál néhány lehetséges opciót, de a fordítóra bízza, hogy az melyiket választja, akkor __nem specifikált__ viselkedésről beszélünk. A nem specifikált viselkedés csak akkor probléma, ha a program végeredményét befolyásolhatja a forídtó választása.
 
 ```cpp
 int main()
 {
   int i = 0;
   int j = 0;
-  std::cout << ++i << j++ << std::endl; // 11
+  std::cout << ++i << ++j << std::endl;
 }
 ```
+
+> kimenet: 11
 
 Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik ki előbb (_nem specifikált_), azt biztosan tudjuk, hogy 11-et fog kiírni (a program végeredménye _jól definiált_).
 
@@ -391,7 +393,7 @@ Bár azt továbbra se tudjuk, hogy a ```++i``` vagy a ```++j``` értékelődik k
 ### Implementáció által definiált viselkedés
 
 
-A szabvány nem köti meg, hogy egy ```int``` egy adott platformon mennyi bájtból álljon. Ez állandó, egy adott platformon egy adott fordító mindig ugyanakkorát hoz létre, de platform/fordító váltás esetén ez változhat. Ennek az az oka, hogy különböző platformokon különböző választás eredményez hatékony programokat. Ennek köszönhetően hatékony kódot tud generálni a fordító, viszont a fejlesztő dolga, hogy megbizonyosodjon róla, hogy az adott platformon a primitív típúsok méretei megfelelnek a program által elvárt követelményeknek.
+A szabvány nem köti meg, hogy egy ```int``` egy adott platformon mennyi bájtból álljon. Ez állandó, egy adott platformon egy adott fordító mindig ugyanakkorát hoz létre, de platform/fordító váltás esetén ez változhat. Ennek az az oka, hogy különböző platformokon különböző választás eredményez hatékony programokat. Ennek köszönhetően hatékony kódot tud generálni a fordító, viszont a fejlesztő dolga, hogy megbizonyosodjon róla, hogy az adott platformon a primitív típusok méretei megfelelnek a program által elvárt követelményeknek.
 
 
 # Első C++ program
@@ -435,7 +437,7 @@ Típusbiztonságot növel, csökkenti a hiba lehetőségek számát, lehetővé 
 ## Kiírás és beolvasás, C vs C++
 
 
-C-ben a kiírásra és beolvasásra elsősorban a ```printf()``` és ```scanf()``` függvényeket használjuk. Ezkellel két fő probléma lehet:
+C-ben a kiírásra és beolvasásra elsősorban a ```printf()``` és ```scanf()``` függvényeket használjuk. Ezekkel két fő probléma lehet:
 
 * nincs típus ellenőrzés
 * nem tudjuk megtanítani, hogyan kell a felhasználók által definiált típusokat kiírni illetve beolvasni.
@@ -526,7 +528,7 @@ A két kódrészlet funkcionalitásban teljesen megegyezik.
 ## A ```main()``` függvény
 
 
-Ez a program __belépési pontja__ (_entry point_). Minden C++ nyelven írt programnak tartalmazni kell __PONTOSAN__ egyet. Ez az egyetlen olyan függvény, amit nem lehet túlterhelni. Paraméterei küzöl az ```argc``` a parancssori paraméterek számát adja meg, míg az ```argv[]``` egy nullpointerrel terminált, karaktermutatókat tartalmazó tömb, amelyben a parancssori paraméterek vannak C-stílusú string-ként. A C++-ban a tömböket 0-tól indexeljük, így az ```argv[]``` nulladik eleme a futtatható állomány neve, első eleme pedig az első paraméter.
+Ez a program __belépési pontja__ (_entry point_). Minden C++ nyelven írt programnak tartalmazni kell __PONTOSAN__ egyet. Ez az egyetlen olyan függvény, amit nem lehet túlterhelni. Paraméterei közül az ```argc``` a parancssori paraméterek számát adja meg, míg az ```argv[]``` egy nullpointerrel terminált, karaktermutatókat tartalmazó tömb, amelyben a parancssori paraméterek vannak C-stílusú string-ként. A C++-ban a tömböket 0-tól indexeljük, így az ```argv[]``` nulladik eleme a futtatható állomány neve, első eleme pedig az első paraméter.
 
 ```./program first second (vagy program.exe first second)```
 
@@ -538,8 +540,8 @@ Ez a program __belépési pontja__ (_entry point_). Minden C++ nyelven írt prog
 
 A két kapcsos zárójel (```{ }```) közti részt blokknak nevezzük. A ```cout``` a C++ standard kimenete. Az ```endl``` pedig beilleszt egy newline karaktert a kiírandó sor végére. Felmerülhet a kérdés, hogy mi a különbség az ```endl``` és a ```\n``` között? Nos,
 
-* a ```\n``` csak egy string aminek a hossza egy és ez adódik hozzá azt ```std::out```-hoz.
-* az ```std::endl``` ezzel szemben egy objektum, ami a newline karakter hozzáadásához vezet ÉS ezek után flush-olja az ```std::out``` buffert. Ezért ez több számítással jár. Az ```std::endl``` meghívja az ```os.put(os.widen('\n'))``` függvényt, majd ezt követően az ```os.flush()``` függvényt.
+* a ```\n``` csak egy string aminek a hossza egy és ez adódik hozzá az ```std::cout```-hoz.
+* az ```std::endl``` ezzel szemben egy objektum, ami a newline karakter hozzáadásához vezet ÉS ezek után flush-olja az ```std::cout``` buffert. Ezért ez több számítással jár. Az ```std::endl``` meghívja az ```os.put(os.widen('\n'))``` függvényt, majd ezt követően az ```os.flush()``` függvényt.
 
 A ```return``` kulcsszó visszaadja a vezérlést az őt hívó függvénynek, jelen esetben ez a program befejezését jelenti, ezért az operációs rendszernek. A ```return``` mögé írt szám visszatérési értéke 0. Ez általában azt jelenti, hogy a program rendben lefutott. A ```main()```-ben ez nem kötelező, ha elhagyjuk, akkor automatikusan 0-t ad vissza, továbbá nem muszáj kiírni az ```int argc, const char* argv[]``` bemeneti paramétereket sem. A fordító ezeket automatikusan legenerálja. Ezért a következő program ekvivalens az előzőkkel:
 
@@ -612,7 +614,7 @@ int x;
 void f() { x = 0; }
 ```
 
-Abban az esetben, ha a ```main.cpp```-t és az ```other.cpp```-t együtt fordítjuk, fordítási hibát kapunk, ugyanis megsértettük az __ODR__-t, hiszen ```x``` kétszer van definiálva. Ezt úgy tudjuk megoldani, ha forward deklarájuk ```x```-et az ```extern``` kulcsszó segítségével.
+Abban az esetben, ha a ```main.cpp```-t és az ```other.cpp```-t együtt fordítjuk, fordítási hibát kapunk, ugyanis megsértettük az __ODR__-t (_One Definition Rule_), hiszen ```x``` kétszer van definiálva. Ezt úgy tudjuk megoldani, ha forward deklarájuk ```x```-et az ```extern``` kulcsszó segítségével.
 
 ```cpp
 // other.cpp
@@ -687,7 +689,7 @@ __Automatikus élettartam__: a blokkokban deklarált lokális változók automat
 
 __Statikus élettartam__: a globális változók, illetve egyes nyelvekben a __statikusként__ deklarált változók statikus élettartamúak. Az ilyen változók élettartama a program teljes végrehajtási idejére kiterjed, számukra a helyfoglalás már a fordítási időben megtörténhet.
 
-__Dinamikus élettartam__: a dinamikus élettartamú változók esetén a programozó foglal helyet számukra a dinamikus tárterületen (_heap_, bővebben a heapről a későbbiekben lesz szó), és a programozó feladata gondoskodni árról is, hogy ezt a tárterületet később felszabadítsa. Amennyiben ez utóbbiról megfeledkezik, azt nevezzük __memória szivárgásnak__ (_memory leak_). A dinamikus élettartam esetén a hatókör semmilyen módon nem kapcsolódik össze az élettartammal, az élettartam szűkebb vagy tágabb is lehet a hatókörnél.
+__Dinamikus élettartam__: a dinamikus élettartamú változók esetén a programozó foglal helyet számukra a dinamikus tárterületen (_heap_, bővebben a heapről a későbbiekben lesz szó), és a programozó feladata gondoskodni arról is, hogy ezt a tárterületet később felszabadítsa. Amennyiben ez utóbbiról megfeledkezik, azt nevezzük __memória szivárgásnak__ (_memory leak_). A dinamikus élettartam esetén a hatókör semmilyen módon nem kapcsolódik össze az élettartammal, az élettartam szűkebb vagy tágabb is lehet a hatókörnél.
 
 Tekintsük az alábbi kódrészletet és figyeljük meg mikor tudunk az ```x``` változóra hivatkozni.
 
@@ -893,7 +895,7 @@ További előnye a ```new``` operátornak, hogy a memória lefoglaláson kívül
 Abban az esetben, ha egy _n_ elemű tömbnek szeretnénk dinamikusan helyet foglalni a ```new``` operátorral, jeleznünk kell a fordítónak, mégpedig az ```[]``` operátor segítségével.
 
 ```cpp
-int* pArray[] = new int[5];
+int* pArray = new int[5];
 ```
 
 Ebben az esetben, ha a
@@ -907,7 +909,7 @@ kifejezést használjuk még mindig memóriaszivárgás lesz a programunkban. Mi
 __Megoldás__: jelezzük a fordítónak, hogy nem csak egy elemet, hanem egy egész tömböt szeretnénk törölni. Ezt szintén az ```[]``` operátor segítségével tehetjük meg.
 
 ```cpp
-delete pArray[];
+delete[] pArray;
 ```
 
 
@@ -1069,7 +1071,7 @@ int main()
 ```
 
 
-# Konstans korrektrég (_const-correctness_)
+# Konstans korrektség (_const-correctness_)
 
 
 A konstans korrektség egy szabály a C++ nyelvben: ha egy értéket konstansnak jelölünk, azt nem módosíthatjuk a program futása során.
@@ -1264,7 +1266,7 @@ int main()
 }
 ```
 
-Megfigyelhető, hogy az első kiírás eredménye ugyanaz, mint a második kiírásé. Ez azonban egy teljesen jól definiált viselkedés. Ennek oka nem más mint, hogy __érték__ szerint vettük át a paramétereket. Képzeljük el, hogy a stackbe a program berakja a ```c``` és ```d``` változókat. Ezután meghívja a ```swapWrong()``` függvényt, melyben létrehozott ```a``` és ```b``` paraméterek értékét megcseréli, de a függvényhívás után ezeket ki is törli a stackből. Az eredeti ```c``` és ```d``` vltozók értéke nem változott a függvényhívás során.
+Megfigyelhető, hogy az első kiírás eredménye ugyanaz, mint a második kiírásé. Ez azonban egy teljesen jól definiált viselkedés. Ennek oka nem más mint, hogy __érték__ szerint vettük át a paramétereket. Képzeljük el, hogy a stackbe a program berakja a ```c``` és ```d``` változókat. Ezután meghívja a ```swapWrong()``` függvényt, melyben létrehozott ```a``` és ```b``` paraméterek értékét megcseréli, de a függvényhívás után ezeket ki is törli a stackből. Az eredeti ```c``` és ```d``` változók értéke nem változott a függvényhívás során.
 
 A stack tartalma érték szerinti paraméterátadás esetén.
 
@@ -1403,6 +1405,23 @@ __konstans referencia szerinti__: ```f(const T& x)```
 * továbbá ha a __NULL NEM lehet valid érték__
 	* próbáljuk mindig ezt a változatot használni saját osztályokhoz, ```std::string```-hez és STL adatszerkezetekhez, ha paramétert nem akarjuk módosítani
 		* copy konstruktorok, copy assignmentek paraméterei
+
+
+__Megjegyzés__: függvények bemeneti paramétereinek adhatunk alapértelmezett (default) értéket.
+
+```cpp
+int f(int i = 0) { std::cout << i; }
+
+int main()
+{
+  f();
+  f(1);
+}
+```
+
+> kimenet: 01
+
+Ilyenkor, ha meghívjuk az ```f()``` függvényt és nem adunk neki bemeneti értéket, akkor az alapértelmezett értéket fogja használni. Ha nem adtunk volna az ```f()```-nek alapértelmezett bemeneti paraméter értéket az első hívás szabálytalan lenne, mert nem találna a fordító olyan ```f()``` függvényt, melynek a szignatúrája megfelel annak a hívásnak.
 
 
 # Visszatérési érték problémája
@@ -1619,3 +1638,452 @@ Ahhoz, hogy egy olyan függvényt írjunk, ami minden méretű tömböt elfogad 
 A tömbök átvétele paraméterként azért ilyen körülményes, mert egy tömbnek a méretét fordítási időben ismernünk kell. Ha változó méretű tömböt várnánk paraméterül, az szembemenne ezzel a követelménnyel.
 
 Könnyű azt hinni (_hibásan_), hogy a mutatók ekvivalensek a tömbökkel. A tömb típusa tartalmazza azt az információt, hogy hány elemű a tömb. Egy mutató típusa csak azt az információt tartalmazza, hogy a mutatott elem mekkora. Számos más különbség is van. A tévhit oka az, hogy tömb könnyen konvertálódik első elemre mutató mutatóra.
+
+
+# Statikus változók / függvények
+
+
+Statikus változókat, függvényeket a ```static``` kulcsszó segítségével hozhatunk létre. A ```static``` kulcsszónak számos jelentése van, annak függvényében, hogy milyen kontextusban írjuk egy változó vagy függvény elé. Statikus változók a statikus globális tárterületen jönnek létre. Élettartamuk attól függ, hogy hol deklaráljuk őket és a program futásának végéig tart. Nem szükséges kezdőértékkel el látni őket csak abban az esetben, ha konstansok.
+
+```cpp
+int main()
+{
+  static int i;       // ok
+  static const int j; // nem ok, konstansoknak kezdőértéket kell adnunk
+                      // emlékezzünk a konstans korrektségre
+}
+```
+
+
+## Fordítási egységre lokális változók
+
+
+A függvényeken és osztályokon kívül deklarált statikus változók az adott fordítási egységre lokálisak – élettartamuk a futás elejétől futás végéig tart, és kizárólagosan az adott fordítási egységben láthatóak.
+
+```cpp
+// main.cpp
+static int x;
+
+int main() { x = 1; }
+
+// other.cpp
+static int x;
+
+int main() { x = 2; }
+```
+
+Ha ezt a két fájlt együtt fordítjuk, nem kapunk linkelési hibát, ugyanis a ```main.cpp```-ben lévő ```x``` egy teljesen más változó, mint ami az ```other.cpp```-ben van.
+
+Csak úgy, mint a globális változókra, fordítási egységen belül bármikor hivatkozhatunk egy statikus változóra, és hasonló módon inicializálódnak.
+
+```cpp
+#include <iostream>
+
+static int x;
+
+int main()
+{
+  int x = 2;
+  std::cout << ::x << std::endl;
+}
+```
+
+> kimenet: 0
+
+
+## Függvényen belüli statikus változók
+
+
+Azokat a változókat, melyek függvényen belül vannak a ```static``` kulcsszóval definiálva, __függvényszintű változónak__ is szokás hívni. Élettartamuk a függvény első hívásától a program futásának végéig tart, míg láthatóságuk csak az adott függvényen belül van. A hagyományos lokális változókkal ellenben nem semmisülnek meg, amikor az adott függvény futása befejeződik. 
+A következő kódrészlet szemlélteti ezt a viselkedést.
+
+```cpp
+#include <iostream>
+
+int f() {
+  static int x = 0;
+  return ++x;
+}
+
+int main() {
+  for (int i = 0; i < 5; i++)
+    std::cout << f() << ’ ’;
+}
+```
+
+> kimenet: 1 2 3 4 5
+
+Ahogy az megfigyelhető, ```x``` csak egyszer inicializálódik, majd a későbbi függvényhívások után egyre növekszik az értéke.
+
+
+## Fordítási egységre lokális függvények
+
+
+Nem csak változókat, függvényeket is deklarálhatunk statikusnak, melyek a fordítási egységre lokálisak.
+
+```cpp
+#include <iostream>
+
+static int f() { return 0; }
+
+int main()
+{
+  std::cout << f();
+}
+```
+
+> kimenet: 0
+
+Ezek a függvények csak az adott fordítási egységen belül érhetőek el.
+
+
+## Függvény túlterhelés (_function overloading_)
+
+
+A C++ lehetőséget ad a __függvények túlterhelésére__ (_overloading_), vagyis azonos nevű, de eltérő szignatúrájú függvények definiálására. Az ilyen függvénycsoportok hivásakor, a fordító a hívás szignatúrájából határozza meg, hogy melyik függvény hívódjon meg.
+
+A C++ az alábbi attribútumokat érti bele egy függvény szignatúrájába:
+
+* függvény neve
+* osztály neve (tagfüggvényeknél)
+* template argumentumok típusa (template függvényeknél)
+* argumentumok típusa
+* ```const``` típusmódosító (tagfüggvényeknél, tagfüggvényeket konstanság alapján is túl lehet terhelni).
+
+Vegyük észre, hogy a szignatúrába a visszatérési érték típusa nem tartozik bele, vagyis ha két függvénydeklaráció pusztán visszatérési értékében különbözik, az nem számít túlterhelésnek, csak felüldefiniálásnak, és mint olyan legtöbbször fordítási hibát generál.
+
+Tekintsük újra a ```swap()``` függvényt.
+
+```cpp
+void swap(int& a, int& b)
+{
+  tmp = a;
+  a = b;
+  b = tmp;
+}
+```
+
+Ez a függvény egészen addig jól működik, amíg csak ```int```-eket használunk. Mi a helyzet, ha két ```std::string```-et szeretnénk megcseréli? A megoldás egyszerű, terheljük túl a ```swap()``` függvényt.
+
+```cpp
+void swap(std::string& a, std::string& b)
+{
+  std::string tmp = a;
+  a = b;
+  b = tmp;
+}
+```
+
+## Operátor túlterhelés (operator overloding)
+
+
+A közönséges függvényekhez hasonlóan a legtöbb operátort is túl lehet terhelni, amely a felhasználói típusok kényelmesebb használatát teszi lehetővé (jellemző például az ```<<``` operátor túlterhelése).
+
+Programozás során gyakran használunk operátorokat a programban elvégzendő feladatok, tömör, olvasható kifejezésére.
+
+Az operátorok beépített típusok kezelésére kitűnően használhatóak, a programozó által létrehozott típusok, osztályok kezelésére azonban természetesen nem alkalmasak változatlan formában. A szabványos C++ operátorokhoz előre definiált úgynevezett operátor-függvények tartoznak. Amikor tehát C++-ban definiált műveleti jel értelmezését ki szeretnénk terjeszteni egy saját adattípusra, akkor a kérdéses operárot operátor-függvényére adunk meg egy újabb paraméter szignatúrájú változatot.
+
+Túlterheléssel a programozó meghatározhatja, hogy mi történjék az általa létrehozott típusokkal az egyes operátorok hatására.
+
+__Fontos__: túlterhelés során megváltoztathatjuk az egyes operátorok jelentését, de:
+
+* nem hozhatunk létre új operátorokat
+* nem változtathatjuk meg az operátorok aritását
+* nem változtathatjuk meg az operátorok precedenciáját
+
+Túlterhelhető operátorok: ```+```, ```-```, ```*```, ```/```, ```%```, ```^```, ```&```, ```|```, ```~```, ```!```, ```=```, ```<```, ```>```, ```+=```, ```-=```, ```*=```, ```/=```, ```%=```, ```^=```, ```&=```, ```|=```, ```<<```, ```>>```, ```>>=```, ```<<=```, ```==```, ```!=```, ```<=```, ```>=```, ```&&```, ```||```, ```++```, ```--```, ```->*```, ```,```, ```->```, ```[]```, ```()```, ```new```, ```new[]```, ```delete```, ```delete[]```.
+
+Az ```=``` (értékadó), ```&``` (címképző) és a ```,``` (kiválasztó) operátorok túlterhelés nélkül is érvényesek.
+
+Nem túlterhelhető operátorok: ```::```, ```.```, ```.*```, ```? :```, ```sizeof```, ```typeid```
+
+
+Ezeknek az operátoroknak a túlterhelése nemkívánatos mellékhatásokkal járna, ezért nem lehet őket túlterhelni.
+
+Túlterhelés menete:
+
+A túlterhelés során az operátort megvalósító utasításokat függvényként adjuk meg. A függvény nevében az ```operator``` kulcsszót maga az operátor követi. Az operátor argumentumai a függvény argumentumai és visszatérési értéke, amelyek beépített típusok, objektumok (kis méret esetén) vagy referenciák (nagy méret esetén) lehetnek.
+
+Az operátorok túlterhelésére használt függvények argumentumai lehetnek objektumok, de ez nem szerencsés nagyméretű objektumok esetében. Mutatókat nem használhatunk argumentumként, mert a mutatókra alkalmazott operátorok nem terhelhetők túl. A referenciák argumentumként használva lehetővé teszik a nagyméretű objektumok kezelését anélkül, hogy lemásolnánk őket.
+
+
+## Litetrálok
+
+
+### Karakterlánc literálok
+
+
+Mi lesz a __"Hello"__ literál típusa?
+
+Egy konstans karakterekből álló _6_ méretű tömb (```const char[6]```). Azért 6 elemű, mert a karakterlánc literál végén el van tárolva a végét jelző ```\0``` karaktert.
+
+__Megjegyzés__: változó típusát a ```typeid(variable).name()``` segítségével tudjuk lekérdezni.
+
+![characterLiterals](img/charLiteral.png)
+
+```cpp
+int main()
+{
+  char* hello = "Hello";
+  hello[0] = 'B';
+}
+```
+
+A fenti kódban megsértettük a konstans korrektséget, mert egy nem konstansra mutató mutatóval mutatuk egy konstans karakterlánc literál első elemére. Ennek ellenére, a fenti kód lefordul. Ennek az az oka, hogy az eredeti C-ben nem volt ```const``` kulcsszó, a kompatibilitás miatt ezért C++-ban lehet konstans karakterlánc literál elemire nem konstansra mutató mutatóval mutatni.
+
+__Megjgyzés__: ezt a fajta kompatibilitás miatt meghagyott viselkedés __kerülendő__. A kód lefordul ugyan, de kapunk rá warningot.
+
+Ha módosítani próbáljuk a karakterlánc literál értékét, az _nem definiált viselkedéshez_ vezet.
+Linux operációs rendeszer futtatáskor futási idejű hibát kapunk, egészen pontosan szegmentálási hibát. Ennek oka, hogy a konstansok értékei __readonly__ memóriában vannak tárolva, aminek a módosítását nem engedi az operációs rendszer.
+
+
+### Szám literálok
+
+
+Függően attól, hogy hogyan írunk egy szám literált C++-ban, más lehet a jelentése.
+
+![numberLiterals](img/numberLiteral.png)
+
+Létezik C++-ban ```signed``` kulcsszó -- erről korábban a 'C++ adattípusok - adattípus módosítók-nál olvashattunk -- , mely a ```char``` miatt lett bevezetve. A ```char``` is egész számokat tartalmaz, de az implementáció függő, hogy a ```char``` ```singed``` vagy ```unsigned``` értéket tartalmaz-e.
+
+Természetesen leggyakrabban egész számoknál használják. Alapértelmezetten minden ```int``` egy ```signed int```, amennyiben egy előjel nélküli egész számra van szükségünk, ```unsigned int```-et vagy röviden ```unsigned```-ot kell írnunk. Megállapíthatjuk tehát, hogy az ```unsigned``` típusok ugyanannyi számjegyet tudnak tárolni, ám értékben kétszer akkorát.
+
+Míg a túlcsordulás ```signed``` típusoknál _nem definiált viselkedés_, addig ```unsigned``` típusoknál definiált. Ekkor ugyanis a maximális érték (mely implementációfüggő) utáni inkrementálás 0-ra állítja a változót. Értelemszerűen, ez a determinisztikus viselkedés futási idejű költséggel jár.
+
+C++-ban tizedes vessző helyett pontot kell írni ha lebegőpontos számot szeretnénk definiálni. Ennek ellenére az alábbi kód mégis helyesen lefordul:
+
+```cpp
+int pi = 3,14;
+```
+
+Miért van ez?
+
+Az ok az, hogy a vessző operátor  (```,```) egy szekvenciapont is, így a fordító az egyenlőség bal oldalát amikor kiértékeli, először rendre kiértékeli a ```3``` számliterált, majd eldobja és utána kiértékeli a ```14```-et, és értékül adja ```pi```-nek.
+
+A lebegőpontos számok másik veszélye, az összehasonlítás. __Minden lebegőpontos szám tartalmazhat egy kis pontatlanságot__.
+
+```cpp
+for(double d = 0; d != 1; d += 0.1)
+{
+  std::cout << i << ' ';
+}
+```
+
+Az elvárt kimenet az lenne, hogy:
+
+> 0 0.1 0.2 ... 1.0
+
+de legnagyobb valószínűséggel végtelen ciklusba futunk. Ez azért van, mert a 0.1 (várhatóan) tartalmaz egy kis pontatlanságot, és így hiába írja ki a programunk hogy ```d``` értéke 1, az várhatóan csak nagyon közel lesz hozzá.
+
+__Megjegyzés__: Viszonylag kevés esetben éri meg ```float```-ot használni ```double``` helyett. Ennek oka, hogy a odern CPU-k ugyanolyan hatékonysággak képesek dolgozni mind a kettővel, így érdemesebb a pontosabbat választani. (Ha a GPU-t programozzuk, az lehet egy kivétel.)
+
+__Megjegyzés__: Érdemes mindig ```int```-et használni, ha nincs különösebben jó okunk arra, hogy mást használjunk. Az ```int```-el általában a leghatékonyabb a processzor.
+
+
+## Struktúrák mérete
+
+
+### Primitív típusok mérete
+
+
+Mint azt már korábban láttuk a ```sizeof(char)``` mindig 1-et ad vissza. A karakter mérete mindig az egység. Minden más típusra a ```sizeof()``` függvény azt adja vissza, hogy paraméterül megadott objektum vagy típus mérete hányszorosa a ```char```-nak.
+
+Attól, hogy ```sizeof(char)``` == ```1```, a ```char``` mérete bájtokban még mindig __implementáció függő__.
+
+A char méretén túl minden másnak a mérete implementációfüggő, bár a szabvány kimond pár relációt (bővebben a '_C++ adattípusok_' fejezetben olvashatunk erről):
+
+```sizeof(X)``` == ```sizeof(signed X)``` == ```sizeof(unsigned X)```
+
+```sizeof(float)``` ≤ ```sizeof(double)``` ≤ ```sizeof(long double)```
+
+```sizeof(short)``` ≤ ```sizeof(int)``` ≤ ```sizeof(long)```
+
+```sizeof(char)``` ≤ ```sizeof(bool)```
+
+
+### Nem primitív típusok mérete
+
+
+Egy áltlaunk megalkotott típus mérete több szabálytól is függhet.
+
+```cpp
+#include <isotream>
+
+struct Student
+{
+  double weight;
+  int age;
+  int height;
+};
+
+int main()
+{
+  std::cout << sizeof(double) << std::endl;
+  std::cout << sizeof(int) << std::endl;
+  std::cout << sizeof(Student) << std::endl;
+}
+```
+A ```double``` mérete 8 bájt, az ```int``` mérete 4 bájt, ```Student```-é 16, tehát a fenti kód lefuttatása után láthatjuk, hogy a ```Student``` struktúra tiszta adat.
+
+Rendezzük egy kicsit át mezők sorrendjét a következő módon
+
+```cpp
+struct Student
+{
+  int age;
+  double weight;
+  int height;
+};
+```
+
+A kód újbóli lefutása érdekes eredményt adhat. Ebben az esetben a ```Student``` már 24 bájtot foglal. Ennek az oka az, hogy míg az első esetben így volt eltárolva a memóriában: (ne feledjük, ez még mindig implementációfüggő !)
+
+![sizeOfStruct](img/sizeOfStruct.png)
+
+A ```weight```, illetve az ```age``` és a ```height``` pont efértek 1-1 gépi szóban. Viszont, ha megcseréljük a sorrendet, ez már nem lesz igaz:
+
+![sizeOfStructBad](img/sizeOfStructBad.png)
+
+Itt a ```weight``` két különböző gépi szóba kerülne. Ez a ma használt processzorok számára nem hatékony, hiszen a ```weight``` értékének kiolvasásához vagy módosításához két gépi szót is olvasni vagy módosítani kéne (a legtöbb processzor csak szóhatárról tud hatékonyan olvasni).
+
+
+![sizeOfStructPadded](img/sizeOfStructPadded.png)
+
+A fenti elrendezés hatékonyabb, bár 3 gépi szót használ. Ebben az esetben a fordító úgynevezett __padding__-et illeszt be a mező után. Ennek hatására hatékonyan olvasható és módosítható minden mező. Cserébe több memóriát foglal a struktúra.
+
+A szabvány kimondja, hogy egy ```struct``` mérete az adottagok méreteinek összegénél nagyobb vagy egyenlő.
+
+Az, hogy egy gépi szó mekkora, __implementációfüggő__.
+
+
+## OOP - Objektum-Orientált Programozás (_Object Oriented Programming_)
+
+
+Az objektum-orientált programozás az objektumokat és köztük fennálló kölcsönhatásokat használja alkalmazások és számítógépes programok tervezéséhez. Négy dolog szükséges ahhoz, hogy egy programozási nyelvről azt mondhassuk, hogy támogatja az OOP-t:
+
+* Adatrejtés (_data hiding_)
+* Egységbezárás (_encapsulation_)
+* Öröklődés (_inheritance_)
+* Polimorfizmus - többalakúság (_polymorphism_)
+
+
+### Alapelemek
+
+
+#### Osztály (_class_)
+
+
+Az osztály meghatározza egy objektum elvont jellemzőit, beleértve az objektum jellemvonásait (attribútumok, mezők, tulajdonságok) és az objektum viselkedését (amit az objektum meg tud tenni, metódusok, műveletek, funkciók).
+
+Azt mondhatjuk, hogy az osztály egy tervrajz, amely leírja valaminek a természetét. Például, egy Autó osztálynak tartalmazni kell az autók közös jellemzőit (gyártó, motor, fékrendszer, maximális terhelés stb.), valamint a fékezés, a balra fordulás stb. képességeket (viselkedés).
+
+Osztályok önmagukban biztosítják a modularitást és a strukturáltságot az objektum-orientált számítógépes programok számára. Az osztálynak értelmezhetőnek kell lennie a probléma területén jártas, nem programozó emberek számára is, vagyis az osztály jellemzőinek „beszédesnek” kell lenniük. Az osztály kódjának viszonylag önállónak kell lennie (egysébezárás – encapsulation). Az osztály beépített tulajdonságait és metódusait egyaránt az osztály tagjainak nevezzük (C++-ban adattag, tagfüggvény).
+
+
+#### Objektum (_object_)
+
+
+Az osztály az objektum mintája. Az Autó osztály segítségével minden lehetséges autó típust megadhatunk, a tulajdonságok és a viselkedési formák felsorolásával. 
+
+
+#### Példány (_instance_)
+
+
+Az objektum szinonimájaként az osztály egy adott példányáról is szokás beszélni. A példány alatt a futásidőben létrejövő aktuális objektumot értjük. Így elmondhatjuk, hogy az énAutóm az Autó osztály egy példánya. Az aktuális objektum tulajdonságértékeinek halmazát az objektum állapotának (_state_) nevezzük. Ezáltal minden objektumot az osztályban definiált állapot és viselkedés jellemez.
+
+
+#### Metódus (_method_)
+
+
+A metódusok felelősek az objektumok képességeiért. Mivel az énAutóm egy Autó, rendelkezik a fékezés képességével, így a Fékez() ez énAutóm metódusainak egyike. Természetesen további metódusai is lehetnek. A programon belül egy metódus használata általában csak egy adott objektumra van hatással. Bár minden autó tud fékezni, a Fékez() metódus hívásával csak egy adott járművet szeretnénk lassítani. C++ nyelven a metódus szó helyett a tagfüggvény kifejezést használjuk.
+
+
+### Alapvető elvek
+
+
+#### Adatrejtés, egységbe zárás - data hiding, encapsulation
+
+
+A fentiekben láttuk, hogy az osztályok alapvetően állapotokból és metódusokból  épülnek fel. Azonban az objektumok állapotát és viselkedését két csoportba osztjuk. Lehetnek olyan jellemzők és metódusok, melyeket elfedünk más objektumok elől, mintegy belső, privát (_private_) vagy védett (_protected_) állapotot és viselkedést létrehozva. Másokat azonban nyilvánossá (_public_) teszünk. Az OOP alapelveinek megfelelően az állapotjellemzőket privát eléréssel kell megadnunk, míg a metódusok többsége nyilvános lehet. Szükség esetén a privát jellemzők ellenőrzött elérésére nyilvános metódusokat készíthetünk.
+
+Általában is elmondhatjuk, hogy egy objektum belső világának ismeretére nincs szüksége annak az objektumnak, amelyik használja. Például, az Autó rendelkezik a Fékez() metódussal, amely pontosan definiálja, miként megy végbe a fékezés. Az énAutóm vezetőjének azonban nem kell ismernie, hogyan is fékez a kocsi.
+
+Minden objektum egy jól meghatározott interfészt biztosít a külvilág számára, amely megadja, hogy kívülről mi érhető el az objektumból. Az interfész rögzítésével az objektumot használó, ügyfél alkalmazások számára semmilyen problémát sem jelent az osztály belső világának jövőbeni megváltoztatása.
+
+
+#### Öröklődés - inheritance
+
+
+Öröklés során egy osztály specializált változatait hozzuk létre, amelyek öröklik a szülőosztály (alaposztály) jellemzőit és viselkedését, majd pedig sajátként használják azokat. Az így keletkező osztályokat szokás alosztályoknak (_subclass_), vagy származtatott (_derived_) osztályoknak hívni.
+
+Például, az Autó osztályból származtathatjuk a Ferrari és a Mercedes alosztályokat. Az énAutóm ezentúl legyen a Mercedes osztály példánya! Tegyük fel továbbá, hogy az Autó osztály definiálja a Fékez() metódust és az fékrendszer tulajdonságot! Minden ebből származtatott osztály örökli ezeket a tagokat, így a programozónak csak egyszer kell megírnia a hozzájuk tartozó kódot. Az alosztályok meg is változtathatják az öröklött tulajdonságokat. A származtatott osztályokat új tagokkal is bővíthetjük.
+
+Az öröklés valójában „egy” (__is-a__) kapcsolat.
+
+A többszörös öröklés (_multiple inheritance_) folyamán a származtatott osztály, több közvetlen ősosztály tagjait örökli. Például, egymástól teljesen független osztályokat definiálhatunk Autó és Hajó néven. Ezekből pedig örökléssel létrehozhatunk egy Kétéltű osztályt, amely egyaránt rendelkezik a teherautók és hajók jellemzőivel és viselkedésével. A legtöbb programozási nyelv (Java, C#) csak az egyszeres öröklést támogatja, azonban a C++-ban mindkét módszer alkalmazható.
+
+
+#### Polimorfizmus - polymorphism
+
+
+A polimorfizmus lehetővé teszi, hogy az öröklés során bizonyos (elavult) viselkedési formákat (metódusokat) a származtatott osztályban új tartalommal valósítsunk meg, és az új, lecserélt metódusokat a szülő osztály tagjaiként kezeljük.
+
+Példaként tegyük fel, hogy az Autó és a Kerekpár osztályok öröklik a Jármű osztály Gyorsít() metódusát. A Teherautó esetén a Gyorsít() parancs a GáztAd() műveletet jelenti, míg Kerekpár esetén a Pedáloz() metódus hívását. Ahhoz, hogy a gyorsítás helyesen működjön, a származtatott osztályok Gyorsít() metódusával felül kell bírálnunk (_override_) a Jármű osztálytól örökölt Gyorsít() metódust. Ez a felülbíráló polimorfizmus.
+
+A legtöbb OOP nyelv a parametrikus polimorfizmust is támogatja, ahol a metódusokat típusoktól független módon, mintegy mintaként készítjük el a fordító számára. A C++ nyelven sablonok (templates) készítésével alkalmazhatjuk ezt a lehetőséget.
+
+
+## Struktúrák (```struct```)
+
+
+A C++ nyelven a struktúra (```struct```) typus több tetszőleges típusú (kivéve ```void``` és a függvénytípus) adatelem együttese. Ezek az adatelemek, melyek szokásos elnevezése __struktúraelem__ vagy __adattag__ (_data member_), csak a struktúrán belül érvényes nevekkel rendelkeznek. (A más nyelveken a mező (field) elnevezést alkalmazzák, mely elnevezést azonban a bitstruktúrákhoz kapcsolja a C++ nyelv.)
+Struktúrák záró kapcsos zárójele után mindig kell pontosvesszőt rakni (```;```).
+
+Alapértelmezett módon a struktúrák adattagjai és metódusai publikusak a külvilág számára és a pont operátor (```.```) segítségével hivatkozhatunk rájuk a struktúrából létrehozott objektumpéldány nevén keresztül.
+
+
+### C stílusú struktúrák
+
+```cpp
+
+typedef struct
+{
+  const char* name;
+  int age;
+  double salary;
+} Person;
+
+int main()
+{
+  Person person; // objektumpéldány létrehozása
+
+  // adattagok inicializálása
+  person.name = "Jack";
+  person.age = 26;
+  person.salary = 1500.50;
+}
+```
+
+### C++ stílusú struktúrák
+
+```cpp
+
+struct Person
+{
+  std::string name;
+  int age;
+  double salary;
+};
+
+int main()
+{
+  Person person; // objektumpéldány létrehozása
+
+  // adattagok inicializálása
+  person.name = "Jack";
+  person.age = 26;
+  person.salary = 1500.50;
+}
+```
+
+Mivel a struktúráknak tetszőleges adattagjaik lehet, így lehetőségünk van több struktúra egymásba ágyazására.
