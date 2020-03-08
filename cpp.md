@@ -743,9 +743,9 @@ int main()
 }
 ```
 
-> kimenet: 2
+> kimenet: 1
 
-Ilyen esetekben, ha azonos nevű változó szerepel a globális névtérben és egy névtelen névtérben a scope operátor __mindig__ a névtelen névtérbeli változóra fog hivatkozni.
+Ilyen esetekben, ha azonos nevű változó szerepel a globális névtérben és egy névtelen névtérben a scope operátor __mindig__ a globális névtérbeli változóra fog hivatkozni.
 
 
 ## Jobb- és balérték
