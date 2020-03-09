@@ -2087,3 +2087,173 @@ int main()
 ```
 
 Mivel a struktúráknak tetszőleges adattagjaik lehet, így lehetőségünk van több struktúra egymásba ágyazására.
+
+__Feladat__: láncolt listák
+
+A következőkben egy láncolt listát fogunk implementálni, amely jól mutatja majd a dinamikus memóriakezelés veszélyeit.
+
+A láncolt lista nevéből eredendően nem tömbszerűen (egymás melletti memóriacímeken) tárolja az objektumokat, hanem egymástól független memóriacímeken. Ezt úgy oldja meg, hogy minden adathoz rendel egy mutatót is, mellyel a következő listalemet el lehet érni. A lista utolsó elemében a mutató a rákövetkező elem memóriacíme helyett nulpointer értéket vesz fel.
+
+![linkedList](img/linkedList.png)
+
+```cpp
+struct List
+{
+  int data;
+  List* next;
+};
+
+int main()
+{
+  List* head = new List;
+  head->data = 1; // (*head.)data == head->data
+  head->next = new List;
+
+  head->next->data = 2;
+  head->next->next = new List;
+  head->next->next->data = 3;
+  head->next->next->next = NULL; // modern C++-ban nullptr
+  
+  delete head;
+  delete head->next;
+  delete head->next->next;
+}
+```
+
+Mondhatnánk, hogy készen is vagyunk, implementáltuk a láncolt listát - noha a használata nem túl kényelmes. Sajnos azonban ez a program hibás. A törlést sorrendje rossz: először törljük a fejelemet (mely az első elemre mutat), viszont az első elem segítségével tudnánk a többi elemet elérni, így mikor a második listaelemet törölnénk, ```head``` már egy felszabadított memóriaterületre mutat. Ezt törlés utáni használatnak (_use after delete_ vagy _use after free_) szokás nevezni és nem definiált viselkedés. A helyes megoldás:
+
+```cpp
+int main()
+{
+  // ...
+  delete head->next->next;
+  delete head->next;
+  delete head;
+}
+```
+
+__Fontos__: a heap-en arra is figyelnünk kell, hogy jó sorrendben szabadítsuk fel a memóriát. Ha rossz sorrendben szabadítjuk fel az objektumokat, könnyen a fentihez hasonló hibát vagy memória szívárgást okozhatunk.
+
+Ez a "láncolt lista” eddig elég szegényesen néz ki. A fő gond az, hogy nagyon sokat kell írni a használatához. Ezzel megszegjük a __DRY__ programozás elvét: __Don't Repeat Yourself__. Itt sokszor írjuk le közel ugyanazt a kifejezést. Erre találnunk kell egy egyszerűbb megoldást. Írjunk egy függvényt, melynek segítségével új listaelemet hozhatunk létre.
+
+```cpp
+List* add(List* head, int data)
+{
+  if (head == 0)
+  {
+    List *ret = new List;
+    ret->data = data;
+    ret->next = 0;
+    return ret;
+  }
+
+  head->next = add(head->next, data);
+  return head;
+}
+```
+
+Ez egy olyan rekurzív függvény, mely addig hívja saját magát, míg a paraméterként kapott lista végére nem ér (azaz a head egy nullpointer). Amikor oda elér, létrehoz egy új listaelemet és azt visszaadja. A rekurzió felszálló ágában a lista megfelelő elemeit összekapcsolja.
+
+
+Írjunk egy újabb függvényt, amely segítségével lehetőségünk lesz felszabadítani a lista által birtokolt memóriát.
+
+```cpp
+void free(List* head)
+{
+  if (head == 0)
+  {
+    return;
+  } 
+
+  free(head->next); 
+  delete head;
+}
+```
+
+Itt a rekurzió szintén a lista végéig megy. A rekurzió felszálló ágában történik a listaelemek felszabadítása. Ennek az oka, hogy a felszabadítás a megfelelő sorrendben történjen meg.
+
+__Megjegyzés__: a rekurzív függvények nem olyan hatékonyak, mint az iteratív (pl. ```for``` vagy ```while``` ciklus) társaik. Továbbá a sok függvényhívás könnyen stack overflow-hoz vezetnek. Egy rekurzív függvényt mindig át lehet írni iteratívvá.
+
+Beszéljünk arról, mennyi a teher a felhasználón. Eddig tudnia kellett, milyen sorrendben kell felszabadítani az elemeket a listán belül, de most már elég arra figylenie, hogy a lista használata után meghívja a ```free()``` függvényt. A felhasználó így kisebb eséllyel követ el hibát. __Legyenek a függvényeink és osztályaink olyanok, hogy könnyű legyen őket jól használni, és nehéz legyen rosszul.__
+
+
+## Osztályok (```class```)
+
+
+C++ nyelvben speciális típusok, az osztályok szolgálnak arra, hogy az adatokat és a hozzájuk rendelt függvényeket egy egységként, egy objektumként kezeljük.
+
+A C++ nyelvben a ```class``` típus a C nyelv struktúratípusának kiterjesztése. Mindkét struktúra tartalmazhat adatmezőket (adattag – data members), azonban a C++-ban ezen adattagokhoz különféle műveleteket, ún. tagfüggvényeket (member function) is megadhatunk. A C++-ban egy osztály típusú tárolási egység függvényeket kombinál adatokkal, és az így létrejött kombinációt elrejtjük, elzárjuk a külvilág elől. Ezt értjük egységbezárás alatt. Egy osztály deklarációja sokban hasonlít a jól ismert struktúra deklarációjához.
+
+```cpp
+class ClassName
+{
+  // members
+public:
+  // methods
+};
+```
+
+A hagyományos C-s struktúrák (```struct```) és a C++ osztályok (```class```) között a fő különbség a tagokhoz való hozzáférésben keresendő. A C-ben egy struktúra adattagja (megfelelő érvényességi tartományon belül) szabadon elérhetők, míg C++-ban egy ```struct``` vagy ```class``` minden egyes tagjához való hozzáférés önállóan kézben tartható azáltal, hogy __nyilvánosnak__ (```public```), __privátnak__ (```private```) vagy __védettnek__ (```protected```) deklaráljuk. Ezeket nevezzük hozzáférési azonosítóknak (__access specifiers__).
+
+A ```class``` kulcsszóval definiált osztályban az adatmezők alapértelmezés szerint __privát__ hozzáférésűek, míg egy ```struct``` esetén __publikus__-ak.
+
+
+### Konstruktor (_constructor_, _ctor_)
+
+
+A C++ programokban az objektumok inicializálását speciális tagfüggvények, a konstruktorok végzik. A konstruktor neve azonos az osztályéval, nincs visszatérési értéke, még ```void``` se. Feladata a dinamikus adattagok létrehozása és az adattagok kezdőértékkel való inicializálása. 
+
+4 féle konstruktor típust különböztetünk meg:
+
+* __paraméter nélküli__, __alapértelmezett__ (_default_) konstruktor törzsében az adattagoknak kezdő értéket adunk.
+```cpp
+class MyClass
+{
+public:
+  MyClass() { _x = 1; _y = 1; }
+private:
+  int _x;
+  int _y;
+};
+```
+
+* __paraméteres konstruktornak__ az a feladata, hogy azoknak az adattagoknak adjon értéket, amelyek a feladat végrehajtásához szükségesek. Ehhez megfelelő darabszámú és típusú paraméter listát kell kialakítanunk.
+```cpp
+class MyClass
+{
+public:
+  MyClass(int x, int y) { this->x = x; this->y = y; }
+private:
+  int x;
+  int y;
+};
+```
+
+__Megjegyzés__: ha a bemeneti paraméternek és az osztály adattagjának ugyan az a neve, akkor a ```this``` kulcsszóval hivatkozhatunk az adattagra, ellenkező esetben a bemeneti paraméter értékét fogjuk saját magának értékül adni.
+
+* __másoló konstruktor__ (_copy constructor_) használatával egy objektumpéldánynak kezdőrétéket adhatunk egy már létező és inicializált objektumpéldánnyal. 
+```cpp
+class MyClass
+{
+public:
+  MyClass(const MyClass& rhs_) { _x = rhs_._x; _y = rhs_._y; }
+private:
+  int _x;
+  int _y;
+};
+```
+
+* __move konstruktor__ (C++ 11 óta)
+```cpp
+class MyClass
+{
+public:
+  MyClass (int&& x_) { _x(std::move(x_)); }
+private:
+  int _x;
+};
+```
+
+Az osztálynak több konstruktora is lehet, és mindig az argumentumlista alapján dől el, hogy melyik változatot kell meghívni. Ha mi magunk nem definiálunk konstruktort akkor a C++ fordító biztosít egy alapértelmezett és egy másoló konstruktort. Ha valamilyen saját konstruktort készítünk, ahhoz az alapértelmezett konstruktort is definiálnunk kell, amennyiben szükségünk van rá.
+
+__Fontos__: konstruktor nem lehet virtuális, de lehet privát.
