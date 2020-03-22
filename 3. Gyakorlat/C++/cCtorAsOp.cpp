@@ -11,8 +11,8 @@ public:
     // copy ctor
     A(const A& rhs)
     {
-    num = new int;
-    *num = *rhs.num;
+      num = new int;
+      *num = *rhs.num;
     }
 
     // assingment operator

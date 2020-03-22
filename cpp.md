@@ -1469,7 +1469,7 @@ int main()
 
 Mi ezzel a programmal a baj?
 
-Ha jobban megnézzük az ```add()``` függvény az ```str``` lokális változó referenciájával tér vissza. Ám, mint azt már tudjuk az ```str``` számára a stacken került foglalásra a memóriaterület, így függvény végén fel fog szabadulni, azaz törlődni fog a stackről. Így, amikor visszaadjuk a referenciáját, egy törölt változó referenciáját fogjuk visszaadni, ami valami memóriaszemét lesz. Ilyen esetekben a fordító egy figyelmeztetést ad: olyan objektumra hivatkozó referenciát adunk vissza, amely ```add()```-on belül lokális. Ez azt jelenti, hogy amint a vezérlés visszatér a ```main()``` függvényhez az ```str``` megsemmisül, és a ```main()``` függvény pedig az ```str```-hez tartozó címen lévő értéket próbálná meg lemásolni. Mivel viszont az ```str``` már ezen a ponton megsemmisült, semmi nem garantálja, hogy azon a memóriaterületen ne követekezett volna be módosítás.
+Ha jobban megnézzük a ```concat()``` függvény az ```str``` lokális változó referenciájával tér vissza. Ám, mint azt már tudjuk az ```str``` számára a stacken került foglalásra a memóriaterület, így függvény végén fel fog szabadulni, azaz törlődni fog a stackről. Így, amikor visszaadjuk a referenciáját, egy törölt változó referenciáját fogjuk visszaadni, ami valami memóriaszemét lesz. Ilyen esetekben a fordító egy figyelmeztetést ad: olyan objektumra hivatkozó referenciát adunk vissza, amely ```concat()```-on belül lokális. Ez azt jelenti, hogy amint a vezérlés visszatér a ```main()``` függvényhez az ```str``` megsemmisül, és a ```main()``` függvény pedig az ```str```-hez tartozó címen lévő értéket próbálná meg lemásolni. Mivel viszont az ```str``` már ezen a ponton megsemmisült, semmi nem garantálja, hogy azon a memóriaterületen ne követekezett volna be módosítás.
 
 Az olyan memóriaterületre való hivatkozás, mely nincs a program számára lefoglalva, __nem definiált viselkedést__ eredményez.
 
@@ -2106,12 +2106,12 @@ struct List
 int main()
 {
   List* head = new List;
-  head->data = 1; // (*head.)data == head->data
+  head->data = 9; // (*head.)data == head->data
   head->next = new List;
 
-  head->next->data = 2;
+  head->next->data = 16;
   head->next->next = new List;
-  head->next->next->data = 3;
+  head->next->next->data = 4;
   head->next->next->next = NULL; // modern C++-ban nullptr
   
   delete head;
@@ -2257,3 +2257,755 @@ private:
 Az osztálynak több konstruktora is lehet, és mindig az argumentumlista alapján dől el, hogy melyik változatot kell meghívni. Ha mi magunk nem definiálunk konstruktort akkor a C++ fordító biztosít egy alapértelmezett és egy másoló konstruktort. Ha valamilyen saját konstruktort készítünk, ahhoz az alapértelmezett konstruktort is definiálnunk kell, amennyiben szükségünk van rá.
 
 __Fontos__: konstruktor nem lehet virtuális, de lehet privát.
+
+
+### Implicit és explicit konstruktor
+
+
+```explicit``` kulcsszó azt mondja ki, hogy a konstruktor explicit, ami azt jelenti, hogy nem használható implicit átalakítás és másolás inicilalizáció (copy-initialization).
+
+```cpp
+class A
+{
+public:
+  A(int) { }
+  A(int, int) { }
+};
+
+class B
+{
+public :
+  explicit B(int) { }
+  explicit B(int, int) { }
+};
+
+int main()
+{
+  A a1 = 1; // OK, copy-initialization A::A(int)
+  A a2(2); // OK, direct-initialization A::A(int)
+  A a3{4, 5}; // OK, direct-list-initialization A::A(int, int)
+  A a4 = {4, 5}; // OK, copy-list-initialization A::A(int, int)
+  A a5 = (A)1; // OK, explicit cast
+
+  B b1 = 1; // Error, copy-initialization figyelmen kívül hagyja a B::B(int)
+  
+  B b2(2); // OK, direct-initialization B::B(int)
+  B b3{4, 5}; // OK, direct-list-initialization B::B(int, int)
+  B b4 = {4, 5}; // Error, copy-list-initialization nem veszi figyelembe B::B(int, int)
+  B b5 = (B)1; // OK, explicit cast
+}
+```
+
+
+### Adattag inicializációs lista - Member initializer list
+
+
+Segítségével elkerülhető az alapértelmezett konstruktor felesleges hívása. Tekintsük az alábbi példát:
+
+```cpp
+class A
+{
+public:
+  A() { x = 0; }
+  A(int x_) { x = x_; }
+  int x;
+};
+
+class B
+{
+public:
+  B() { _a.x = 3; }
+private:
+  A _a;
+};
+```
+
+Ebben az esetben a ```B``` osztály konstruktora először az ```A``` osztály alapértelmezett konstruktorát fogja meghívni, és utána állítja be az ```a.x``` értékét 3-ra. Egy jobb megoldás, ha a ```B``` osztály direktben meghívja az ```A``` osztály konstruktorát egy inicializációs listában.
+
+```cpp
+B() : a(3) { }
+```
+
+Ebben az esetben az ```A```-nak már csak az ```int``` paraméteres konstruktorát fogja meghívni. Megspórolunk egy felesleges konstruktor hívást, ami abban az esetben nagy előny, ha pl. az ```A``` osztály alapértelmezett konstruktorában még egy dinamikus memóriafoglalás is lenne.
+
+További előnyei, ha konstans adattagoknak vagy referenciáknak szeretnénk értéket adni.
+
+```cpp
+class A
+{
+public:
+  A(int x_, int y_) { _x = x_;  _y = y_; }
+private:
+  const int _x;
+  int& _y;
+};
+
+int main()
+{
+  int i = 1;
+  int j = 2;
+  A(i, j);
+}
+```
+
+> kimenet:
+>
+> error: uninitialized const member in ‘const int’
+>
+> error: uninitialized reference member in ‘int&’
+>
+> error: assignment of read-only member ‘A::_x’
+
+Láthatjuk, hogy így több hibát is kapunk, miszerint nem inicializálzunk egy konstans változót, egy referenciát és írni próbálunk egy read-only értéket. Írjuk meg helyesen ezt a programot.
+
+```cpp
+class A
+{
+public:
+  A(int x_, int y_) :
+    _x{x_},
+    _y{y_}
+  { }
+private:
+  const int _x;
+  int& _y;
+};
+
+int main()
+{
+  int i = 1;
+  int j = 2;
+  A(i, j);
+}
+```
+
+Ez a program lefordul és le is fut helyesen.
+
+__Fontos__: konstans adattagoknak és referencia változónak csak így tudunk értéket adni.
+
+A változók kiértékelése mindig a deklarálásuk sorrendjében történik. Inicializációs listában törekedjünk arra, hogy az osztály adattagjaival ne inicializáljunk másik adattagokat, mert ha nem figyelünk eléggé, akkor az adattag amivel inicializálni szeretnénk még lehet, hogy nem kapott kezdőértéket. Ez pedig nem definiált viselkedés.
+
+```cpp
+class A
+{
+public:
+  A(int x_,) :
+    _y(_z), _x(x_), _z(1) 
+  { }
+private:
+  int _x, _y, _z;
+}
+```
+
+### Másoló konstruktor (_copy constructor_, _cctor_)
+
+
+A fordító alapértelmezetten sok kódot generál az osztályokba, struktúrákba. Konstruktoron és destruktoron kívül még másoló konstruktort is. 
+
+A másoló konstruktor egy olyan konstruktor, melynek egyetlen paramétere egy, az osztállyal azonos típusú objektum. Ez alapértelmezetten minden adattagot lemásol az adott adattag másoló konstruktora segítségével. Primitív típusoknál ez bitről bitre való másolást jelent. Azonban, ha az osztályunk dinamikusan létrehozott adattagokat is tartalmaz a fordító által generált másoló konstruktor már nem fogja tudni rendesen elvégezni a feladatát. Ugyanis nem fogja dinamikusan létrehozni az új változót csak egy mutatót, ami az eredeti objektum dinamikus változójára fog mutatni. Ennek pedig az a következménye, hogy az egyik objektumból képesek leszünk egy másik objektum privát adattagját módosítani, továbbá, ha az egyik osztálynak lefut a destruktora, ami felszabadítja a dinamikus változó által foglalt tárhelyet, amikor a következő osztály destruktora is lefut szintén megpróbál felszabadítani egy már felszabadított tárhelyet, ami nem definiált viselkedéshez vezet. 
+
+Ez azért van mert a fordító által létrehozott másoló konstruktor csak egy úgynevezett __sekély másolatot__ (_shallow copy_) fog készíteni, azaz a dinamikus foglalású változóknak nem az értéke csak a hivatkozása lesz lemásolva. Az ilyen esetek elkerülése érdekében saját másoló konstruktor írása szükséges, ami __mély másolatot__ (_deep copy_) készít.
+
+__Fontos__: a másoló konstruktor NEM értékadó operátor!
+
+```cpp
+class A
+{
+public:
+  A() : _i(new int(1)) { }
+  A(int i_) : _i(new int(i_)) { }
+  ~A() { delete _i; }
+private:
+  int* _i;
+};
+
+int main()
+{
+  A a1(1);
+  A a2(a1); // másoló konstruktor hívása
+}
+```
+
+> kimenet: Error: double free or corruption
+
+Itt egy sekély másolat fog készülni, ami azt jelenti, hogy a dinamikusan lefoglalt adattagok nem fognak újra létrejönni, hanem hivatkozni fognak az eredeti változóra, és amikor az ```a2```-nek lefut a destruktora törölni fogja a dinamikusan lefoglat értéket, ezért amikor az ```a1``` destruktora fog lefutni már egy nem létező változó értékét akarja majd törölni, ami nem definiált viselkedés. Írjunk hát saját másoló konstrukort.
+
+```cpp
+class A
+{
+public:
+  A() : _i(new int(1)) { }
+  A(int i_) : _i(new int(i_)) { }
+  ~A() { delete _i; }
+
+  A(const A& rhs_) { _i = new int(*rhs_._i); }
+private:
+  int* _i;
+};
+
+int main()
+{
+  A a1(1);
+  A a2(a1); // másoló konstruktor hívása
+}
+```
+
+
+### Az értékadó operátor (_assignmet operator_)
+
+
+Hasonló a helyzet, mint a másoló konstruktor esetében, az alapértelmezetten létrehozott értékadó operátor is meghívja az egyes tagok értékadó operátorait, amik a primitív típusok esetén bitről bitre másolnak. Dinamikus típusok másolásához szükség van saját értékadó operátor írására. Az értékadó oeprátornak azonban van visszatérési értéke, mégpedig egy osztály típusú referencia, ami a többszörös értékadás miatt szükséges.
+
+
+Tekintsük az előző programot, de a ```main()```-t módosítsuk kicsit.
+
+```cpp
+class A
+{
+public:
+  A() : _i(new int(1)) { }
+  A(int i_) : _i(new int(i_)) { }
+  ~A() { delete _i; }
+
+  A(const A& rhs_) { _i = new int(*rhs_._i); }
+private:
+  int* _i;
+};
+
+int main()
+{
+  A a1(1);
+  A a2;
+  a2 = a1; // értékadó operátor hívása
+}
+```
+
+> kimenet: Error: double free or corruption
+
+Hasonló a helyzet, mint a másoló konstruktor esetében, ezért hát írjunk saját értékadó operátort.
+
+```cpp
+class A
+{
+public:
+  A() : _i(new int(1)) { }
+  A(int i_) : _i(new int(i_)) { }
+  ~A() { delete _i; }
+
+  A(const A& rhs_) { _i = new int(*rhs_._i); }
+
+  A& operator=(const A& rhs_)
+  {
+    // régi memória felszabadítása
+    delete _i;
+
+    // ellenőrzés, hogy nem önértékadást csináltunk-e
+    if (this != &rhs)
+    {
+      _i = new int(*rhs_._i); }
+    }
+    return *this;
+  }
+private:
+  int* _i;
+};
+
+int main()
+{
+  A a1(1);
+  A a2;
+  a2 = a1; // értékadó operátor hívása
+}
+```
+
+Gyakori hiba, hogy összekeverik a másoló konstruktor hívást az értékadó operátor hívásával.
+
+```cpp
+int main()
+{
+  A a1;
+  A a2(a1); //cctor
+  A a3 = a2; // cctor
+  A a4;
+  a4 = a3; // assignment operator
+}
+```
+
+Látható, hogy ha az értékadó operátort szeretnénk meghívi előbb létrekell hozni az objektum példányt, majd egy új sorban értékül adni neki egy már létező objektumpéldány értékeit.
+
+
+### Destruktor (_destructor_, _dtor_)
+
+
+Gyakran előfordul, hogy egy objektum létrehozása során dinamikus erőforrásokat is (memória, állomány stb.) lefoglalunk, amelyeket az objektum megszűnésekor fel kell szabadítanunk. Ellenkező esetben ezek az erőforrások elvesznek a programunk számára.
+
+A C++ nyelv biztosít egy speciális tagfüggvényt – a __destruktort__ – amelyben gondoskodhatunk a lefoglalt erőforrások felszabadításáról. A destruktor nevét a hullám karakterrel (```~```) egybeépített osztály névként kell megadni. A destruktor a konstruktor-hoz hasonlóan nem rendelkezik visszatérési típussal, nincsenek paraméterei, csak egy lehet belőle az osztályon belül. Ha magunk nem definiálunk destruktort, akkor a fordító a saját alapértelmezése szerinti változatot használja. 
+
+```cpp
+class A
+{
+public:
+  A() { };  // konstruktor
+  ~A() { }; // destruktor
+};
+```
+
+__Fontos__: destruktor lehet virtuális, de nem lehet privát.
+
+Minden tagfüggvény, még a paraméter nélküliek is rendelkeznek egy egy nem látható (implicit) paraméterrel: ```this```, amelyben a hívás során az aktuális objektumpédányra mutató mutatót ad át a C++, és minden adattag hivatkozás automatikusan ```this->data_member``` kifejezésként kerül a kódba.
+
+
+### __RAII (Resource Acquisition is Initialization)__
+
+Ha olyan struktúrát, osztályt írtunk, amely gondoskodik arról, hogy minden dinamikusan lefoglalt területet felszabadít, mindent csak egyszer töröl, azt is jó sorrendben, akkor egy RAII struktúrát vagy osztályt írtunk. Ennek lényege, hogy az adott osztály a megfelelő erőforrásokat lefoglalja magának, majd a destruktor gondoskodik az erőforrások felszabadításáról. Minden erőforrást egy stack-en lévő objektumhoz kötünk, mivel azok garantáltan automatikusan fel fognak szabadulni, azaz destruktoruk le fog futni.
+
+Bjarne Stroustrup híres mondása, hogy a C++ szemétgyűjtéssel rendelkező nyelv, mert nem generál szemetet.
+
+
+### ```const``` kulcsszó metódusok esetében
+
+
+Korábban már láthattuk a ```const``` kulcsszó kettő lehetséges felhasználási módját függvények esetében.
+
+* konstans visszatérési érték. Ebben az esetben a visszatérési értéken nem tudunk változtatni.
+
+```cpp
+const std::string& f() { };
+```
+
+* konstans bemeneti paraméter. Ebben az esetben a bemeneti paraméter értéke nem módosulhat a függvényen belül.
+
+```cpp
+void f(const std::string& i_) { }
+```
+
+Harmadik eset pedig amikor a metódust definiáljuk konstansnak
+
+```cpp
+void f() const { }
+```
+
+Ez annyit jelent, hogy az ```f()``` függvényen belül az osztály adattagjainak értéke nem változhat meg. Továbbá fontos megjegyezni, hogy ha konstans objektumpéldányt hozunk létre, akkor annak csak konstans metódusait tudjuk elérni, ellenkező esetben módosítani tudnánk az adattagjait egy konstans objektumpéldánynak és így megsértenénk a konstans korrektséget. Továbbá konstans objektumpéldányok létrehozás esetében mindig kell, hogy legyen legalább egy, a felhasználó által definiált konstruktor.
+
+```cpp
+class MyClass
+{
+public:
+  A() { _counter = 0; }
+  int getCounter() const { std::cout << 1; }
+  int getCounter() { std::cout << 2; }
+private:
+  int _counter;
+};
+
+int main()
+{
+  const MyClass mc;
+  mc.getCounter();
+  
+  MyClass mc2;
+  mc2.getCounter();
+}
+```
+
+> kimenet: 11
+
+Ilyen esetekben a fordító mindig a konstans metódust fogja választani.
+
+
+### ```friend``` mechanizmus
+
+
+A friend mehcanizmus lehetővé teszi, hogy az osztály ```private``` és ```protected``` tagjait nem saját tagfüggvényből is elérjük. A friend deklarációt az osztályon belül kell elelyezni tetszőleges elérésű részben. "barát" lehet egy külső függvény, egy mási osztály adott tagfüggvénye, de akár egy egész osztály is (vagyis annak minden tagfüggvénye).
+
+```cpp
+class MyClass
+{
+public:
+  friend int getCounter(const MyClass);
+  // friend int getCounter() const; -> hiba, non-member function cannot have a const qualifier.
+private:
+  int _counter;
+};
+
+int getCounter(const MyClass& mc_) { return mc_._counter; }
+
+int main()
+{
+  MyClass mc;
+  getCounter(mc)
+}
+```
+
+
+### ```inline``` tagfüggvények
+
+
+Az ```inline``` megoldás nagy előnye, hogy a teljes osztályt egyetlen fej állományban tárolhatjuk, és az osztály tagjait könnyen át tekinthetjük. Általában kisebb méretű függvények esetén alkalmazható hatékonyan. Ilyenkor nem függvényhívás történik, hanem magának a függvénynek a kódja beillesztésre kerül a hívások helyein. Nagyobb méretű kód: a függvény törzse több helyen szerepel, több optimalizálási lehetőség miatt azonban lehet mgis rövidebb. Megspórolja a függvényhívás idejét. Rekurzív függvények esetében nem használható, mert a fordító nem fogja tudni hányszor ágyazza egymásba az inline-olt kódot. Megadhatjuk explicit módon az ```inline``` kulcsszó segítségével vagy akár implicit módon is.
+
+```cpp
+class MyClass
+{
+public:
+  int getNumberI() const { return _i; } // implicit inline
+  inline int getNumberJ() const { return _j; } // explicit inline
+  // int inline és inline int között a fordító nem tesz különbséget
+private:
+  int _i;
+  int _j;
+};
+```
+
+
+## ```static``` az  osztályon belül
+
+
+C++-ban az osztályszintű változókat és függvéneket a ```static``` prefixel kell ellátni. Ezek nem fognak létrejönni minden egyes objektum példánynál, mint az adattagok, hanem csak egyszer. Statikus adattagok kezdőértékkel való inicilizálása csak az osztályon kívül megengedett, kivétel az az eset, amikor konstant statikus adattagokról van szó. Ebben az esetben az osztályon belül tudunk nekik kezdőértéket adni. __Konstruktor és destruktor SOHA nem lehet statikus__.
+
+Nem statikus metódusokból elérhetőek statikus és nem statikus adatagok is. Statikus metódosukból csak statikus adattagokra tudunk hivatkozni. Ennek oka, hogy ezek már fordítási időben létrejönnek, míg a nem statikus adattagok csak akkor, amikor példányosítjuk az osztályt. 
+
+```cpp
+class MyClass
+{
+public:
+  int f() { return _i; } // helyes
+  static int g() { return _k; } // hibás -> a return k; az implicit return this->k;
+                                // hívásnak felelne meg, ám az osztályszintű metódus
+                                // esetében nincs értelmezve a this mutató, hiszen
+                                // nincs objektum, amin értelmezhetnénk. Statikus metódus
+                                // eléréséhez használjuk az osztály neévt és a scope 
+                                // operátort. MyClass::g()
+private:
+  int _k;
+  static int _i; // osztályon kívül kell inicializálni
+  const static int _j = 0; // lehet osztályon belül inicializálni, mert konstans
+};
+
+int A::_i = 0; // _i változó osztályon kívüli inicializálása
+```
+
+## Öröklődésről bővebben
+
+
+Mint azt már láthattuk a problémák objektum orientált feldolgozása során használatos az öröklődés. Lehetővé teszi, hogy már egy létező osztály vagy osztályok adatait és műveleteit új megközelítésben alkalmazzuk, illetve a feladat igényeinek megfelelően módosítsuk, bővítsük. Így nem egyetlen (nagy) osztállyal, hanem osztályok egymásra épülő rendszerével oldjuk meg a problémákat.
+
+Az öröklődés az OO C++ nyelv egyik legfőbb sajátossága. Az öröklés során az új osztály örökli a meglévő osztály(ok) nyilványos (_public_) és védett (_potected_) adattagjait és tagfüggfényeit, amelyeket aztán annak sajátjaként használhatunk. Az új osztállyal bővíthetjük is a meglévő osztály(oka)t, új adattagokat és tagfüggvényeket definiálhatunk, illetve újra értelmezhetjük az örökölt, de működésükben elavult tagfüggvényket. Ez utóbbit nevezzük __override__-olásnak.
+
+```cpp
+class Base
+{
+  // ...
+};
+
+class Derived: public Base
+{
+  // ...
+}
+```
+
+![singleInheritance](img/inheritanceDiagram.png)
+
+A C++ támogatja a többszörös öröklődést (_multiple inheritance_), mely során valamely új osztály több ősosztályból származik. Ez nem összekeverendő a több osztályon keresztüli örökléssel.
+
+```cpp
+class Base1
+{
+public:
+  int a;
+};
+
+class Base2
+{
+public:
+  int b;
+};
+
+class Derived: public Base1, public Base2
+{
+public:
+  int c;
+}
+```
+
+![multipleInheritance](img/multipleInheritanceDiagram.png)
+
+Az ábrán a ```Derived``` osztálynak két őse van: ```Base1``` és ```Base2```. Egy osztálynak természetesen kettőnél több őse is lehet. 
+
+Nézzük meg, hogy a leszármazott ```Derived``` osztály objektumai hogyan néznek ki a memóriában.
+
+![multipleInheritanceMemoryMap](img/multipleInheritanceMemoryMap.png)
+
+A ```d``` egy ```Derived``` osztálybeli objektum. Az objektumban először az örökölt tagváltozók foglalnak helyet, mégpedig a ```Derived``` osztály definíciójában megadott ősosztály listában balról jobbra haladva kerülnek be az objektumba: a ```Base1``` osztályból ```a```, majd a ```Base2``` osztályból ```b```. Ezt követik a leszármazott osztály tagváltozói., jelen esetben ```c```.
+
+Többszörös öröklés esetén is érvényes az a szabály, hogy leszármazott osztálybeli objektumra lehet ősosztály típusú mutatóval vagy referenciával hivatkozni. Természetesen itt is igaz, hogy ekkor úgy tekintünk az objektumra, mintha az adott őszosztálybeli lenne, ennek következtében csak az adott ősosztálybeli tagváltozók és tagfüggvények érhetőek el, illetve azok amelyeket az ősosztály örökölt a saját szüleitől. Tekintsük az alábbi kódot:
+
+```cpp
+Derived d; //Derived őse Base1 és Base2
+D* pd = &d;
+Base1* pb1 = &d;
+Base2* pb2 = &d;
+
+pb1->a = 10;  // OK
+pb1->b = 10;  // Fordítási hiba
+pb2->a = 10   // Fordítási hiba
+pb2->b = 10;  // OK 
+```
+
+Bár az ```a``` és ```b``` változók jelen vannak a ```Derived``` osztályban, ettől függetlenül egy ősosztály típusú mutatóval csak azokat tudjuk elérni, melyek az adott ősosztályban is jelen vannak.
+
+![multipleInheritanceMemoryMapPointer](img/multipleInheritanceMemoryMapPointer.png)
+
+A lefontosabb tanulság a következő: __minden mutató a mutató típusának megfelelő rész elejére mutat az objektumban__. Első pillantásra talán kicsit furcsának tűnhet, hogy a ```pb2``` mutató nem az objektum elejére mutat, hiszen ```Base2```-ből örökölt részek nem itt kezdődnek. Ennek fő következménye az, hogy __mutató konverzió esetén a mutató által tartalmazott cím megváltozhat.__
+
+A származtatott osztály olyan osztály, amely adattagjait és függvényeit egy vagy több előzőleg definiált osztálytól örökli. A származtatott osztály szintén lehet alaposztálya további osztályoknak, lehetővé téve ezzel az osztályhierarchia kialakítását.
+
+A származtatott osztály az alaposztály minden tagját örökli, azonban az alaposztályból csak a publikus és a védett tagokat éri el sajátként. A tagfüggvényeket általában publikus vagy védett hozzáféréssel adjuk meg, míg az adattagok esetén a védett vagy privát elérést alkalmazzuk. Öröklés során megadhatjuk a származtatás módját (__public__, __protected,__, __private__).
+
+Az alaposztálybeli elérhetőségüktől függetlenül nem öröklődnek a konstruktorok, destruktorok, az értékadó operátor valamint a _friend_ viszonyok.
+
+![inheritance](img/inheritanceCpp.png)
+
+A publikus származtatás során az örökölt tagok megtartják az alaposztálybeli elérhetőségüket, míg privát származtatás során az örökölt tagok a származtatott osztály privát tagjaivá válnak. Védett öröklés esetén az örökölt tagok védettek lesznek az új osztályban.
+
+
+## Behelyettesíthetőség
+
+
+Tekinstük az alábbi programot
+
+```cpp
+#include <iostream>
+
+class Person
+{
+public:
+  Person(std::string name_, int age_):
+    _name(name_),
+    _age(age_)
+  { }
+
+  void print() { std::cout << _name << _age; }
+protected:
+  std::string _name;
+  int _age;
+};
+
+class Employee: public Person
+{
+public:
+  Employee(std::string name_, int age_, int employmentYear_):
+    Person(name_, age_),
+    _employmentYear(employmentYear_)
+  { }
+
+  void print() { Person::print(); std::cout << _employmentYear; }
+private:
+  int _employmentYear;
+};
+
+int main()
+{
+  Person person("Jack", 34);
+  Employee employee("John", 28, 3);
+
+  person.print(); // OK, meghívódik a Person::print()
+  employee.print(); // OK, meghívódik az Employee::print();
+}
+```
+A fenti példában nincs semmi meglepő. A tagfüggvényekhez objektumváltozókon keresztül férünk hozzá, így a változó típusa meghatároz egy tagfüggvényt, és az hívódik meg.
+
+Mutatók esetén nem mindig ilyen egyértelmű a helyzet. Ilyenkor ugyanis két típus is szerepet játszik:
+
+* a mutató típusa
+* mutatott területen található változó típusa
+
+Amikor ez a kettő különbözik, akkor a műveleteket a mutató típusa határozza meg.
+
+Mutassunk rá egy __Employee__ típusú objektumra egy __Person__ típusú mutatóval.
+
+```cpp
+Employee employee("John", 28, 3);
+Person* pPerson = &employee;
+```
+
+Nézzük meg a két típus memóriabeli reprezentációját.
+
+![personEmployeeObjectMemoryModel](img/personEmployeeObjectMemoryModel.png)
+
+Jól látható, hogy az __Employee__ típusú objektum eleje megegyezik egy __Person__ típusú objektummal és a __pPerson__ mutató valóban az __Employee__ objektum __Person__ típusú részére mutat. A mutatón keresztüli hozzáférés szempontjából az __Employee__ osztály kompatibilis a __Person__ osztállyal. Ez általában is igaz: ha egy osztály csak egy osztályból örököl, akkor  mindig kompatibilis az ősosztállyal. Ekkor a __pPerson__ mutatón keresztül minden olyan függvényhez hozzáférünk az __Employee__ osztályban, amik megtalálhatóak a __Person__-ban is. A többihez viszont nincs hozzáférésünk a mutatón keresztül. Ezt nevezzük az objektum ledarabolódásának vagy __object slicing__-nak.
+
+Érdekes kérdés lehet, hogy ebben az esetben a ```print()``` metódus hívása mit eredményez, ha a __pPerson__ mutatón keresztül hívjuk meg. Mivel a műveletet a mutató típusa határozza meg és nem a mutatott memóriaterületen elhelyezkedő objektum típusa, így a ```Person::print()``` függvény fog meghívódni. Ha ehhez hozzávesszük, hogy mindezek nem csak mutatóra, hanem referenciára is igazak, kimondhatjuk a behelyettesíthetőség C++-beli megvalósításának lényegét:
+
+__Egy ősosztály típusú mutatónak mindig értékül adhatunk egy leszármazott típusú mutatót vagy leszármazott típusú objektum címét. Referencia esetén ez azt jelenti, hogy egy ősosztály típusú referenciát inicializálhatunk leszármazott típusú objektummal is. Az ősosztály típusú mutatón, illetve referencián keresztül csak az ősosztálybeli tagváltozók, illetve tagfüggvények érhetőek el.__
+
+Ennek következménye, hogy egy ősosztály típusú mutató esetében mi rejtőzik a mutató mögött. Ősosztály vagy származtatott osztály egy objektuma. Azt a jelenséget, hogy egy ősosztály típusú mutató mutathat bármelyik leszármazott típus példányára is, __polimorfizmusnak__ nevezzük, a mutatót pedig __polimorfnak__.
+
+Ha azt szeretnénk elérni, hogy ha egy ősosztály mutató mögött valamelyik leszármazott található, ne az ősosztály tagfüggvénye hívódjon meg, hanem a leszármazotté, akkor a ```virtual``` kulcsszót kell használnunk, melynek alkalmazásával az egyes tagfüggvények virtuálissá tehetők.
+
+```cpp
+class Person
+{
+public:
+  Person(std::string name_, int age_):
+    _name(name_),
+    _age(age_)
+  { }
+
+  virtual void print() { std::cout << _name << _age; }
+protected:
+  std::string _name;
+  int _age;
+};
+```
+
+__A virtuális függvény (_virtual function_) azt jelenti, hogyha:__
+
+* __az ősosztályban virtuálisnak deklarálunk egy tagfüggvényt, és__
+* __a leszármazott osztályban létezik egy ugyanolyan nevű, argumentumlistájú és visszatérési értékű függvény, továbbá,__
+* __ezt a függvényt egy leszármazott osztályra mutató, ősosztály típusú mutatón/referencián keresztül hívjuk meg,__
+
+__akkor a leszármazottbeli tagfüggvény fog meghívódni.__
+
+A ```virtual``` kulcsszót csak nem statikus tagfüggvényekre alkalmazhatjuk. Ha a leszármazott osztályban írunk egy ugyanolyan nevű, argumentumlistájú és visszatérési értékű függvényt, mint az ősosztály egy virtuális  függvénye, akkor az ősosztály függvényét felülírjuk (__override__).
+
+A leszármazott osztályban jelezni tudjuk, hogy egy ősosztálybeli függvényt írunk felül az ```override``` kulcsszó segítségével. 
+
+```cpp
+class Employee: public Person
+{
+public:
+  Employee(std::string name_, int age_, int employmentYear_):
+    Person(name_, age_),
+    _employmentYear(employmentYear_)
+  { }
+
+  void print() override { Person::print(); std::cout << _employmentYear; }
+private:
+  int _employmentYear;
+};
+```
+
+__Megjegyzés__: az ```override``` kulcsszavat nem muszáj kiírni, viszont, ha kiírjuk figyeljünk oda, hogy csak olyan függvény esetében használhatjuk, amelyet az ősosztályban virtuálisnak jelöltünk.
+
+Abban az esetben, ha az ősosztálybeli függvény annyira általános lenne, hogy nem tudunk neki viselkedést megadni, viszont mégis kell hogy szerepeljen az ősosztályban, érdemes __tisztán virtuális__ (_pure virtual_) függvényként megadni.
+
+```cpp
+class Person
+{
+public:
+  Person(std::string name_, int age_):
+    _name(name_),
+    _age(age_)
+  { }
+
+  virtual void print() = 0;
+protected:
+  std::string _name;
+  int _age;
+};
+```
+
+Ilyenkor a függvénytörzs helyett egy ```= 0```-át írunk. Ezzel azt jelezzük a fordítónak, hogy nem kívánunk megadni függvénytörzset csak a leszármazott osztályban. Ha ezek után szeretnénk példányosítani a __Person__ osztályt, és meghívnánk a ```Person::print()``` tagfüggvényt, a fordító bajban lenne, hiszen nem adtunk meg törzset a függvénynek, ezért a __Person__ osztályt nem lehet példányosítani.
+
+A legalább egy tisztán virtuális függvényt tartalmzató osztályt __absztrakt osztálynak__ (_abstract class_) nevezzük. Az absztrakt osztályokat nem lehet példányosítani.
+
+Ha egyszer egy függvényt virtuálisnak deklarálunk, akkor az összes leszármazottbeli osztályban virtuális lesz. A virtuális lánc nem megszakítható!
+
+A csak tisztán virtuális függvényeket tartalmazó osztályt __interésznek__ (_interface_) nevezzük. Ha örökölünk egy ilyen vagy egy absztrakt osztályból, biztosítanunk kell a fordítót, hogy a tisztán virtuális tagfüggvényekhez működést rendelünk.
+
+
+## Virtuális destruktor
+
+
+Tekintsük az alábbi programot:
+
+```cpp
+#include <iostream>
+
+class Base
+{
+public:
+  Base() { std::cout << "Base ctor" << '\n'; }
+  ~Base() { std::cout << "Base dtor" << '\n'; }
+};
+
+class Derived : public Base
+{
+public:
+  Derived() { std::cout << "Derived ctor" << '\n'; }
+  ~Derived() { std::cout << "Derived dtor" << '\n'; }
+};
+
+int main()
+{
+  Base* p = new Derived();
+  delete p;
+}
+```
+
+Mi ezzel a probléma?
+
+> kimenet:
+>
+> Base ctor
+>
+> Derived ctor
+>
+> Base dtor
+
+Mint láthatjuk a származtatott osztály destruktora nem hívódott meg, ami abban az esetben, ha dinamikus adattagokat használtunk volna benne memóriaszivárgást jelentene. Erre a problémára nyújt megoldást, ha a destruktort is virtuálissá tesszük.
+
+```cpp
+#include <iostream>
+
+class Base
+{
+public:
+  Base() { std::cout << "Base ctor" << '\n'; }
+  virtual ~Base() { std::cout << "Base dtor" << '\n'; }
+};
+```
+
+> kimenet:
+>
+> Base ctor
+>
+> Derived ctor
+>
+> Derived dtor
+>
+> Base dtor
+
+Ha az alaposztály destruktora virtuális, akkor minden ebből származtatott osztály destruktora is virtuális lesz. Ezáltal biztosak lehetünk abban, hogy a megfelelő destruktor hívódik meg, amikor az objektum megszűnik, még akkor is, ha valamelyik alaposztály típusú mutatóval vagy referenciával hivatkozunk a leszármazott osztály példányára. 
+
+
+## Virtuális függvények megvalósítása
+
+
+A nem virtuális függvények esetében az a cím, amelyre a függvény hívásakor ugrani kell, fordítási időben határozódik meg. Egy virtuális függvény mutatón, illetve referencián keresztüli hívásakor azonban az a függvénycím, amelyre ugrani kell, csak futási időben dől el, a fordító nem "égeti be" egyik függvény címét se. A fordítók ilyen esetekben indirekciót használnak. Minden olyan osztály, amelynek van legalább egy virtuális függvénye (akár definiált, akár örökölt), rendelkezik egy táblázattal a virtuális függvények ugrási címeivel. Ezt szokás virtuális ugrótáblának nevezni. A tábla annyi címet tartalmaz, ahány virtuális függvénye az adott osztálynak van.
+
+Az osztály minden objektumának van egy mutatója az osztályának virtuális ugrótáblájához. A mutatóra a __vfptr__ (_virtual function table pointer_) a leggyakrabban alkalmazott jelölés. A mutató minden objektumban ténylegesen jelen van és helyet foglal. Tekintsük az alábbi kódrészletet:
+
+```cpp
+class A
+{
+public:
+  virtual void f1() {}
+private:
+  int _x:
+};
+
+int main()
+{
+  A a1;
+  A a2;
+}
+```
+
+A memóriakép a következő lesz:
+
+![virtualFunctionMemoryModel](img/virtualFunctionMemoryModel.png)
+
+Virtuális függvények öröklődés esetén:
+
+![virtualFunctionMemoryModelMultipleInheritance](img/virtualFunctionMemoryModelMultipleInheritance.png)
