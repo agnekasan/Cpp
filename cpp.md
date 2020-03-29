@@ -1479,7 +1479,7 @@ __Megjegyzés__: mutatóknál ugyan ez a probléma áll fent.
 # Függvény átadása paraméterként
 
 
-C++-ban lehetőségünk van arra is, hogy függvényeket adjunk át paraméterként. Ezeket az objektumokat __függvény mutatóknak__ (_fucntion pointer_) nevezzük. A függvénymutató egy függvény memóriacímét tároló változó, melyen a függvényhívás művelete (```()```) hajtható végre. Mikor lehetnek hasznosak? Nos, előfordulhat az a helyzet, hogy egy osztály ugyanazt a hívást sokféle objektum felé meg szeretné tenni, ám ezeknek __nincs közös őse__. Annak értekében, hogy csökkentsük a függőségeket az osztályok között, nem hozunk létre egy közös őst, hanem függvénymutatókat használunk az osztályban.
+C++-ban lehetőségünk van arra is, hogy függvényeket adjunk át paraméterként. Ezeket az objektumokat __függvény mutatóknak__ (_function pointer_) nevezzük. A függvénymutató egy függvény memóriacímét tároló változó, melyen a függvényhívás művelete (```()```) hajtható végre. Mikor lehetnek hasznosak? Nos, előfordulhat az a helyzet, hogy egy osztály ugyanazt a hívást sokféle objektum felé meg szeretné tenni, ám ezeknek __nincs közös őse__. Annak értekében, hogy csökkentsük a függőségeket az osztályok között, nem hozunk létre egy közös őst, hanem függvénymutatókat használunk az osztályban.
 
 ```cpp
 #include <iostream>
@@ -1774,7 +1774,7 @@ void swap(std::string& a, std::string& b)
 }
 ```
 
-## Operátor túlterhelés (operator overloding)
+## Operátor túlterhelés (operator overloading)
 
 
 A közönséges függvényekhez hasonlóan a legtöbb operátort is túl lehet terhelni, amely a felhasználói típusok kényelmesebb használatát teszi lehetővé (jellemző például az ```<<``` operátor túlterhelése).
@@ -1807,7 +1807,7 @@ A túlterhelés során az operátort megvalósító utasításokat függvényké
 Az operátorok túlterhelésére használt függvények argumentumai lehetnek objektumok, de ez nem szerencsés nagyméretű objektumok esetében. Mutatókat nem használhatunk argumentumként, mert a mutatókra alkalmazott operátorok nem terhelhetők túl. A referenciák argumentumként használva lehetővé teszik a nagyméretű objektumok kezelését anélkül, hogy lemásolnánk őket.
 
 
-## Litetrálok
+## Literálok
 
 
 ### Karakterlánc literálok
@@ -2454,7 +2454,7 @@ int main()
 ### Az értékadó operátor (_assignmet operator_)
 
 
-Hasonló a helyzet, mint a másoló konstruktor esetében, az alapértelmezetten létrehozott értékadó operátor is meghívja az egyes tagok értékadó operátorait, amik a primitív típusok esetén bitről bitre másolnak. Dinamikus típusok másolásához szükség van saját értékadó operátor írására. Az értékadó oeprátornak azonban van visszatérési értéke, mégpedig egy osztály típusú referencia, ami a többszörös értékadás miatt szükséges.
+Hasonló a helyzet, mint a másoló konstruktor esetében, az alapértelmezetten létrehozott értékadó operátor is meghívja az egyes tagok értékadó operátorait, amik a primitív típusok esetén bitről bitre másolnak. Dinamikus típusok másolásához szükség van saját értékadó operátor írására. Az értékadó operátornak azonban van visszatérési értéke, mégpedig egy osztály típusú referencia, ami a többszörös értékadás miatt szükséges.
 
 
 Tekintsük az előző programot, de a ```main()```-t módosítsuk kicsit.
@@ -2539,7 +2539,7 @@ Látható, hogy ha az értékadó operátort szeretnénk meghívi előbb létrek
 
 Gyakran előfordul, hogy egy objektum létrehozása során dinamikus erőforrásokat is (memória, állomány stb.) lefoglalunk, amelyeket az objektum megszűnésekor fel kell szabadítanunk. Ellenkező esetben ezek az erőforrások elvesznek a programunk számára.
 
-A C++ nyelv biztosít egy speciális tagfüggvényt – a __destruktort__ – amelyben gondoskodhatunk a lefoglalt erőforrások felszabadításáról. A destruktor nevét a hullám karakterrel (```~```) egybeépített osztály névként kell megadni. A destruktor a konstruktor-hoz hasonlóan nem rendelkezik visszatérési típussal, nincsenek paraméterei, csak egy lehet belőle az osztályon belül. Ha magunk nem definiálunk destruktort, akkor a fordító a saját alapértelmezése szerinti változatot használja. 
+A C++ nyelv biztosít egy speciális tagfüggvényt – a __destruktort__ – amelyben gondoskodhatunk a lefoglalt erőforrások felszabadításáról. A destruktor nevét a hullám karakterrel (```~```) egybeépített osztály névként kell megadni. A destruktor a konstruktorhoz hasonlóan nem rendelkezik visszatérési típussal, nincsenek paraméterei, csak egy lehet belőle az osztályon belül. Ha magunk nem definiálunk destruktort, akkor a fordító a saját alapértelmezése szerinti változatot használja. 
 
 ```cpp
 class A
@@ -2622,7 +2622,7 @@ A friend mehcanizmus lehetővé teszi, hogy az osztály ```private``` és ```pro
 class MyClass
 {
 public:
-  friend int getCounter(const MyClass);
+  friend int getCounter(const MyClass&);
   // friend int getCounter() const; -> hiba, non-member function cannot have a const qualifier.
 private:
   int _counter;
@@ -2684,12 +2684,13 @@ private:
 int A::_i = 0; // _i változó osztályon kívüli inicializálása
 ```
 
+
 ## Öröklődésről bővebben
 
 
 Mint azt már láthattuk a problémák objektum orientált feldolgozása során használatos az öröklődés. Lehetővé teszi, hogy már egy létező osztály vagy osztályok adatait és műveleteit új megközelítésben alkalmazzuk, illetve a feladat igényeinek megfelelően módosítsuk, bővítsük. Így nem egyetlen (nagy) osztállyal, hanem osztályok egymásra épülő rendszerével oldjuk meg a problémákat.
 
-Az öröklődés az OO C++ nyelv egyik legfőbb sajátossága. Az öröklés során az új osztály örökli a meglévő osztály(ok) nyilványos (_public_) és védett (_potected_) adattagjait és tagfüggfényeit, amelyeket aztán annak sajátjaként használhatunk. Az új osztállyal bővíthetjük is a meglévő osztály(oka)t, új adattagokat és tagfüggvényeket definiálhatunk, illetve újra értelmezhetjük az örökölt, de működésükben elavult tagfüggvényket. Ez utóbbit nevezzük __override__-olásnak.
+Az öröklődés az OO C++ nyelv egyik legfőbb sajátossága. Az öröklés során az új osztály örökli a meglévő osztály(ok) nyilványos (_public_) és védett (_protected_) adattagjait és tagfüggfényeit, amelyeket aztán annak sajátjaként használhatunk. Az új osztállyal bővíthetjük is a meglévő osztály(oka)t, új adattagokat és tagfüggvényeket definiálhatunk, illetve újra értelmezhetjük az örökölt, de működésükben elavult tagfüggvényket. Ez utóbbit nevezzük __override__-olásnak.
 
 ```cpp
 class Base
@@ -2741,7 +2742,7 @@ Többszörös öröklés esetén is érvényes az a szabály, hogy leszármazott
 
 ```cpp
 Derived d; //Derived őse Base1 és Base2
-D* pd = &d;
+Derived* pd = &d;
 Base1* pb1 = &d;
 Base2* pb2 = &d;
 
