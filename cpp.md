@@ -190,13 +190,13 @@ int main()
 {
   int i = 1;
   int j = 2;
-  std::cout << add(++i,++j); // 12
+  std::cout << add(++i,++j);
   i = 1;
   j = 2;
-  std::cout << add(++i,j++); // 10
+  std::cout << add(++i,j++);
   i = 1;
   j = 2;
-  std::cout << add(i++,j++); // 8
+  std::cout << add(i++,j++);
 }
 ```
 
@@ -2540,7 +2540,7 @@ public:
     delete _i;
 
     // ellenőrzés, hogy nem önértékadást csináltunk-e
-    if (this != &rhs)
+    if (this != &rhs_)
     {
       _i = new int(*rhs_._i); }
     }
@@ -2567,7 +2567,7 @@ int main()
   A a2(a1); //cctor
   A a3 = a2; // cctor
   A a4;
-  a4 = a3; // assignment operator
+  a4 = a3; // értékadó operátor
 }
 ```
 
@@ -2853,7 +2853,7 @@ Tekinstük az alábbi programot
 class Person
 {
 public:
-  Person(std::string name_, int age_):
+  Person(const std::string& name_, int age_):
     _name(name_),
     _age(age_)
   { }
@@ -2867,7 +2867,7 @@ protected:
 class Employee: public Person
 {
 public:
-  Employee(std::string name_, int age_, int employmentYear_):
+  Employee(const std::string& name_, int age_, int employmentYear_):
     Person(name_, age_),
     _employmentYear(employmentYear_)
   { }
@@ -2920,7 +2920,7 @@ Ha azt szeretnénk elérni, hogy ha egy ősosztály mutató mögött valamelyik 
 class Person
 {
 public:
-  Person(std::string name_, int age_):
+  Person(const std::string& name_, int age_):
     _name(name_),
     _age(age_)
   { }
@@ -2948,7 +2948,7 @@ A leszármazott osztályban jelezni tudjuk, hogy egy ősosztálybeli függvényt
 class Employee: public Person
 {
 public:
-  Employee(std::string name_, int age_, int employmentYear_):
+  Employee(const std::string& name_, int age_, int employmentYear_):
     Person(name_, age_),
     _employmentYear(employmentYear_)
   { }
@@ -2967,7 +2967,7 @@ Abban az esetben, ha az ősosztálybeli függvény annyira általános lenne, ho
 class Person
 {
 public:
-  Person(std::string name_, int age_):
+  Person(const std::string& name_, int age_):
     _name(name_),
     _age(age_)
   { }
@@ -3095,11 +3095,11 @@ A C++ nyelv Szabványos Sablonkönyvtára (STL) osztály- és függvénysablonok
 
 A sablonos megoldás lehetővé teszi, hogy az adott néven szereplő osztályokat és függvényeket (majdnem) minden típushoz felhasználhatjuk, a program igényeinek megfelelően.
 
-Az STL alapvetően három csoportra épül, a __konténerekre__ (tárolókra), az __algoritmusokra__ és az __iterátorokra__ (bejárókra). Egyszerűen megfogalmazva az algoritmusokat a konténerekben tárolt ada- tokon hajtjuk végre az iterátorok felhasználásával.
-
-![STLStructure](img/STLStructure.png)
+Az STL alapvetően három csoportra épül, a __konténerekre__ (tárolókra), az __algoritmusokra__ és az __iterátorokra__ (bejárókra). Egyszerűen megfogalmazva az algoritmusokat a konténerekben tárolt adatokon hajtjuk végre az iterátorok felhasználásával.
 
 A végrehajtott algoritmus működésének eredményét többféleképpen is megkaphatjuk (konténerben, iterátorként vagy valamilyen egyéb adatként).
+
+![STLStructure](img/STLStructure.png)
 
 A konténerek, az iterátorok és az algoritmusok kiegészítéseként az STL-ben további szabványos elemeket is találunk: helyfoglalókat (_allocators_), adaptereket (_adaptors_), függvényobjektumokat (_function objects – functors_)
 
