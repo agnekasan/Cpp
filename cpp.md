@@ -122,7 +122,7 @@ A fordítás 3 fő lépésből áll:
 * __Fordítás__ (_tárgykód létrehozása_)
 * __Linkelés__ (_szerkesztés_)
 
-A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk __fordítási egységeknek__ (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy kitöltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor fordítási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
+A fordítás a __preprocesszor__ parancsok végrehajtásával kezdődik, mint például a __header__ fájlok beillesztése a ```.cpp``` fájlokba, az így kapott fájlokat hívjuk __fordítási egységeknek__ (_translation unit_). A fordítási egységek külön-külön fordulnak __tárgykóddá__ (_object file_). Ezekben a gépi utasítások már megvannak, de hiányoznak belőle a hivatkozások, például változók vagy függvények, melyek más fájlokban vannak megvalósítva. Ahhoz, hogy a tárgykódból __futtatható állományt__ (_executable file_) lehessen készíteni, össze kell linkelni őket. A __szerkesztő__ (_linker_) feladata, hogy kitöltse a tárgykódban hiányzó referenciákat. A linkelés lehet __statikus__, amikor a fordító tölti fel a hiányzó referenciákat, vagy __dinamikus__, amikor futási időben, jellemzően egy másik fájlból (pl: .dll) tölti be a hiányzó kódot. Utóbbi akkor praktikus, ha egy modult több, különálló program használ.
 
 ![compilation](img/compilation.png)
 
@@ -265,6 +265,12 @@ void symbol(); // forward deklaráció
 
 int main() { symbol(); }
 ```
+
+
+#### Forward deklaráció
+
+
+Elődeklarálunk egy függvényt, amihez csak a program egy kesőbbi pontján fogunk működést definiálni.
 
 A fodítás során a linkelés fázisánál kapunk hibát, mert a linker nem fogja megtalálni a ```void symbol()``` függvény definícióját. Ezt úgy tudjuk megoldani, ha a ```main.cpp```-ből és a ```symbol.cpp```-ből először tárgykódot készítünk, majd később összelinkeljük őket. Ekkor a  ```main.cpp```-ben lesz egy hivatkozás a ```void symbol();``` függvényre, és a ```symbol.cpp``` fogja tartalmazni a függvény definícióját.
 
@@ -703,10 +709,12 @@ int main()
   int x = 1;
   {
     int x = 2;
-    std::cout << x << std::endl; // 2
+    std::cout << x << std::endl;
   }
 }
 ```
+
+> kimenet: 2
 
 A ```main()``` elején létrehozott ```x``` az utána következő blokkban teljesen elérhetetlen - nincs olyan szabványos nyelvi eszköz, amivel tudnánk rá hivatkozni. Ezt a folyamatot nevezzük __leárnyékolásnak__ (_shadowing_). Azonban a külső globális ```x```-re bármikor tudunk hivatkozni a már korábban említett scope operátor (```::```) segítségével.
 
@@ -720,10 +728,12 @@ int main()
   int x = 1;
   {
     int x = 2;
-    std::cout << ::x << std::endl; // 0
+    std::cout << ::x << std::endl;
   }
 }
 ```
+
+> kimenet: 0
 
 Tekintsük a következő programot:
 
@@ -1170,10 +1180,12 @@ __Figyelem__: ez implementáció függő!
 ```cpp
 int main()
 {
-  std::cout << sizeof(array) << std::endl;
-  std::cout << sizeof(int) << std::endl;
+  int array[] = {1,2,3,4,5};
+  std::cout << sizeof(array) << ' ' << sizeof(int);
 }
 ```
+
+>  kimenet: 20 4
 
 Mivel az ```array```-ben egész számokat tárolunk - egészen pontosan 5 darabot - láthatjuk, hogy az ```array``` mérete pontosan az ötszöröse az ```int```-nek ezért mondhatjuk, hogy a tömbök tiszta adatok.
 
@@ -1266,6 +1278,12 @@ int main()
 }
 ```
 
+> kimenet:
+>
+> 1 2
+>
+> 1 2
+
 Megfigyelhető, hogy az első kiírás eredménye ugyanaz, mint a második kiírásé. Ez azonban egy teljesen jól definiált viselkedés. Ennek oka nem más mint, hogy __érték__ szerint vettük át a paramétereket. Képzeljük el, hogy a stackbe a program berakja a ```c``` és ```d``` változókat. Ezután meghívja a ```swapWrong()``` függvényt, melyben létrehozott ```a``` és ```b``` paraméterek értékét megcseréli, de a függvényhívás után ezeket ki is törli a stackből. Az eredeti ```c``` és ```d``` változók értéke nem változott a függvényhívás során.
 
 A stack tartalma érték szerinti paraméterátadás esetén.
@@ -1297,6 +1315,12 @@ int main()
 }
 ```
 
+> kimenet:
+>
+> 1 2
+>
+> 2 1
+
 Amennyiben ezt a függvényt hívjuk meg, valóban megcserélődik a két változó értéke. De ehhez fontos, hogy ne ```swapPointer(c, d)```-t írjunk, az ugyanis fordítási idejű hibához vezetne, hiszen ```c``` és ```d``` változók típusa ```int``` és nem ```int*```, márpedig mi mutatót adtunk meg bemenetként, amiben pedig referenciákat tudunk tárolni, így a helyes választás a ```&c``` és ```&d``` változók referenciája lesz.
 
 A stack tartalma mutató szerinti paraméterátadás esetén.
@@ -1321,6 +1345,12 @@ int main()
   std::cout << c << ", " << d << std::endl;
 }
 ```
+
+> kimenet:
+>
+> 1 2
+>
+> 1 2
 
 Ebben a példában nem a mutatók által mutatott értéket, hanem magukat a mutatókat cseréljük meg. Itt az fog történni, hogy a függvény belsejében ```a``` és ```b``` mutató másra fog mutatni. A mutatott értékek viszont nem változnak.
 
@@ -1361,6 +1391,12 @@ int main()
   std::cout << c << ", " << d << std::endl;
 }
 ```
+
+> kimenet:
+>
+> 1 2
+>
+> 2 1
 
 Vegyük észre, hogy ilyenkor nem kell jelezni, hogy memóriacímet akarunk átadni, ezért ```swapReference(c, d)```-t kell írnunk. Hátulütője a dolognak, hogy ha más valaki által írt függvényt akarunk használni, aminek nem ismerjük a szignatúráját nem tudjuk explicit megállapítani a hívásból, hogy az átadott paraméterek refenrecia vagy érték szerint lesznek átadca. C#-ban ennek a jelzésére van a ```ref``` kulcsszó.
 
@@ -1551,6 +1587,7 @@ int main()
   mult(1,2);
 }
 ```
+A ```typedef``` egy speciális tárolási osztály, amely lehetővé teszi, hogy már létező típusokhoz újabb szinonim neveket rendeljünk.
 
 A ```typedef``` helyett egy modernebb nyelvi eszköz C++11 óta a ```using``` kulcsszó. Az előző programot ennek a segítségével a következőképpen lehet leírni:
 
@@ -1591,7 +1628,7 @@ int main()
 
 > kimenet: 20 8 (implementáció függő)
 
-Amikor érték szerint próbálunk meg átadni egy tömböt, az átkonvertálódik a tömb első elemére mutató mutatóra. Emlékezzünk a pointer aritmetikánál tanultakra.
+Amikor érték szerint próbálunk meg átadni egy tömböt, az átkonvertálódik a tömb első elemére mutató mutatóra. Emlékezzünk a pointer aritmetikánál tanultakra, azaz ebben az esetben az ```f``` függvényben található ```sizeof(arr)``` egy ```int*``` méretét fogja kiírni.
 
 Hiába is próbálnánk megadni méretet a függvény bemeneti paraméterében
 
@@ -2184,6 +2221,8 @@ C++ nyelvben speciális típusok, az osztályok szolgálnak arra, hogy az adatok
 
 A C++ nyelvben a ```class``` típus a C nyelv struktúratípusának kiterjesztése. Mindkét struktúra tartalmazhat adatmezőket (adattag – data members), azonban a C++-ban ezen adattagokhoz különféle műveleteket, ún. tagfüggvényeket (member function) is megadhatunk. A C++-ban egy osztály típusú tárolási egység függvényeket kombinál adatokkal, és az így létrejött kombinációt elrejtjük, elzárjuk a külvilág elől. Ezt értjük egységbezárás alatt. Egy osztály deklarációja sokban hasonlít a jól ismert struktúra deklarációjához.
 
+__Megjegyzés__: lehetőségünk van készíteni ún. __inline class__-okat. Inline class-nak nevezzük azt, amikor egy osztály definícióját egy másik osztályban vagy függvényben írjuk meg.
+
 ```cpp
 class ClassName
 {
@@ -2397,6 +2436,7 @@ private:
 }
 ```
 
+
 ### Másoló konstruktor (_copy constructor_, _cctor_)
 
 
@@ -2555,6 +2595,29 @@ __Fontos__: destruktor lehet virtuális, de nem lehet privát.
 Minden tagfüggvény, még a paraméter nélküliek is rendelkeznek egy egy nem látható (implicit) paraméterrel: ```this```, amelyben a hívás során az aktuális objektumpédányra mutató mutatót ad át a C++, és minden adattag hivatkozás automatikusan ```this->data_member``` kifejezésként kerül a kódba.
 
 
+### Vexing parse
+
+
+A __vexing parse__ a szintaktikai félreérthetőség speciális formája a C ++ programozási nyelnek. Ez akkor történik, amikor véletlenül függvénydeklarációt csinálunk függvén definíció helyett a default konstruktornál.
+
+Tekintsük az alábbi programot:
+
+```cpp
+class A()
+{
+public:
+  A() { }
+}
+
+int main()
+{
+  A a();
+}
+```
+
+Jelen esetben nem konstruktorhívást végzünk, hanem egy függvény deklarációt csinálunk. Az ```A a();``` sor egy __a__ nevű bemeneti paraméternélküli __A__ visszatérési típusú függvény lesz.
+
+
 ### __RAII (Resource Acquisition is Initialization)__
 
 Ha olyan struktúrát, osztályt írtunk, amely gondoskodik arról, hogy minden dinamikusan lefoglalt területet felszabadít, mindent csak egyszer töröl, azt is jó sorrendben, akkor egy RAII struktúrát vagy osztályt írtunk. Ennek lényege, hogy az adott osztály a megfelelő erőforrásokat lefoglalja magának, majd a destruktor gondoskodik az erőforrások felszabadításáról. Minden erőforrást egy stack-en lévő objektumhoz kötünk, mivel azok garantáltan automatikusan fel fognak szabadulni, azaz destruktoruk le fog futni.
@@ -2641,7 +2704,7 @@ int main()
 ### ```inline``` tagfüggvények
 
 
-Az ```inline``` megoldás nagy előnye, hogy a teljes osztályt egyetlen fej állományban tárolhatjuk, és az osztály tagjait könnyen át tekinthetjük. Általában kisebb méretű függvények esetén alkalmazható hatékonyan. Ilyenkor nem függvényhívás történik, hanem magának a függvénynek a kódja beillesztésre kerül a hívások helyein. Nagyobb méretű kód: a függvény törzse több helyen szerepel, több optimalizálási lehetőség miatt azonban lehet mgis rövidebb. Megspórolja a függvényhívás idejét. Rekurzív függvények esetében nem használható, mert a fordító nem fogja tudni hányszor ágyazza egymásba az inline-olt kódot. Megadhatjuk explicit módon az ```inline``` kulcsszó segítségével vagy akár implicit módon is.
+Az ```inline``` megoldás nagy előnye, hogy a teljes osztályt egyetlen fej állományban tárolhatjuk, és az osztály tagjait könnyen át tekinthetjük. Általában kisebb méretű függvények esetén alkalmazható hatékonyan. Ilyenkor nem függvényhívás történik, hanem magának a függvénynek a kódja beillesztésre kerül a hívások helyein. Nagyobb méretű kód: a függvény törzse több helyen szerepel, több optimalizálási lehetőség miatt azonban lehet mégis rövidebb. Megspórolja a függvényhívás idejét. Rekurzív függvények esetében nem használható, mert a fordító nem fogja tudni hányszor ágyazza egymásba az inline-olt kódot. Megadhatjuk explicit módon az ```inline``` kulcsszó segítségével vagy akár implicit módon is.
 
 ```cpp
 class MyClass
@@ -2655,6 +2718,16 @@ private:
   int _j;
 };
 ```
+
+Tekintsük azt a példát, amikor a ```void f() {}``` függvényt is beillesztjük a headerbe: ha több fordítási egységet fordítanánk egyszerre, melyben ez a header be van illesztve, linkelési hibát kapnánk, mert ```f()``` többször lesz definiálva. Ez azonban megkerülhető az inline kulcsszó használatával, segítségével ugyanis kiküszöbölhető a linkelési hiba: minden azonos nevű, visszatérési értékű, és paraméter listájú inline-ként definiált függvény definícióval együtt beilleszthető több különböző fordítási egységbe, és nem fog fordítási hibát okozni.
+
+Ez úgy oldható meg, hogy a fordító a linkelés folyamán a definíciók közül egyet tetszőlegesen kivá- laszt. Az osztályon belül kifejtett függvények implicit inline-ok, így sose okozhatnak fordítási hibát.
+
+![inlineProblem](img/inlineProblem.png)
+
+Az fent látható ábra jól demonstrálja a problémát. ```f()``` egy ún. __strong reference__-el jön létre ha nem inline, így a linker hibát dob ha több fordítási egységben definiálva van. Ha azonban inline-ként adjuk meg, akkor __weak reference__-ként értelmezi, a meglevő definíciók közül tetszőlegesen kerül egy kiválasztásra. Ez nyilván azt is jelenti, hogy minden ilyen függvény definíciójának meg kell egyeznie, hisz kellemetlen meglepetés érhet minket, ha különböző definíciók közül olyat választ a fordító, melyre nem számítanánk (és ez egyben nem definiált viselkedés is).
+
+__Megjegyzés__: a legtöbb fordítónál be lehet kapcsolni egy ún. __LTO__ (_link time optimalization_) funkciót, amely a linkelésnél optimalizál, többek között ott végzi az inline-olást. Az inline függvények hajlamosak erősen megnövelni a bináris kódot, így az erőltetett használatuk nem javasolt. Az inline kulcsszó egy javaslat a fordító számára nem pedig parancs. Nem inline függvények lehetnek inline-ok, és inline-ként definiált függvények lehet mégsem lesznek azok.
 
 
 ## ```static``` az  osztályon belül
@@ -3010,3 +3083,907 @@ A memóriakép a következő lesz:
 Virtuális függvények öröklődés esetén:
 
 ![virtualFunctionMemoryModelMultipleInheritance](img/virtualFunctionMemoryModelMultipleInheritance.png)
+
+
+## STL - Standard Template Library
+
+
+### Bevezetés az STL-be
+
+
+A C++ nyelv Szabványos Sablonkönyvtára (STL) osztály- és függvénysablonokat tartalmaz, amelyekkel elterjedt adatstruktúrákat (vektor, sor, lista stb.) és algoritmusokat (rendezés, keresés, összefésülés stb.) építhetünk be a programunkba.
+
+A sablonos megoldás lehetővé teszi, hogy az adott néven szereplő osztályokat és függvényeket (majdnem) minden típushoz felhasználhatjuk, a program igényeinek megfelelően.
+
+Az STL alapvetően három csoportra épül, a __konténerekre__ (tárolókra), az __algoritmusokra__ és az __iterátorokra__ (bejárókra). Egyszerűen megfogalmazva az algoritmusokat a konténerekben tárolt ada- tokon hajtjuk végre az iterátorok felhasználásával.
+
+![STLStructure](img/STLStructure.png)
+
+A végrehajtott algoritmus működésének eredményét többféleképpen is megkaphatjuk (konténerben, iterátorként vagy valamilyen egyéb adatként).
+
+A konténerek, az iterátorok és az algoritmusok kiegészítéseként az STL-ben további szabványos elemeket is találunk: helyfoglalókat (_allocators_), adaptereket (_adaptors_), függvényobjektumokat (_function objects – functors_)
+
+
+### Függvényobjektumok - funktorok (_functors_, _function objects_)
+
+
+Az STL sok szabványos algoritmust biztosít a programozók számára, amelyek feldolgozzák a konténerekben tárolt adatokat. Az algoritmusok működése függvényobjektumok (function objects, functors) megadásával testre szabható. Ily módon meghatározhatjuk, hogy milyen műveletek hajtódjanak végre a kollekció elemein. A függvényobjektum hagyományos függvénymutató is lehet, azonban az esetek többségében objektumokat alkalmazunk.
+
+A függvényobjektum olyan típus, amely megvalósítja a függvényhívás (```()```) operátorát. Két lényeges előnye van a közönséges függvényekhez képest:
+
+1. megőrizheti a működés állapotát
+2. mivel a függvényobjektum egy típus, megadhatjuk sablon paraméterként
+
+Amikor az egyoperandusú (_unáris_) függvényobjektum ```bool``` típusú értéket ad vissza __predikátum__-nak nevezzük. __Bináris predikátum__-ról akkor beszélünk, ha egy kétoperandusú függvényobjektum ad vissza __bool__ típusú értéket, a két paraméter összevetésének eredményeképp.
+
+A C++11-től használt [lambda](#lambda-kifejez%c3%a9sek) kifejezések tulajdonképpen névetlen függvénybjektumok.
+
+A függvényobjektumokkal kapcsolatos STL osztálysablonokat a ```<functional>``` fejállományban találjuk. Egy egyszerű példa a funktorokra:
+
+```cpp
+#include <iostream>
+
+struct Add()
+{
+  int x;
+  int operator()(int y) const { return x + y; }
+};
+
+int main()
+{
+  Add a1;
+  a1.x = 1;
+  std::cout << a1(2) << std::endl;
+}
+```
+> kimenet: 3
+
+A későbbiekben nézni fogunk arra is példát, hogy hogyan lehet funktorok segítségével pl. konténeret rendezni.
+
+
+### Konténerek
+
+
+A konténerek olyan objektumok, amelyekben más, azonos típusú objektumokat tárolhatunk. A tárolás módja alapján a konténereket három csoportba sorolhatjuk:
+
+1. __szekvenciális__ (_sequence_) tárolóról beszélünk, amikor az elemek sorrendjét a tárolás sorrendje határozza meg.
+2. __asszociatív__ (_associative_) konténerek ezzel szemben az adatokat egy kulcssal azonosítva tárolják, melyeket tovább csoportosíthatunk kulcs alapján
+   1. __rendezett__ (_ordered_) és
+   2. __nem rendezett__ (_unordered_) tárolókra.
+
+A konténerek sokféleképpen különböznek egymástól:
+* a memóriahasználat hatékonysága
+* a tárolt elemek elérési ideje
+* az új elem beszúrásának, illetve valamely elem törlésének időigénye
+* új elem konténer elejére, illetve véégre történő beillesztésének ideje
+* stb
+
+
+### Szekvenciális tárolók
+
+
+Jellemzőjük, hogy megőrzik az elemek beviteli sorrendjét, azaz a beszúrás ideje határozza meg az elemek sorrendjét. Az ```array``` kivételével tetszőleges pozícióba beszúrhatunk elemet, illetve törölhetünk onnan. Ezek a műveletek általában a tárolók végein a leggyorsabbak.
+
+```array<>``` - a sablonparaméterben megadott konstans elemszámmal létrejövő, egydimenziós tömbök osztálysablonja. ([std::array - cppreference.com](https://en.cppreference.com/w/cpp/container/array))
+
+![stdArrayMemoryMap](img/stdArrayMemoryMap.png)
+
+```cpp
+#include <array>
+
+int main()
+{
+  std::array<int, 5> arr1{{1, 2, 3, 4, 5}};
+  std::array<int, 5> arr2 = {1, 2, 3, 4, 5};
+}
+```
+
+```vector<>``` - a vektor __dinamikus tömbben__ tárolódik sorfolytonos memóriaterületen, amely a végén nővekedhet, viszont azt már tudjuk, hogy egy tömb mérete nem növelhető. Ezt az ```std::vector``` a következő képpen oldja meg: ha több elemet szerenénk beszúrni, mint amennyi az adott vektor kapacitása, akkor lefoglal egy nagyobb memóriaterületet - általában kétszer akkorát - és minden elemet egyesével átmásol erre a memória területre. Ezért a végtor végéhez való elem hozzáadásának műveletigénye amortizált konstans: általában konstans, de ha új memóriaterületet kell lefoglalni és a meglevő elemet átmásolni, akkor lineáris. ([std::vector - cppreference.com](https://en.cppreference.com/w/cpp/container/vector))
+
+Az elemeket indexelve is elérhetjük konstans _O(1)_ idő alatt. Elemek eltávolítása a (```pop_back()```), illetve hozzáadása (```push_back()```) a vektor végéhez szintén _O(1)_ idő alatt lehetséges, míg az elején vagy a közepén ezeka  műveletek (```insert()```, ```erase()```) _O(n)_ végrehajtású idejűek. Rendezetlen vektorban egy elem megkeresésének ideje szintén _O(n)_.
+
+![stdVectorMemoryMap](img/stdVectorMemoryMap.png)
+
+```cpp
+#include <vector>
+
+int main()
+{
+  std::vector<int> vec1{1, 2, 3, 4, 5};
+  std::vector<int> vec2 = {1, 2, 3};
+}
+```
+
+```deque<>``` - __kettősvégű sort__ megvalósító adatszerkezet, amely mindkét végén növelhető, egydimenziós tömböket tartalmazó listában tárolódik. Elemeket mindkét végén konstans _O(1)_ idő alatt adhatunk (```push_front()```, ```push_back()```) a kettősvégű sorhoz, illetve távolíthatunk el onnan (```pop_front()```, ```pop_back()```). Az elemek index segítségével konstans időben _O(1)_ is elérhetőek. ([std::deque - cppreference.com](https://en.cppreference.com/w/cpp/container/deque))
+
+![stdDequeMemoryMap](img/stdDequeMemoryMap.png)
+
+```cpp
+#include <deque>
+
+int main()
+{
+  std::deque<int> deq1{1, 2, 3, 4, 5};
+  std::deque<int> deq2 = {1, 2, 3};
+}
+```
+
+```forward_list<>``` (C++11 óta) - __egyszeres láncolású lista__, melyet csak az elején lehet bővíteni. Azonos elemtípus esetén az elemek helyigénye kisebb, mint a kettős láncolású listáé. Az elemek beszúrása (```insert_after()```) és törlése (```erase_after()```) konstans _O(1)_ időt igényel. ([std::forward_list - cppreference.com](https://en.cppreference.com/w/cpp/container/forward_list))
+
+![stdForwardListMemoryMap](img/stdForwardListMemoryMap.png)
+
+```cpp
+#include <forward_list>
+
+int main()
+{
+  std::forward_list<int> myflist1{1, 2, 3};
+  std::forward_list<int> myflist2 = {3, 2, 1, 4};
+}
+```
+
+```list<>``` - __kettős láncolású lista__, melynek elemei nem érhetőek el az indexelés operátorával. Tetszőleges pozíció eseten a beszúrás (```insert()```) és a törlés (```erase()```) művelete konstans _O(1)_ idő alatt végezhető el. A lista mindkét végéhez adhatunk elemek (```push_front()```, ```push_back()```), illetve törölhetünk (```pop_front()```, ```pop_back()```) onnan. ([std::list - sppreference.com](https://en.cppreference.com/w/cpp/container/list))
+
+![stdListMemoryMap](img/stdListMemoryMap.png)
+
+```cpp
+#include <list>
+
+int main()
+{
+  std::list<int> mylist1;
+  std::list<int> mylist2;
+
+  for (int i = 0; i < 10; ++i)
+  {
+    mylist1.push_back(i);
+    mylist2.push_front(i*2);
+  }
+}
+```
+
+A szekvenciális tárolókra épülő, konténerillesztő osztálysablonok a tároló adapterek. Az alábbi konténer adapterek elemein nem lehet iterátorok segítségével végig lépkedni, ezért semmilyen algortimus hívásakor nem használhatjuk azokat.
+
+```stack<>``` - a __last in first out__ (_LIFO_) működésű __verem__ adatszerkezet típusa. A verem csak a legfelső pozícióban lévő elem módosítását (felülírás, kivétel, behelyezés) teszi lehetővé. Alapértelmezés szerint a __deque__ konténerre épül, azonban a __vector__ és a __list__ is használható a megvalósításához. ([std::stack - cppreference.com](https://en.cppreference.com/w/cpp/container/stack))
+
+![stdStackMemoryMap](img/stdStackMemoryMap.png)
+
+```cpp
+#include <iostream>
+#include <stack>
+
+int main()
+{
+  std::stack<int> mystack;
+  mystack.push(0);
+  mystack.push(1);
+  mystack.push(2);
+
+  while (!mystack.empty())
+  {
+    std::cout << mystack.top() << ' ';
+    mystack.pop();
+  }
+}
+```
+
+> kimenet: 2 1 0
+
+```queue``` - __sor__ adatszerkezetet megvalósító típus, amely csak az utolsó pozícióra való beszúrást és az első pozícióról való eltávolítást teszi lehetővé (__first in first out__ _FIFO_). Ezeken túlmenően az első és az utolsó elem lekérdezése és módosítása is megengedett. Az alapértelmezetten a __deque__ mellett  a __list__ szekvenciális tárolóra épülve is elkészíthető. ([std::queue - cppreference.com](https://en.cppreference.com/w/cpp/container/deque))
+
+![stdQueueMemoryMap](img/stdQueueMemoryMap.png)
+
+```cpp
+#include <iostream>
+#include <queue>
+
+void showq(std::queue<int> myq)
+{
+  std::queue<int>tmpq = myq;
+  while (!tmpq.empty())
+  {
+    std::cout << tmpq.front() << ' ';
+    tmpq.pop();
+  }
+  std::cout << std::endl;
+}
+
+int main()
+{
+  std::queue<int> myq;
+  myq.push(10);
+  myq.push(20);
+  myq.push(30);
+
+  showq(myq);
+
+  std::cout << "myq.size(): " << myq.size() << std::endl;
+  std::cout << "myq.front(): " << myq.front() << std::endl;
+  std::cout << "myq.back(): " << myq.back() << std::endl;
+  myq.pop();
+  showq(myq);
+}
+```
+
+> kimenet:
+> 10 20 30
+> myq.size(): 3
+> myq.front(): 10
+> myq.back(): 30
+> 20 30
+
+```priority_queue<>``` - a __prioritásos sorban__ az elemek a ```<``` (kisebb) operátorral hasonlítva, redezetten tárolódnak. A prioritásos sort csak az egyik, legnagyobb elemet tartalmazó végén érjük el. Ez az elem szükség esetén módosítható, vagy kivehető a sorból. Alapértelmezés szerint a __vector__ konténer fölött jön létre, azonban a __deque__ is alkalmazható. ([std::priority_queue - cppreference.com](https://en.cppreference.com/w/cpp/container/priority_queue))
+
+![stdPriorityQueueMemoryMap](img/stdPriorityQueueMemoryMap.png)
+
+```cpp
+#include <iostream>
+#include <queue>
+
+void showpq(std::priority_queue<int> prQ)
+{
+  std::priority_queue<int> tmpPrQ = prQ;
+  while (!tmpPrQ.empty())
+  {
+    std::cout << tmpPrQ.top() << ' ';
+    tmpPrQ.pop();
+  }
+  std::cout << std::endl;
+}
+
+int main ()
+{
+  std::priority_queue<int> myPrQ;
+  myPrQ.push(10);
+  myPrQ.push(30);
+  myPrQ.push(20);
+  myPrQ.push(5);
+  myPrQ.push(1);
+
+  showpq(myPrQ);
+
+  std::cout << "myPrQ.size(): " << myPrQ.size() << std::endl;
+  std::cout << "myPrQ.top(): " << myPrQ.top() << std::endl;
+  myPrQ.pop();
+
+  showpq(myPrQ);
+}
+```
+
+> kimenet:
+> 30 20 10 5 1
+> myPrQ.size(): 5
+> myPrQ.top(): 30
+> 20 10 5 1
+
+__Megjegyzés__: a C++ alapértelmezetten __maximum kupacot__ (tehát egy olyan kupacot, amelyben bármely elem kulcsa nagyobb vagy egyeblő, mint a gyerekeinek kulcsa) hoz létre a prioritásos sornak.
+
+
+### Asszociatív tárolók
+
+
+Az asszociatív konténerekben az elemekhez való hozzáférés nem az elem pozíciója, hanem egy kulcs értéke alapján megy végbe. A __rendezett asszociatív tárolók__ esetén biztosítani kell a rendezéshez használható kisebb (```<```) műveletet. Az elemek fizikailag egy önkiegyensúlyozó bináris keresőfa ([piros-fekete fa](https://hu.wikipedia.org/wiki/Piros-fekete_fa)) adastruktúrában helyezkednek el.
+
+![redBlackBinaryTree](img/redBlackBinaryTree.png)
+
+A rendezett konténerek esetén általában logaritmikus a végrehatási idő (_O(log(n))_), a rendezettségnek köszönhetően azonban hatékony algoritmuskkal dolgozhatunk. Ebbe a csoportba tartozik az egyedi kulcsokkal működő halmaz (__set__) és a szótár (asszociatív tömb: __map__), valamint ezek kulcsismétlődést megengedő változatai a __multiset__ és a __multimap__.
+
+__Megjegyzés__: kulcsismétlődés esetén a keresés végehatási ideje lineáris (_O(n)_).
+
+Más a helyzet a __rendezetlen__ (_unordered_) asszociatív konténerek esetében. Ebben az esetben az elemek gyoss elérése érdekében minden elemhez egy hasító érték tárolódik egy _hash_ -táblában. Az elemek elérésekor ismét kiszámítódik a hasító érték, és ez alapján majdnem konstans idő alatt lehet elérni az elemeket.
+
+![unorderedHashMemoryMap](img/unorderedHashMemoryMap.png)
+
+A hasító (_kulcstranszformációs_) függvény a kulcsobjektumot egy indexszé (_hasító kód_) alakítja, amely a hasító táblában kijelöl egy elemet (indexeli azt). A hash-tábla minden eleme az objektumok egy csoportjára (bucket – vödör, kosár) hivatkozik, amennyiben az adott hash-kódhoz tartoznak objektumok. Kereséskor a megfelelő kosár objektumait egymás után a kulcshoz hasonlítva találjuk meg a kívánt objektumot, amennyiban az létezik. Látható tehát, hogy a hasító tábla működésének hatékonysága nagyban függ a hasító függvénytől. Egy jó hash-függvény véletlenszerűen és egyenletesen osztja szét az objektumokat a „vödrökbe”, minimalizálva ezzel a lineáris keresés lépéseit.
+
+A C++ nyelv alaptípusaihoz az STL biztosítha a megfelelő ```hash()``` függvényeket (```<functional>``` fejléc). A fentebb látható négy asszociatív konténer nem rendezett változatai az __unordered_set__, __unordered_multiset__, __unordered_map__, __unordered_multimap__.
+
+Míg a __set__ konténerekben a tárolt adat jelenti a kulcsot, addig a __map__ tárolókban (kulcs/érték) adatpárokat helyezhetünk el. Az adatpárok típusa a ```pair``` struktúrasablon, amely lehetővé teszi, hogy egyetlen objektumban két (akár különböző típusú) objektumot tároljunk. A tárolt objektumok közül az elsőre a ```first```, míg a másodikra a ```second``` névvel hivatkozhatunk. (A ```first``` jelenti a kulcsot a ```second``` a hozzá tartozó értéket.)
+
+```set<>```, ```multiset<>``` - mindkét rendezett halmaz konténer a tárolt adatokat kulcsként használja. A __set__ -ben a kulcsok (tárolt adatok) egyediek kell, legyenek, míg a __multiset__ -ben ismétlődhetnek. A két osztálysablon műveletei a ```count()``` és az ```insert()``` tagfüggvényektől eltekintve megegyeznek. A __set__ esetében a beszúrás logarimtmikus idejű (_O(lon(n))_), abban az esetben, ha az ```insert()``` -et használjuk, iterátorral a beszúrás konstans idejű. A keresés szintén logaritmikus idejű (a műveletek kihasználják a rendezettséget). ([std::set - cppreference.com](https://en.cppreference.com/w/cpp/container/set), [std::multiset - cppreference.com](https://en.cppreference.com/w/cpp/container/multiset))
+
+![setMulltiset](img/setMultiset.png)
+
+```cpp
+#include <iostream>
+#include <iterator>
+#include <set>
+
+int main()
+{
+  std::set<int> mySet;
+  std::multiset<int> myMultiSet;
+
+  // elemek hozzáadása a set-hez, véletlen sorrendben
+  mySet.insert(40);
+  mySet.insert(30);
+  mySet.insert(60);
+  mySet.insert(20);
+  mySet.insert(50);
+  mySet.insert(50); // csak az első 50-es érték lesz hozzáadva
+  mySet.insert(10);
+
+  // elemek hozzáadása a multiset-hez véletlen sorrendben
+  myMultiSet.insert(40);
+  myMultiSet.insert(30);
+  myMultiSet.insert(60);
+  myMultiSet.insert(20);
+  myMultiSet.insert(50);
+  myMultiSet.insert(50);
+  myMultiSet.insert(10);
+
+  // set elemeinek kiírása
+  std::set<int>::iterator itr = mySet.begin();
+  for (; itr != mySet.end(); ++itr)
+  {
+    std::cout << *itr << ' ';
+  }
+
+  std::cout << std::endl;
+
+  // multiset elemeinek kiírása
+  std::multiset<int>::iterator mItr = myMultiSet.begin();
+  for (; mItr != myMultiSet.end(); ++mItr)
+  {
+    std::cout << *mItr << ' ';
+  }
+}
+```
+
+> kimenet:
+> 10 20 30 40 50 60
+> 10 20 30 40 50 50 60
+
+```map<>```, ```multimap<>``` - mindkét asszociatív tömb elemei ```pair``` típusúak, és kulcs/érték párokat tartalmaznak. A tárolók elemei a kulcs alapján rendezettek. A kulcsok a __map__ esetén egyediek, míg __multimap__ esetén ismétlődhetnek. A halmazhoz hasonlóan a két osztálysablonnak csak a ```count()``` és az ```insert()``` tagfüggvényei különböznek egymsától. Az elemek indexelve vannak nem feltétlen nullától és nem is  feltétlenül egymás utáni indexek. A kulcsok értékét nem tudjuk módosítani. Keresés logaritmikus idejű (_O(log(n))_). ([std::map - cppreference.com](https://en.cppreference.com/w/cpp/container/map), [std::multimap - cppreference.com](https://en.cppreference.com/w/cpp/container/multimap))
+
+![mapMultimap](img/mapMultimap.png)
+
+```cpp
+#include <iostream>
+#include <iterator>
+#include <map>
+
+int main()
+{
+
+  std::map<int, int> myMap;
+  std::multimap<int, int> myMultiMap;
+
+  // elemek hozzáadása a map-hez  véletlen sorrendben
+  myMap.insert(std::pair<int, int>(7, 10));
+  myMap.insert(std::pair<int, int>(2, 30));
+  myMap.insert(std::pair<int, int>(1, 40));
+  myMap.insert(std::pair<int, int>(5, 50));
+  myMap.insert(std::pair<int, int>(2, 30)); // csak az első 2-es kulcsú kulcs/érték pár lesz beírva
+  myMap.insert(std::pair<int, int>(3, 60));
+  myMap.insert(std::pair<int, int>(6, 50));
+  myMap.insert(std::pair<int, int>(4, 20));
+
+  // elemek hozzáadása a multimap-hez  véletlen sorrendben
+  myMultiMap.insert(std::pair<int, int> (5, 50));
+  myMultiMap.insert(std::pair<int, int> (1, 40));
+  myMultiMap.insert(std::pair<int, int> (6, 50));
+  myMultiMap.insert(std::pair<int, int> (3, 60));
+  myMultiMap.insert(std::pair<int, int> (4, 20));
+  myMultiMap.insert(std::pair<int, int> (6, 10));
+  myMultiMap.insert(std::pair<int, int> (2, 30));
+
+  // elemek kiírása kulcs/ érték alapján
+  std::map<int, int>::iterator itr = myMap.begin();
+  for (; itr != myMap.end(); ++itr) {
+      std::cout << itr->first << ' ' << itr->second << std::endl;
+  }
+
+  std::cout << std::endl;
+
+  std::multimap<int, int>::iterator mItr = myMultiMap.begin();
+  for (; mItr != myMultiMap.end(); ++mItr)
+  {
+    std::cout << mItr->first << ' ' << mItr->second << std::endl;
+  }
+}
+```
+
+> kimenet:
+>
+> 1 40
+> 2 30
+> 3 60
+> 4 20
+> 5 50
+> 6 50
+> 7 10
+
+> 1 40
+> 2 30
+> 3 60
+> 4 20
+> 5 50
+> 6 50
+> 6 10
+
+
+```unordered_set```, ```unordered_multiset```, ```unordered_map```, ```unordered_multimap``` - jó hash-függvény esetén egy rendezetlen konténerben a keresés konstans idejű (_O(1)_). A beszúrás szintúgy. __unordered_set__ és __unordered_multiset__ esetén az adatok étéke nem változhat. __unordered_map__ és __unordered_multimap__ esetén a kulcsok értéke nem változhat, és nem tudjuk őket indexelni az indexelő operátor (```[]```) segítségével. A használatukhoz az ```<unordered_set>``` és az ```<unordered_map>``` fejlécek használata szükséges.  ([std::unordered_set - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_set), [std::unordered_multiset - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_multiset), [std::unordered_map - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_map), [std::unordered_multimap - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_multimap))
+
+
+Az alábbi összehasonlítás megállja a helyét mind a négy, rendezett, illetve nem rendezett asszociatív konténer esetén:
+* egy rendezett konténer kevesebb memóriát foglal ugyanannyi tárolt elem esetén,
+* kevés elem esetén a keresés gyorsabb lehet a rendezett tárolókban,
+* a műveletek többsége gyorsabb a rendezetlen asszociatív konténerekkel,
+* a rendezetlen konténerek nem definiálják a lexikografikus összehasonlítás műveleteit: ```<```, ```<=```, ```>``` és ```>=.```
+
+![containerChooseHelp](img/containerChooseHelp.png)
+
+
+### Bejárók - Iterátorok
+
+
+Az iterátorok elkülönítik egymástól a konténerelemekhez való hozzáférés módját a konténer fajtájától. Ezzel a megoldással lehetővé vált olyan általánosított algoritmusok készítése, amelyek függetlenek a konténerek eltérő elemhozzáférési megoldásaitól (```push_back()```, ```insert()```). Az iterátor egy pozíciót határoz meg a tárolóban. Használatához az ```<iterator>``` fejlállomány szükséges. Az iterátorokra tekinthetünk úgy, mint mutatókra, amik egy konténer adott elemére mutatnak.
+
+__Megjegyzés__: az iterátorosztályokat ellátták a hagyományos mutatók operátoraival, az iterátorokat paraméterként fogadó algoritmus függvénysablonok többsége C tömbökkel is működik.
+
+Mivel a konténerek működése lényeges eltéréseket mutat, egyetlen általános iterátor helyett a szabvány négy egymásra épülő és egy ötödik, különálló iterátort vezetett be. A különböző algoritmusok is más-más kategóriájú iterátor(oka)t várnak paraméterként.
+
+Legyenek ```p``` és ```q``` iterátorok és ```n``` pedig egy nemnegatív egész szám.
+
+* a ```*p``` kifejezés megadja a konténer ```p``` által jelölt pozícióján álló elemet. Amennyiben az elem egy objektum, akkor annak tagjaira a ```(*p).memberName``` vagy a ```p->memberName``` formában hivatkozhatunk.
+* a ```p[n]``` kifejezés megadja a konténer ```p + n``` kifejezés által kijelölt pzícióján álló elemet - megegyezik a ```(*p+n)``` kfejezéssel, ami a [pointer aritmetikából](#t%c3%b6mb-elemeinek-el%c3%a9r%c3%a9se) isemrős lehet.
+* a ```p++```, illetve ```p--```  kifejezések hatására a ```p``` iterátor az aktuális pozíciót követő, illetve megelőző elemre lép. (Prefixes alakban is használható ```++p```, ```--p```.)
+* a ```p == q``` és a ```p != q``` kifejezések segítségével ellenőrizhetjük, hogy ```p``` és ```q``` iterátorok a tárolón belül ugyanarra az elemre hivatkoznak-e vagy sem.
+* a ```p < q```, ```p <= q```, ```p > q``` és a ```p >= q``` kifejezések segítségével ellenőrizhetjük, hogy a tárolón belül ```p``` által mutatott elem megelőzi-e a ```q``` által mutatott elemet, illetve fordítva.
+* a ```p + n```, ```p - n```, ```p += n``` és a ```p -= n``` kifejezésekkel a ```p``` által mutatott elemhez képest ```n``` pozícióval távolabb álló elemre hivatkozhatunk, előre (```+```, ```+=```), illetve visszafelé (```-```, ```-=```).
+* a ```q - p``` kifejezés megadja a ```q``` és ```p``` iterátorok által mutatott elemek pozíciókban mért távolságát.
+
+
+#### Iterátorok kategorizálása
+
+Mint azt korábban olvashattuk a szabvány az iterátorokat 4 + 1 kategóriába sorolja, mégpedig:
+
+1. __Input Iterátor__
+2. __Forward Iterátor__
+3. __Bidirectional Iterátor__
+4. __RandomAccess Iterátor__
+5. __Output Iterátor__
+
+![iteratorCategories](img/iteratorCategories.png)
+
+__Megjegyzés__: a __forward iterátor__-tól kezdve, minden kategória helyettesítheti a megelőző kategóriákat.
+
+![iteratorCategoriesDescription](img/iteratorCategoriesDescription.png)
+
+
+##### Input Iterátor
+
+
+A legegyszerűbb iterátor, amely csak a konténerek olvasására szolgál. A bemeneti iterátorral csak az ```istream_iterator``` osztálysablon tér vissza. A bemeneti iterátor tetszőleges más iterátorral helyettesíthető, kivéve az __output__ iterátort. Az alábbi példában három, szóközzel tagolt számot olvasunk be:
+
+```cpp
+#include <iostream>
+#include <iterator>
+
+int main()
+{
+  double data[3] = {0};
+  std::cout << "Adj meg három számot: ";
+
+  std::istream_iterator<double> pReader(std::cin);
+  for (int i = 0; i < 3; ++i)
+  {
+    data[i] = *pReader;
+    if (i < 2) pReader++;
+  }
+
+  for (int elem : data)
+  {
+    std::cout << elem << ' ';
+  }
+}
+```
+
+> kimenet: Adj meg három számot: 1 2 3
+>
+> 1 2 3
+
+
+##### Output Iterátor
+
+
+A kimeneti iterátorral mindenütt találkozhatunk, ahol valamilyen adatfeldolgozás folyik az STL eszközeivel, pl. másolás vagy összefűzés. Output iterátort a kimeneti adatfolyam iterátor adapterek (```ostream_iterator```) és a beszúró iterátor adapterek (```insterter```, ```front_inserter```, ```back_inserter```) szolgálnak. A kimeneti adatfolyam iterátorra való másolás az adatok kiírását jelenti:
+
+```cpp
+#include <iostream>
+#include <iterator>
+#include <vector>
+#include <algorithm>
+
+int main()
+{
+  std::vector<int> data = {1, 2, 3, 4, 5, 6, 7};
+  std::copy(data.begin(), data.end(), std::ostream_iterator<int>(std::cout, "\t"));
+}
+```
+
+> kimenet: 1 2 3 4 5 6 7
+
+##### Forward Iterátor
+
+
+Amennyiben egyesítjük a bemeneti és a kimeneti iterátorokat, megkapjuk az előrehaladó iterátort, amellyel a konténerben tárolt adatokon csak előre irányban lépkedhetünk. Az előrehaladó iterátor műveleteivel minden további nélkül készíthetünk elemeket új értékkel helyettesítő függvénysablont:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+template<typename FwdIter, typename Type>
+void swap(FwdIter first, FwdIter last, const Type& old_t, const Type& new_t)
+{
+  while (first != last)
+  {
+    if (*first == old_t)
+    {
+      *first = new_t;
+    }
+    ++first;
+  }
+}
+
+int main()
+{
+  std::vector<int> data = {1, 2, 3, 12, 23, 34};
+  swap(data.begin(), data.end(), 2, 22);
+  swap(data.begin(), data.end(), 1, 111);
+  std::copy(data.begin(), data.end(), std::ostream_iterator<int>(std::cout, "\t"));
+}
+```
+> kimenet: 111 22 12 23 34
+
+
+##### Bidirectioanl Iterátor
+
+
+A bidirectional iterátorral a konténerben tárolt adtokon előre és visszafelé is lépkedhetünk. Több algoritmus is kétirányú iterátorokat vár paraméterként, mint például az adatok sorrendjét megfordító ```reverse()``` algoritmus.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+int main()
+{
+  std::vector<int> data = {1, 2, 3, 12, 23, 34};
+  std::reverse(data.begin(), data.end());
+  std::copy(data.begin(), data.end(), std::ostream_iterator<int>(std::cout, "\t"));
+}
+```
+
+> kimenet: 34 23 12 3 2 1
+
+
+##### Random-Access Iterátor
+
+
+A random-access iterátorok lehetőségei teljes egészében megegyeznek a normál mutatókéval. A ```vector``` és ```deque``` tárolókon túlmenően a C-s tömbök esetén is ilyen iterátorokat használhatunk. Az alábbi példa programban egy függvénysablont készítünk a random-access iterátorokkal kijelölt tartomány elemeinek véletlenszerű átrendezésére. (Az elempárok cseréjét az ```iter_swap()``` algoritmussal végezzük.)
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iterator>
+
+template<typename RandIter>
+void swap(RandIter first, RandIter last)
+{
+  while (first < last)
+  {
+    std::iter_swap(first, first + std::rand() % (last-first));
+    ++first;
+  }
+}
+
+int main()
+{
+  std::vector<int> data = {1, 2, 3, 12, 23, 34};
+  std::srand(unsigned(time(nullptr)));
+  swap(data.begin(), data.end());
+  std::copy(data.begin(), data.end(), std::ostream_iterator<int>(std::cout, "\t"));
+}
+```
+
+> kimenet: 34 23 1 3 12 2
+
+__Megjegyzés__: a fentebb látott kódrészletekben használt ```data.begin()``` és ```data.end()``` helyett használható a ```std::begin(data)``` és ```std::end(data)``` alak is.
+
+
+#### Iterátorok konténerekben tárolt elemekhez
+
+
+Normál és konstans iterátorokkal térnek vissza a konténerek ```begin()``` és ```cbegin()``` tagfüggvényei, míg az utolsó elem utáni pozícióra hivatkoznak az ```end()``` és ```cend()``` tagfüggvények. A bejáráshoz előre kell léptetnünk (__++__) a ```begin()``` és ```cbegin()``` tagok hívásával megkapott iterátorokat. A függvények által visszaadott iterátor és konstans iterátor típusú bejárók kategóriáját a konténer fajtája határozza meg.
+
+![beginEndIterators](img/beginEndIterators.png)
+
+Az ```array```, ```vector```, ```deque```, ```list```, ```set```, ```multiset```, ```map```, ```multimap``` konténerek esetén fordított irányú bejárást is lehetővé tesznek az ```rbegin()```, ```crbegin()```, illetve az ```rend()```, ```crend()``` tagfüggvények álltal visszaadott iterátorok. Ezek a függvények ```reverse_iterator```, illetve ```const_reverse_iterator``` típusú értékkel térnek vissza. A bejáráshoz ebben az esetben előre kell léptetnünk (__++__) az ```rbegin()```, ```crbegin()``` tagok hívásával megkapott iterátorokat.
+
+![rBeginREndIterators](img/rBeginREndIterators.png)
+
+
+### STL Algoritmusok
+
+
+Az STL algoritmusok az ```<algorithm>``` könyvtárban találhatóak, és számos jól ismert fontos függvényt foglalnak megukba, mint pl. adott tulajdonságú elem keresése, törlése stb. Numerikus algorismusok esetén a ```<numeric>``` deklarációs fájlra van szükség.
+
+Az egyik legnagyobb erősségük, hogy nagyon jól olvasható kódot eredményez a használatuk. Nagyon hasznosak és megbízhatóvá tehetik a C++ programok fejlesztését. Az algoritmusok egy részét arra tervezték, hogy módosítsák egy kijelölt adatsor elemeit, azonban soha nem változtatják meg magukat az adatokat tároló konténereket.
+
+Az algoritmusok nem tagfüggvényei a konténereknek, globális függvénysablonok, amelyek iterátorok segítségével férnek hozzá a konténerben lévő adatokhoz. Az algoritmusok teljesen függetlenek a konténerektől, a paraméterként megkapott iterátorok feladata a konténerek ismerete.
+
+Az algoritmusok közötti eligazodásban segít, ha a különböző műveleteket a viselkedésük és működésük alapján csoportokba soroljuk. Egy lehetséges kategorizálás - ahol egy algortimus akár több csoportban is megjelenhet:
+
+
+#### Nem módosító algoritmusok:
+
+
+Ezek az algoritmusok nem változtatják meg sem az adatelemeket, sem pedig azok tárolási sorrendjét.
+
+* [```adjacent_find()```](https://en.cppreference.com/w/cpp/algorithm/adjacent_find)
+* [```find_first_of()```](https://en.cppreference.com/w/cpp/algorithm/find_first_of)
+* [```max_element()```](https://en.cppreference.com/w/cpp/algorithm/max_element)
+* [```min_element()```](https://en.cppreference.com/w/cpp/algorithm/min_element)
+* [```for_each()```](https://en.cppreference.com/w/cpp/algorithm/for_each)
+* [```all_of()``` ```any_of``` ```none_of```](https://en.cppreference.com/w/cpp/algorithm/all_any_none_of)
+* [```count()``` ```count_if()```](https://en.cppreference.com/w/cpp/algorithm/count)
+* [```lexicographical_compare()```](https://en.cppreference.com/w/cpp/algorithm/lexicographical_compare)
+* [```minmax_element()```](https://en.cppreference.com/w/cpp/algorithm/minmax_element)
+* [```equal()```](https://en.cppreference.com/w/cpp/algorithm/equal)
+* [```max()```](https://en.cppreference.com/w/cpp/algorithm/max)
+* [```min()```](https://en.cppreference.com/w/cpp/algorithm/min)
+* [```mismatch()```](https://en.cppreference.com/w/cpp/algorithm/mismatch)
+* [```search()```](https://en.cppreference.com/w/cpp/algorithm/search)
+* [```find()``` ```find_if()``` ```find_if_not()```](https://en.cppreference.com/w/cpp/algorithm/find)
+* [```find_end()```](https://en.cppreference.com/w/cpp/algorithm/find_end)
+* [```minmax()```](https://en.cppreference.com/w/cpp/algorithm/minmax)
+* [```search_n()```](https://en.cppreference.com/w/cpp/algorithm/search_n)
+
+
+#### Módosító algoritmusok
+
+
+Az adatmódosító algoritmusoka arra tervezték, hogy megváltoztassák a konténerekben tárolt adatelemek értékét. Ez megtörténhet közvetlenül, magában a konténerben, vagy pedig az elemek más konténerbe való másolásával. Néhány algoritmus csupán az elemek sorrendjét modosítja, és ezért került ide.
+
+* [```copy()``` ```copy_if()```](https://en.cppreference.com/w/cpp/algorithm/copy)
+* [```copy_backward()```](https://en.cppreference.com/w/cpp/algorithm/copy_backward)
+* [```copy_n()```](https://en.cppreference.com/w/cpp/algorithm/copy_n)
+* [```fill()```](https://en.cppreference.com/w/cpp/algorithm/fill)
+* [```fill_n()```](https://en.cppreference.com/w/cpp/algorithm/fill_n)
+* [```for_each()```](https://en.cppreference.com/w/cpp/algorithm/for_each)
+* [```generate()```](https://en.cppreference.com/w/cpp/algorithm/generate)
+* [```generate_n()```](https://en.cppreference.com/w/cpp/algorithm/generate_n)
+* [```iter_swap()```](https://en.cppreference.com/w/cpp/algorithm/iter_swap)
+* [```merge()```](https://en.cppreference.com/w/cpp/algorithm/merge)
+* [```move()```](https://en.cppreference.com/w/cpp/algorithm/move)
+* [```move_backward()```](https://en.cppreference.com/w/cpp/algorithm/move_backward)
+* [```replace()``` ```replace_if()```](https://en.cppreference.com/w/cpp/algorithm/replace)
+* [```replace_copy()``` ```replace_copy_if()```](https://en.cppreference.com/w/cpp/algorithm/replace_copy)
+* [```swap()```](https://en.cppreference.com/w/cpp/algorithm/swap)
+* [```swap_ranges()```](https://en.cppreference.com/w/cpp/algorithm/swap_ranges)
+* [```transform()```](https://en.cppreference.com/w/cpp/algorithm/transform)
+
+
+#### Eltávolító algoritmusok
+
+
+Ezek valójában módosító algoritmusok, azonban céljuk az elemek eltávolítása egy konténerből, vagy másolása egy másik tárolóba.
+
+* [```remove()``` ```remove_if```](https://en.cppreference.com/w/cpp/algorithm/remove)
+* [```remove_copy()``` ```remove_copy_if()```](https://en.cppreference.com/w/cpp/algorithm/remove_copy)
+* [```unique()```](https://en.cppreference.com/w/cpp/algorithm/unique)
+* [```unique_copy()```](https://en.cppreference.com/w/cpp/algorithm/unique_copy)
+
+
+#### Átalakító algoritmusok
+
+
+Ezek is módosító algoritmusok, azonban kimondottan az elemsorrend megváltoztatásával jár a működésük.
+
+* [```is_partitioned()```](https://en.cppreference.com/w/cpp/algorithm/is_partitioned)
+* [```is_permutation()```](https://en.cppreference.com/w/cpp/algorithm/is_permutation)
+* [```next_permutation()```](https://en.cppreference.com/w/cpp/algorithm/next_permutation)
+* [```partition()```](https://en.cppreference.com/w/cpp/algorithm/partition)
+* [```partition_copy()```](https://en.cppreference.com/w/cpp/algorithm/partition_copy)
+* [```partition_point()```](https://en.cppreference.com/w/cpp/algorithm/partition_point)
+* [```prev_permutation()```](https://en.cppreference.com/w/cpp/algorithm/prev_permutation)
+* [```random_shuffle()``` ```shuffle()```](https://en.cppreference.com/w/cpp/algorithm/random_shuffle)
+* [```reverse()```](https://en.cppreference.com/w/cpp/algorithm/reverse)
+* [```reverse_copy()```](https://en.cppreference.com/w/cpp/algorithm/reverse_copy)
+* [```rotate()```](https://en.cppreference.com/w/cpp/algorithm/rotate)
+* [```rotate_copy()```](https://en.cppreference.com/w/cpp/algorithm/rotate_copy)
+* [```stable_partition()```](https://en.cppreference.com/w/cpp/algorithm/stable_partition)
+
+
+#### Rendező algoritmusok
+
+
+Az itt található módosító algortimusok feladata a teljes konténerben, vagy tároló egy tartományában található elemek rendezése.
+
+* [```is_heap()```](https://en.cppreference.com/w/cpp/algorithm/is_heap)
+* [```is_heap_until()```](https://en.cppreference.com/w/cpp/algorithm/is_heap_until)
+* [```is_partitioned()```](https://en.cppreference.com/w/cpp/algorithm/is_partitioned)
+* [```is_sorted()```](https://en.cppreference.com/w/cpp/algorithm/is_sorted)
+* [```is_sorted_until()```](https://en.cppreference.com/w/cpp/algorithm/is_sorted_until)
+* [```make_heap()```](https://en.cppreference.com/w/cpp/algorithm/make_heap)
+* [```nth_element()```](https://en.cppreference.com/w/cpp/algorithm/nth_element)
+* [```partial_sort()```](https://en.cppreference.com/w/cpp/algorithm/partial_sort)
+* [```partial_sort_copy()```](https://en.cppreference.com/w/cpp/algorithm/partial_sort_copy)
+* [```partition()```](https://en.cppreference.com/w/cpp/algorithm/partition)
+* [```partition_copy()```](https://en.cppreference.com/w/cpp/algorithm/partition_copy)
+* [```pop_heap()```](https://en.cppreference.com/w/cpp/algorithm/pop_heap)
+* [```push_heap()```](https://en.cppreference.com/w/cpp/algorithm/push_heap)
+* [```sort()```](https://en.cppreference.com/w/cpp/algorithm/sort)
+* [```sort_heap()```](https://en.cppreference.com/w/cpp/algorithm/sort_heap)
+* [```stable_partition()```](https://en.cppreference.com/w/cpp/algorithm/stable_partition)
+* [```stable_sort()```](https://en.cppreference.com/w/cpp/algorithm/stable_sort)
+
+
+#### Rendezett tartomány algoritmusok
+
+
+Ezek az algoritmusok az elemek rendezettségét kihasználva igen hatékonyan működnek.
+
+* [```binary_search()```](https://en.cppreference.com/w/cpp/algorithm/binary_search)
+* [```equal_range()```](https://en.cppreference.com/w/cpp/algorithm/equal_range)
+* [```includes()```](https://en.cppreference.com/w/cpp/algorithm/includes)
+* [```inplace_merge()```](https://en.cppreference.com/w/cpp/algorithm/inplace_merge)
+* [```lower_bound()```](https://en.cppreference.com/w/cpp/algorithm/lower_bound)
+* [```merge()```](https://en.cppreference.com/w/cpp/algorithm/merge)
+* [```set_differences()```](https://en.cppreference.com/w/cpp/algorithm/set_difference)
+* [```set_intersection()```](https://en.cppreference.com/w/cpp/algorithm/set_intersection)
+* [```set_symmetric_difference()```](https://en.cppreference.com/w/cpp/algorithm/set_symmetric_difference)
+* [```set_union()```](https://en.cppreference.com/w/cpp/algorithm/set_union)
+* [```upper_bound()```](https://en.cppreference.com/w/cpp/algorithm/upper_bound)
+
+
+#### Numerikus algoritmusok
+
+
+Számokat tároló konténerek elemein műveleteket végző algoritmusok csoportja.
+
+* [```accumulate()```](https://en.cppreference.com/w/cpp/algorithm/accumulate)
+* [```adjancent_difference()```](https://en.cppreference.com/w/cpp/algorithm/adjacent_difference)
+* [```inner_product()```](https://en.cppreference.com/w/cpp/algorithm/inner_product)
+* [```iota()```](https://en.cppreference.com/w/cpp/algorithm/iota)
+* [```partial_sum()```](https://en.cppreference.com/w/cpp/algorithm/partial_sum)
+
+
+Néhány tároló rendelkezik az algoritmusok némelyikével megegyező nevű tagfüggvénnyel. Ezek léte- zésnek oka, hogy kihasználva a konténerek speciális adottságait, hatékonyabb és biztonságosabb tagfüggvény készíthető, mint az általános algoritmus. Egyetemes szabályként megfogalmazható, hogy részesítsük előnyben a taggfüggvényeket a program készítése során.
+
+
+#### Az algortimusok végrehajtási ideje
+
+
+A konténerműveletek időigénye mellett a felhasznált algoritmusok időigénye együtt határozza meg az adott programrész futásidejét. Az algoritmusok vérehajtásához szükséges időigényt a feldolgozandó adatsor elemeinek számával (_n_) jellemezhetjük:
+
+* __O(1)__ - ```swap()```, ```iter_swap()```
+* __O(log(n))__ - ```lower_bound()```, ```upper_bund()```, ```equal_range()```, ```binary_search()```, ```push_heap()```, ```pop_heap()```
+* __O(n log(n))__ - ```inplace_merge()``` (legrosszabb esetben), ```stable_partition()``` (legrosszabb esetben),
+* __O($n^2$)__ - ```find_end()```, ```find_first_of()```, ```search()```, ```search_n()```
+* __O(n)__ - minden más algoritmus
+
+
+### Lambda kifejezések
+
+
+A lambda függvények lehetővé teszik, hogy egy vagy több soros névtelen függvényeket definiáljunk a forráskódban, ott ahol éppen szükség van rájuk. A lambda kifejezések szerkezete nem kötött, a fordító feltételezésekkel él a hiányzó részekkel kapcsolatban. Nézzünk erre egy példát:
+
+```cpp
+int a = []{ return 12 * 23; } ();
+```
+
+A bevezető szögletes zárójel jelzi, hogy lambda következik. Ez után áll a függvény törzse, ahol a ```return``` utasításból a fordító meghatározza a függvény értékét és típusát. Az utasítást záró kerek zárójelpár a függvényhívást jelenti.
+
+Amennyiben paraméterezni kívánjuk a lambdát, a szögeltes és a kapcsos zárójelek közé egy hagyományos paraméterlista is beékelődik:
+
+```cpp
+int a = [](int x, int y){ return x * y; } (12, 23);
+```
+
+Szükség esetén a függvény visszatérési zípusát is megadhatjuk a C++11-ben bevezetett formában:
+
+```cpp
+int a = [](int x, int y) -> int { return x * y; } (12, 23);
+```
+
+A lambda függvények legfontosabb alkalmazási területe az STL algoritmusok hívása. 
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main()
+{
+  std::vector<int> data = {1, 2, 3, 5, 8, 13, 21};
+  int quantity = std::count_if(data.begin(), data.end(), [] (int x) { return x % 2; });
+
+  std::cout << "Quantity: " << quantity << std::endl;
+
+  std::for_each(data.begin(), data.end(), [](int& e){ e *= 2; });
+
+  std::sort(data.begin(), data.end(), [](int e1, int e2){ return e1 > e2; });
+
+  std::for_each(data.begin(), data.end(), [](int x){ std::cout << x << ' '; });
+}
+```
+
+Első lépésként megszámoljuk a ```data``` vektor páratlan elemeit, majd minden elemet a duplájára növelünk, csökkenő sorrendben rendezzük a vektort, végül pedig megjelenítjük az elemeket. Ezekben a példákban a lambda függvények csak a paramétereken keresztül tartották a kapcsolatot a környezetükben elérhető változókkal. Ellentétben a hagyományos függvényekkel, a lambda kifejezésekben elérhetjük a lokális hatókör változóit.
+
+A fájl szintű és lokális statikus élettartamú nevek elére minden további nélkül működik:
+
+```cpp
+const double PI = 3.1415;
+
+int main()
+{
+  static int b = 11;
+  double x = [](){ return PI * b; } ();
+}
+```
+
+A lokális, nem statikus függvényváltozók, illetve az osztály adattagjai esetén intézkedhetünk az elérés módjáról. Amennyiben a fenti példában ```PI``` és ```b``` lokális változók, a velük azonos hatókörben megadott lambda a következőképpen módosul:
+
+```cpp
+const double PI = 3.1415;
+int b = 11;
+double x = [PI, b](){ return PI * b; } ();
+```
+
+A lambdát és az elért változókat együtt szokás __closure__-nek nevezni, míg a felhasznált változókat, mint elkapott vagy __captured__ változókra hivatkozhatunk. A változókat érték, illetve referencia szerint is elkaphatjuk.
+
+* ```[]``` egyetlen helyi változót sem kívánunk elkapni
+* ```[=]``` az összes helyi változót érték szerint kapjuk el
+* ```[&]``` az összes helyi változót referencia szerint kapjuk el
+* ```[a, b]``` csak az ```a``` és ```b``` változókat kapjuk el érték szerint
+* ```[a, &b]``` az ```a``` változót érték, míg ```b```-t referencia szerint kapjuk el
+* ```[=, &b]``` az összes helyi változót érték szerint kapjuk el, kivéve ```b```-t, őt referenciával
+* ```[&, a]``` az összes helyi változót referencijukkal kapjuk el, kivéve ```a```-t, amelyet érték szerint
+* ```[this]``` osztályon belül definiált lambda kifejezésekben használhatjuk a ```this``` mutatót, vagyis elérhetjük az osztály adattagjait
+
+
+__Megjegyzés__: C++17 óta ```[*this]``` is lehetőségünk van elkapni.
+
+A fordító nem engedi az érték szerint elkapott változó módosítását.
+
+Amennyiben a lambda függvényt többször szeretnénk használni, hozzárendelhetjük egy függvény mutatóhoz.
+
+```cpp
+void (*myLambda) (int) = [](int i){ i *= i; }; // C++11 óta függvény mutató helyett auto kulcsszó használható
+
+auto myLambda = [](int i){ i *= i; };
+
+std::for_each(data.begin(), data.end(), myLambda);
+```
+
+Nézzünk egy példát, ahol egy vektor elemeit négyzetre emeljük először egy funtor segítségével, majd egy lambda segítségével:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct Square
+{
+  void operator()(int& i) const { i *= i; }
+};
+
+int main()
+{
+  Square sq;
+  std::vector<int> data{1, 2, 3, 4, 5, 6}; // C++11-es vagy annál újabb fordító szükséges
+
+  std::for_each(data.begin(), data.end(), sq); // funktorral
+
+  std::for_each(data.begin(), data.end(), [](int& i){ i *= i; }); // lambdával
+}
+```
