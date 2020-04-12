@@ -1927,7 +1927,7 @@ Mint azt már korábban láttuk a ```sizeof(char)``` mindig 1-et ad vissza. A ka
 
 Attól, hogy ```sizeof(char)``` == ```1```, a ```char``` mérete bájtokban még mindig __implementáció függő__.
 
-A char méretén túl minden másnak a mérete implementációfüggő, bár a szabvány kimond pár relációt (bővebben a '_C++ adattípusok_' fejezetben olvashatunk erről):
+A char méretén túl minden másnak a mérete implementációfüggő, bár a szabvány kimond pár relációt (bővebben a [C++ adattípusok](#c-adatt%c3%adpusok) fejezetben olvashatunk erről):
 
 ```sizeof(X)``` == ```sizeof(signed X)``` == ```sizeof(unsigned X)```
 
@@ -2045,7 +2045,7 @@ A fentiekben láttuk, hogy az osztályok alapvetően állapotokból és metódus
 
 Általában is elmondhatjuk, hogy egy objektum belső világának ismeretére nincs szüksége annak az objektumnak, amelyik használja. Például, az Autó rendelkezik a Fékez() metódussal, amely pontosan definiálja, miként megy végbe a fékezés. Az énAutóm vezetőjének azonban nem kell ismernie, hogyan is fékez a kocsi.
 
-Minden objektum egy jól meghatározott interfészt biztosít a külvilág számára, amely megadja, hogy kívülről mi érhető el az objektumból. Az interfész rögzítésével az objektumot használó, ügyfél alkalmazások számára semmilyen problémát sem jelent az osztály belső világának jövőbeni megváltoztatása.
+Minden objektum egy jól meghatározott interfészt biztosít a külvilág számára, amely megadja, hogy kívülről mi érhető el az objektumból. Az interfész rögzítésével az objektumot használó, ügyfél alkalmazások számára semmilyen problémát sem jelent az osztály belső világának jövőbeli megváltoztatása.
 
 
 #### Öröklődés - inheritance
@@ -2065,7 +2065,7 @@ A többszörös öröklés (_multiple inheritance_) folyamán a származtatott o
 
 A polimorfizmus lehetővé teszi, hogy az öröklés során bizonyos (elavult) viselkedési formákat (metódusokat) a származtatott osztályban új tartalommal valósítsunk meg, és az új, lecserélt metódusokat a szülő osztály tagjaiként kezeljük.
 
-Példaként tegyük fel, hogy az Autó és a Kerekpár osztályok öröklik a Jármű osztály Gyorsít() metódusát. A Teherautó esetén a Gyorsít() parancs a GáztAd() műveletet jelenti, míg Kerekpár esetén a Pedáloz() metódus hívását. Ahhoz, hogy a gyorsítás helyesen működjön, a származtatott osztályok Gyorsít() metódusával felül kell bírálnunk (_override_) a Jármű osztálytól örökölt Gyorsít() metódust. Ez a felülbíráló polimorfizmus.
+Példaként tegyük fel, hogy az Autó és a Kerékpár osztályok öröklik a Jármű osztály Gyorsít() metódusát. A Teherautó esetén a Gyorsít() parancs a GáztAd() műveletet jelenti, míg Kerékpár esetén a Pedáloz() metódus hívását. Ahhoz, hogy a gyorsítás helyesen működjön, a származtatott osztályok Gyorsít() metódusával felül kell bírálnunk (_override_) a Jármű osztálytól örökölt Gyorsít() metódust. Ez a felülbíráló polimorfizmus.
 
 A legtöbb OOP nyelv a parametrikus polimorfizmust is támogatja, ahol a metódusokat típusoktól független módon, mintegy mintaként készítjük el a fordító számára. A C++ nyelven sablonok (templates) készítésével alkalmazhatjuk ezt a lehetőséget.
 
@@ -2073,7 +2073,7 @@ A legtöbb OOP nyelv a parametrikus polimorfizmust is támogatja, ahol a metódu
 ## Struktúrák (```struct```)
 
 
-A C++ nyelven a struktúra (```struct```) typus több tetszőleges típusú (kivéve ```void``` és a függvénytípus) adatelem együttese. Ezek az adatelemek, melyek szokásos elnevezése __struktúraelem__ vagy __adattag__ (_data member_), csak a struktúrán belül érvényes nevekkel rendelkeznek. (A más nyelveken a mező (field) elnevezést alkalmazzák, mely elnevezést azonban a bitstruktúrákhoz kapcsolja a C++ nyelv.)
+A C++ nyelven a struktúra (```struct```) típus több tetszőleges típusú (kivéve ```void``` és a függvénytípus) adatelem együttese. Ezek az adatelemek, melyek szokásos elnevezése __struktúraelem__ vagy __adattag__ (_data member_), csak a struktúrán belül érvényes nevekkel rendelkeznek. (A más nyelveken a mező (field) elnevezést alkalmazzák, mely elnevezést azonban a bitstruktúrákhoz kapcsolja a C++ nyelv.)
 Struktúrák záró kapcsos zárójele után mindig kell pontosvesszőt rakni (```;```).
 
 Alapértelmezett módon a struktúrák adattagjai és metódusai publikusak a külvilág számára és a pont operátor (```.```) segítségével hivatkozhatunk rájuk a struktúrából létrehozott objektumpéldány nevén keresztül.
@@ -2123,13 +2123,13 @@ int main()
 }
 ```
 
-Mivel a struktúráknak tetszőleges adattagjaik lehet, így lehetőségünk van több struktúra egymásba ágyazására.
+Mivel a struktúráknak tetszőleges adattagjaik lehetnek, így lehetőségünk van több struktúra egymásba ágyazására.
 
 __Feladat__: láncolt listák
 
 A következőkben egy láncolt listát fogunk implementálni, amely jól mutatja majd a dinamikus memóriakezelés veszélyeit.
 
-A láncolt lista nevéből eredendően nem tömbszerűen (egymás melletti memóriacímeken) tárolja az objektumokat, hanem egymástól független memóriacímeken. Ezt úgy oldja meg, hogy minden adathoz rendel egy mutatót is, mellyel a következő listalemet el lehet érni. A lista utolsó elemében a mutató a rákövetkező elem memóriacíme helyett nulpointer értéket vesz fel.
+A láncolt lista nevéből eredendően nem tömbszerűen (egymás melletti memóriacímeken) tárolja az objektumokat, hanem egymástól független memóriacímeken. Ezt úgy oldja meg, hogy minden adathoz rendel egy mutatót is, mellyel a következő listalemet lehet elérni. A lista utolsó elemében a mutató a rákövetkező elem memóriacíme helyett ```nullpointer``` értéket vesz fel.
 
 ![linkedList](img/linkedList.png)
 
@@ -2157,7 +2157,7 @@ int main()
 }
 ```
 
-Mondhatnánk, hogy készen is vagyunk, implementáltuk a láncolt listát - noha a használata nem túl kényelmes. Sajnos azonban ez a program hibás. A törlést sorrendje rossz: először törljük a fejelemet (mely az első elemre mutat), viszont az első elem segítségével tudnánk a többi elemet elérni, így mikor a második listaelemet törölnénk, ```head``` már egy felszabadított memóriaterületre mutat. Ezt törlés utáni használatnak (_use after delete_ vagy _use after free_) szokás nevezni és nem definiált viselkedés. A helyes megoldás:
+Mondhatnánk, hogy készen is vagyunk, implementáltuk a láncolt listát - noha a használata nem túl kényelmes. Sajnos azonban ez a program hibás. A törlés sorrendje rossz: először töröljük a fejelemet (mely az első elemre mutat), viszont az első elem segítségével tudnánk a többi elemet elérni, így mikor a második listaelemet törölnénk, ```head``` már egy felszabadított memóriaterületre mutat. Ezt törlés utáni használatnak (_use after delete_ vagy _use after free_) szokás nevezni és nem definiált viselkedés. A helyes megoldás:
 
 ```cpp
 int main()
@@ -2169,7 +2169,7 @@ int main()
 }
 ```
 
-__Fontos__: a heap-en arra is figyelnünk kell, hogy jó sorrendben szabadítsuk fel a memóriát. Ha rossz sorrendben szabadítjuk fel az objektumokat, könnyen a fentihez hasonló hibát vagy memória szívárgást okozhatunk.
+__Fontos__: a heap-en arra is figyelnünk kell, hogy jó sorrendben szabadítsuk fel a memóriát. Ha rossz sorrendben szabadítjuk fel az objektumokat, könnyen a fentihez hasonló hibát vagy memória szivárgást okozhatunk.
 
 Ez a "láncolt lista” eddig elég szegényesen néz ki. A fő gond az, hogy nagyon sokat kell írni a használatához. Ezzel megszegjük a __DRY__ programozás elvét: __Don't Repeat Yourself__. Itt sokszor írjuk le közel ugyanazt a kifejezést. Erre találnunk kell egy egyszerűbb megoldást. Írjunk egy függvényt, melynek segítségével új listaelemet hozhatunk létre.
 
@@ -2571,7 +2571,7 @@ int main()
 }
 ```
 
-Látható, hogy ha az értékadó operátort szeretnénk meghívi előbb létrekell hozni az objektum példányt, majd egy új sorban értékül adni neki egy már létező objektumpéldány értékeit.
+Látható, hogy ha az értékadó operátort szeretnénk meghívi előbb létre kell hozni az objektum példányt, majd egy új sorban értékül adni neki egy már létező objektumpéldány értékeit.
 
 
 ### Destruktor (_destructor_, _dtor_)
@@ -2592,13 +2592,13 @@ public:
 
 __Fontos__: destruktor lehet virtuális, de nem lehet privát.
 
-Minden tagfüggvény, még a paraméter nélküliek is rendelkeznek egy egy nem látható (implicit) paraméterrel: ```this```, amelyben a hívás során az aktuális objektumpédányra mutató mutatót ad át a C++, és minden adattag hivatkozás automatikusan ```this->data_member``` kifejezésként kerül a kódba.
+Minden tagfüggvény, még a paraméter nélküliek is rendelkeznek egy nem látható (implicit) paraméterrel: ```this```, amelyben a hívás során az aktuális objektumpéldányra mutató mutatót ad át a C++, és minden adattag hivatkozás automatikusan ```this->dataMember``` kifejezésként kerül a kódba.
 
 
 ### Vexing parse
 
 
-A __vexing parse__ a szintaktikai félreérthetőség speciális formája a C ++ programozási nyelnek. Ez akkor történik, amikor véletlenül függvénydeklarációt csinálunk függvén definíció helyett a default konstruktornál.
+A __vexing parse__ a szintaktikai félreérthetőség speciális formája a C++ programozási nyelnek. Ez akkor történik, amikor véletlenül függvénydeklarációt csinálunk függvény definíció helyett a default konstruktornál.
 
 Tekintsük az alábbi programot:
 
@@ -2615,7 +2615,7 @@ int main()
 }
 ```
 
-Jelen esetben nem konstruktorhívást végzünk, hanem egy függvény deklarációt csinálunk. Az ```A a();``` sor egy __a__ nevű bemeneti paraméternélküli __A__ visszatérési típusú függvény lesz.
+Jelen esetben nem konstruktorhívást végzünk, hanem egy függvény deklarációt csinálunk. Az ```A a();``` sor egy ```a``` nevű, bemeneti paraméternélküli, ```A``` visszatérési típusú függvény lesz.
 
 
 ### __RAII (Resource Acquisition is Initialization)__
@@ -2679,7 +2679,7 @@ Ilyen esetekben a fordító mindig a konstans metódust fogja választani.
 ### ```friend``` mechanizmus
 
 
-A friend mehcanizmus lehetővé teszi, hogy az osztály ```private``` és ```protected``` tagjait nem saját tagfüggvényből is elérjük. A friend deklarációt az osztályon belül kell elelyezni tetszőleges elérésű részben. "barát" lehet egy külső függvény, egy mási osztály adott tagfüggvénye, de akár egy egész osztály is (vagyis annak minden tagfüggvénye).
+A friend mehcanizmus lehetővé teszi, hogy az osztály ```private``` és ```protected``` tagjait nem saját tagfüggvényből is elérjük. A friend deklarációt az osztályon belül kell elhelyezni tetszőleges elérésű részben. "barát" lehet egy külső függvény, egy mási osztály adott tagfüggvénye, de akár egy egész osztály is (vagyis annak minden tagfüggvénye).
 
 ```cpp
 class MyClass
@@ -2704,7 +2704,7 @@ int main()
 ### ```inline``` tagfüggvények
 
 
-Az ```inline``` megoldás nagy előnye, hogy a teljes osztályt egyetlen fej állományban tárolhatjuk, és az osztály tagjait könnyen át tekinthetjük. Általában kisebb méretű függvények esetén alkalmazható hatékonyan. Ilyenkor nem függvényhívás történik, hanem magának a függvénynek a kódja beillesztésre kerül a hívások helyein. Nagyobb méretű kód: a függvény törzse több helyen szerepel, több optimalizálási lehetőség miatt azonban lehet mégis rövidebb. Megspórolja a függvényhívás idejét. Rekurzív függvények esetében nem használható, mert a fordító nem fogja tudni hányszor ágyazza egymásba az inline-olt kódot. Megadhatjuk explicit módon az ```inline``` kulcsszó segítségével vagy akár implicit módon is.
+Az ```inline``` megoldás nagy előnye, hogy a teljes osztályt egyetlen fejállományban tárolhatjuk, és az osztály tagjait könnyen át tekinthetjük. Általában kisebb méretű függvények esetén alkalmazható hatékonyan. Ilyenkor nem függvényhívás történik, hanem magának a függvénynek a kódja beillesztésre kerül a hívások helyein. Nagyobb méretű kód: a függvény törzse több helyen szerepel, több optimalizálási lehetőség miatt azonban lehet mégis rövidebb. Megspórolja a függvényhívás idejét. Rekurzív függvények esetében nem használható, mert a fordító nem fogja tudni hányszor ágyazza egymásba az inline-olt kódot. Megadhatjuk explicit módon az ```inline``` kulcsszó segítségével vagy akár implicit módon is.
 
 ```cpp
 class MyClass
@@ -2733,7 +2733,7 @@ __Megjegyzés__: a legtöbb fordítónál be lehet kapcsolni egy ún. __LTO__ (_
 ## ```static``` az  osztályon belül
 
 
-C++-ban az osztályszintű változókat és függvéneket a ```static``` prefixel kell ellátni. Ezek nem fognak létrejönni minden egyes objektum példánynál, mint az adattagok, hanem csak egyszer. Statikus adattagok kezdőértékkel való inicilizálása csak az osztályon kívül megengedett, kivétel az az eset, amikor konstant statikus adattagokról van szó. Ebben az esetben az osztályon belül tudunk nekik kezdőértéket adni. __Konstruktor és destruktor SOHA nem lehet statikus__.
+C++-ban az osztályszintű változókat és függvényeket a ```static``` prefixel kell ellátni. Ezek nem fognak létrejönni minden egyes objektum példánynál, mint az adattagok, hanem csak egyszer. Statikus adattagok kezdőértékkel való inicilizálása csak az osztályon kívül megengedett, kivétel az az eset, amikor konstans statikus adattagokról van szó. Ebben az esetben az osztályon belül tudunk nekik kezdőértéket adni. __Konstruktor és destruktor SOHA nem lehet statikus__.
 
 Nem statikus metódusokból elérhetőek statikus és nem statikus adatagok is. Statikus metódosukból csak statikus adattagokra tudunk hivatkozni. Ennek oka, hogy ezek már fordítási időben létrejönnek, míg a nem statikus adattagok csak akkor, amikor példányosítjuk az osztályt. 
 
@@ -2809,7 +2809,7 @@ Nézzük meg, hogy a leszármazott ```Derived``` osztály objektumai hogyan néz
 
 ![multipleInheritanceMemoryMap](img/multipleInheritanceMemoryMap.png)
 
-A ```d``` egy ```Derived``` osztálybeli objektum. Az objektumban először az örökölt tagváltozók foglalnak helyet, mégpedig a ```Derived``` osztály definíciójában megadott ősosztály listában balról jobbra haladva kerülnek be az objektumba: a ```Base1``` osztályból ```a```, majd a ```Base2``` osztályból ```b```. Ezt követik a leszármazott osztály tagváltozói., jelen esetben ```c```.
+A ```d``` egy ```Derived``` osztálybeli objektum. Az objektumban először az örökölt tagváltozók foglalnak helyet, mégpedig a ```Derived``` osztály definíciójában megadott ősosztály listában balról jobbra haladva kerülnek be az objektumba: a ```Base1``` osztályból ```a```, majd a ```Base2``` osztályból ```b```. Ezt követik a leszármazott osztály tagváltozói, jelen esetben ```c```.
 
 Többszörös öröklés esetén is érvényes az a szabály, hogy leszármazott osztálybeli objektumra lehet ősosztály típusú mutatóval vagy referenciával hivatkozni. Természetesen itt is igaz, hogy ekkor úgy tekintünk az objektumra, mintha az adott őszosztálybeli lenne, ennek következtében csak az adott ősosztálybeli tagváltozók és tagfüggvények érhetőek el, illetve azok amelyeket az ősosztály örökölt a saját szüleitől. Tekintsük az alábbi kódot:
 
@@ -2829,7 +2829,7 @@ Bár az ```a``` és ```b``` változók jelen vannak a ```Derived``` osztályban,
 
 ![multipleInheritanceMemoryMapPointer](img/multipleInheritanceMemoryMapPointer.png)
 
-A lefontosabb tanulság a következő: __minden mutató a mutató típusának megfelelő rész elejére mutat az objektumban__. Első pillantásra talán kicsit furcsának tűnhet, hogy a ```pb2``` mutató nem az objektum elejére mutat, hiszen ```Base2```-ből örökölt részek nem itt kezdődnek. Ennek fő következménye az, hogy __mutató konverzió esetén a mutató által tartalmazott cím megváltozhat.__
+A legfontosabb tanulság a következő: __minden mutató a mutató típusának megfelelő rész elejére mutat az objektumban__. Első pillantásra talán kicsit furcsának tűnhet, hogy a ```pb2``` mutató nem az objektum elejére mutat, hiszen ```Base2```-ből örökölt részek nem itt kezdődnek. Ennek fő következménye az, hogy __mutató konverzió esetén a mutató által tartalmazott cím megváltozhat.__
 
 A származtatott osztály olyan osztály, amely adattagjait és függvényeit egy vagy több előzőleg definiált osztálytól örökli. A származtatott osztály szintén lehet alaposztálya további osztályoknak, lehetővé téve ezzel az osztályhierarchia kialakítását.
 
@@ -2985,7 +2985,7 @@ A legalább egy tisztán virtuális függvényt tartalmzató osztályt __absztra
 
 Ha egyszer egy függvényt virtuálisnak deklarálunk, akkor az összes leszármazottbeli osztályban virtuális lesz. A virtuális lánc nem megszakítható!
 
-A csak tisztán virtuális függvényeket tartalmazó osztályt __interésznek__ (_interface_) nevezzük. Ha örökölünk egy ilyen vagy egy absztrakt osztályból, biztosítanunk kell a fordítót, hogy a tisztán virtuális tagfüggvényekhez működést rendelünk.
+A csak tisztán virtuális függvényeket tartalmazó osztályt __interfésznek__ (_interface_) nevezzük. Ha örökölünk egy ilyen vagy egy absztrakt osztályból, biztosítanunk kell a fordítót, hogy a tisztán virtuális tagfüggvényekhez működést rendelünk.
 
 
 ## Virtuális destruktor
@@ -3138,7 +3138,7 @@ int main()
 ```
 > kimenet: 3
 
-A későbbiekben nézni fogunk arra is példát, hogy hogyan lehet funktorok segítségével pl. konténeret rendezni.
+A későbbiekben nézni fogunk arra is példát, hogy hogyan lehet funktorok segítségével pl. konténert rendezni.
 
 
 ### Konténerek
@@ -3155,7 +3155,7 @@ A konténerek sokféleképpen különböznek egymástól:
 * a memóriahasználat hatékonysága
 * a tárolt elemek elérési ideje
 * az új elem beszúrásának, illetve valamely elem törlésének időigénye
-* új elem konténer elejére, illetve véégre történő beillesztésének ideje
+* új elem konténer elejére, illetve végére történő beillesztésének ideje
 * stb
 
 
@@ -3164,7 +3164,7 @@ A konténerek sokféleképpen különböznek egymástól:
 
 Jellemzőjük, hogy megőrzik az elemek beviteli sorrendjét, azaz a beszúrás ideje határozza meg az elemek sorrendjét. Az ```array``` kivételével tetszőleges pozícióba beszúrhatunk elemet, illetve törölhetünk onnan. Ezek a műveletek általában a tárolók végein a leggyorsabbak.
 
-```array<>``` - a sablonparaméterben megadott konstans elemszámmal létrejövő, egydimenziós tömbök osztálysablonja. ([std::array - cppreference.com](https://en.cppreference.com/w/cpp/container/array))
+[```array```](https://en.cppreference.com/w/cpp/container/array) - a sablonparaméterben megadott konstans elemszámmal létrejövő, egydimenziós tömbök osztálysablonja.
 
 ![stdArrayMemoryMap](img/stdArrayMemoryMap.png)
 
@@ -3177,10 +3177,11 @@ int main()
   std::array<int, 5> arr2 = {1, 2, 3, 4, 5};
 }
 ```
+___
 
-```vector<>``` - a vektor __dinamikus tömbben__ tárolódik sorfolytonos memóriaterületen, amely a végén nővekedhet, viszont azt már tudjuk, hogy egy tömb mérete nem növelhető. Ezt az ```std::vector``` a következő képpen oldja meg: ha több elemet szerenénk beszúrni, mint amennyi az adott vektor kapacitása, akkor lefoglal egy nagyobb memóriaterületet - általában kétszer akkorát - és minden elemet egyesével átmásol erre a memória területre. Ezért a végtor végéhez való elem hozzáadásának műveletigénye amortizált konstans: általában konstans, de ha új memóriaterületet kell lefoglalni és a meglevő elemet átmásolni, akkor lineáris. ([std::vector - cppreference.com](https://en.cppreference.com/w/cpp/container/vector))
+[```vector```](https://en.cppreference.com/w/cpp/container/vector) - a vektor __dinamikus tömbben__ tárolódik sorfolytonos memóriaterületen, amely a végén növekedhet, viszont azt már tudjuk, hogy egy tömb mérete nem növelhető. Ezt az ```std::vector``` a következő képpen oldja meg: ha több elemet szerenénk beszúrni, mint amennyi az adott vektor kapacitása, akkor lefoglal egy nagyobb memóriaterületet - általában kétszer akkorát - és minden elemet egyesével átmásol erre a memória területre. Ezért a vketor végéhez való elem hozzáadásának műveletigénye amortizált konstans: általában konstans, de ha új memóriaterületet kell lefoglalni és a meglevő elemet átmásolni, akkor lineáris.
 
-Az elemeket indexelve is elérhetjük konstans _O(1)_ idő alatt. Elemek eltávolítása a (```pop_back()```), illetve hozzáadása (```push_back()```) a vektor végéhez szintén _O(1)_ idő alatt lehetséges, míg az elején vagy a közepén ezeka  műveletek (```insert()```, ```erase()```) _O(n)_ végrehajtású idejűek. Rendezetlen vektorban egy elem megkeresésének ideje szintén _O(n)_.
+Az elemeket indexelve is elérhetjük konstans (_O(1)_) idő alatt. Elemek eltávolítása a (```pop_back()```), illetve hozzáadása (```push_back()```) a vektor végéhez szintén konstans (_O(1)_) idő alatt lehetséges, míg az elején vagy a közepén ezek a műveletek (```insert()```, ```erase()```) lineáris (_O(n)_) végrehajtású idejűek. Rendezetlen vektorban egy elem megkeresésének ideje szintén lineáris (_O(n)_).
 
 ![stdVectorMemoryMap](img/stdVectorMemoryMap.png)
 
@@ -3193,8 +3194,9 @@ int main()
   std::vector<int> vec2 = {1, 2, 3};
 }
 ```
+___
 
-```deque<>``` - __kettősvégű sort__ megvalósító adatszerkezet, amely mindkét végén növelhető, egydimenziós tömböket tartalmazó listában tárolódik. Elemeket mindkét végén konstans _O(1)_ idő alatt adhatunk (```push_front()```, ```push_back()```) a kettősvégű sorhoz, illetve távolíthatunk el onnan (```pop_front()```, ```pop_back()```). Az elemek index segítségével konstans időben _O(1)_ is elérhetőek. ([std::deque - cppreference.com](https://en.cppreference.com/w/cpp/container/deque))
+[```deque```](https://en.cppreference.com/w/cpp/container/deque) - __kettősvégű sor__-t megvalósító adatszerkezet, amely mindkét végén növelhető, egydimenziós tömböket tartalmazó listában tárolódik. Elemeket mindkét végén konstans (_O(1)_) idő alatt adhatunk (```push_front()```, ```push_back()```) a kettősvégű sorhoz, illetve távolíthatunk el onnan (```pop_front()```, ```pop_back()```). Az elemek index segítségével konstans időben (_O(1)_) is elérhetőek.
 
 ![stdDequeMemoryMap](img/stdDequeMemoryMap.png)
 
@@ -3207,8 +3209,9 @@ int main()
   std::deque<int> deq2 = {1, 2, 3};
 }
 ```
+___
 
-```forward_list<>``` (C++11 óta) - __egyszeres láncolású lista__, melyet csak az elején lehet bővíteni. Azonos elemtípus esetén az elemek helyigénye kisebb, mint a kettős láncolású listáé. Az elemek beszúrása (```insert_after()```) és törlése (```erase_after()```) konstans _O(1)_ időt igényel. ([std::forward_list - cppreference.com](https://en.cppreference.com/w/cpp/container/forward_list))
+[```forward_list```](https://en.cppreference.com/w/cpp/container/forward_list) (C++11 óta) - __egyszeres láncolású lista__, melyet csak az elején lehet bővíteni. Azonos elemtípus esetén az elemek helyigénye kisebb, mint a kettős láncolású listáé. Az elemek beszúrása (```insert_after()```) és törlése (```erase_after()```) konstans (_O(1)_) időt igényel.
 
 ![stdForwardListMemoryMap](img/stdForwardListMemoryMap.png)
 
@@ -3221,8 +3224,9 @@ int main()
   std::forward_list<int> myflist2 = {3, 2, 1, 4};
 }
 ```
+___
 
-```list<>``` - __kettős láncolású lista__, melynek elemei nem érhetőek el az indexelés operátorával. Tetszőleges pozíció eseten a beszúrás (```insert()```) és a törlés (```erase()```) művelete konstans _O(1)_ idő alatt végezhető el. A lista mindkét végéhez adhatunk elemek (```push_front()```, ```push_back()```), illetve törölhetünk (```pop_front()```, ```pop_back()```) onnan. ([std::list - sppreference.com](https://en.cppreference.com/w/cpp/container/list))
+[```list```](https://en.cppreference.com/w/cpp/container/list) - __kettős láncolású lista__, melynek elemei nem érhetőek el az indexelés operátorával. Tetszőleges pozíció esetén a beszúrás (```insert()```) és a törlés (```erase()```) művelete konstans (_O(1)_) idő alatt végezhető el. A lista mindkét végéhez adhatunk elemeket (```push_front()```, ```push_back()```), illetve törölhetünk (```pop_front()```, ```pop_back()```) onnan.
 
 ![stdListMemoryMap](img/stdListMemoryMap.png)
 
@@ -3243,8 +3247,9 @@ int main()
 ```
 
 A szekvenciális tárolókra épülő, konténerillesztő osztálysablonok a tároló adapterek. Az alábbi konténer adapterek elemein nem lehet iterátorok segítségével végig lépkedni, ezért semmilyen algortimus hívásakor nem használhatjuk azokat.
+___
 
-```stack<>``` - a __last in first out__ (_LIFO_) működésű __verem__ adatszerkezet típusa. A verem csak a legfelső pozícióban lévő elem módosítását (felülírás, kivétel, behelyezés) teszi lehetővé. Alapértelmezés szerint a __deque__ konténerre épül, azonban a __vector__ és a __list__ is használható a megvalósításához. ([std::stack - cppreference.com](https://en.cppreference.com/w/cpp/container/stack))
+[```stack```](https://en.cppreference.com/w/cpp/container/stack) - a __last in first out__ (_LIFO_) működésű __verem__ adatszerkezet típusa. A verem csak a legfelső pozícióban lévő elem módosítását (felülírás, kivétel, behelyezés) teszi lehetővé. Alapértelmezés szerint a __deque__ konténerre épül, azonban a __vector__ és a __list__ is használható a megvalósításához.
 
 ![stdStackMemoryMap](img/stdStackMemoryMap.png)
 
@@ -3269,7 +3274,9 @@ int main()
 
 > kimenet: 2 1 0
 
-```queue``` - __sor__ adatszerkezetet megvalósító típus, amely csak az utolsó pozícióra való beszúrást és az első pozícióról való eltávolítást teszi lehetővé (__first in first out__ _FIFO_). Ezeken túlmenően az első és az utolsó elem lekérdezése és módosítása is megengedett. Az alapértelmezetten a __deque__ mellett  a __list__ szekvenciális tárolóra épülve is elkészíthető. ([std::queue - cppreference.com](https://en.cppreference.com/w/cpp/container/deque))
+___
+
+[```queue```](https://en.cppreference.com/w/cpp/container/deque) - __sor__ adatszerkezetet megvalósító típus, amely csak az utolsó pozícióra való beszúrást és az első pozícióról való eltávolítást teszi lehetővé (__first in first out__ _FIFO_). Ezeken túlmenően az első és az utolsó elem lekérdezése és módosítása is megengedett. Az alapértelmezetten a __deque__ mellett  a __list__ szekvenciális tárolóra épülve is elkészíthető.
 
 ![stdQueueMemoryMap](img/stdQueueMemoryMap.png)
 
@@ -3306,13 +3313,21 @@ int main()
 ```
 
 > kimenet:
+>
 > 10 20 30
+>
 > myq.size(): 3
+>
 > myq.front(): 10
+>
 > myq.back(): 30
+>
 > 20 30
 
-```priority_queue<>``` - a __prioritásos sorban__ az elemek a ```<``` (kisebb) operátorral hasonlítva, redezetten tárolódnak. A prioritásos sort csak az egyik, legnagyobb elemet tartalmazó végén érjük el. Ez az elem szükség esetén módosítható, vagy kivehető a sorból. Alapértelmezés szerint a __vector__ konténer fölött jön létre, azonban a __deque__ is alkalmazható. ([std::priority_queue - cppreference.com](https://en.cppreference.com/w/cpp/container/priority_queue))
+___
+
+
+[```priority_queue```](https://en.cppreference.com/w/cpp/container/priority_queue) - a __prioritásos sorban__ az elemek alapértelmezett módon a ```<``` (kisebb) operátorral hasonlítva, redezetten tárolódnak. A prioritásos sort csak az egyik, legnagyobb elemet tartalmazó végén érjük el. Ez az elem szükség esetén módosítható, vagy kivehető a sorból. Alapértelmezés szerint a __vector__ konténer fölött jön létre, azonban a __deque__ is alkalmazható.
 
 ![stdPriorityQueueMemoryMap](img/stdPriorityQueueMemoryMap.png)
 
@@ -3351,9 +3366,13 @@ int main ()
 ```
 
 > kimenet:
+>
 > 30 20 10 5 1
+>
 > myPrQ.size(): 5
+>
 > myPrQ.top(): 30
+>
 > 20 10 5 1
 
 __Megjegyzés__: a C++ alapértelmezetten __maximum kupacot__ (tehát egy olyan kupacot, amelyben bármely elem kulcsa nagyobb vagy egyeblő, mint a gyerekeinek kulcsa) hoz létre a prioritásos sornak.
@@ -3366,21 +3385,21 @@ Az asszociatív konténerekben az elemekhez való hozzáférés nem az elem poz�
 
 ![redBlackBinaryTree](img/redBlackBinaryTree.png)
 
-A rendezett konténerek esetén általában logaritmikus a végrehatási idő (_O(log(n))_), a rendezettségnek köszönhetően azonban hatékony algoritmuskkal dolgozhatunk. Ebbe a csoportba tartozik az egyedi kulcsokkal működő halmaz (__set__) és a szótár (asszociatív tömb: __map__), valamint ezek kulcsismétlődést megengedő változatai a __multiset__ és a __multimap__.
+A rendezett konténerek esetén általában logaritmikus a végrehajtási idő (_O(log(n))_), a rendezettségnek köszönhetően azonban hatékony algoritmuskkal dolgozhatunk. Ebbe a csoportba tartozik az egyedi kulcsokkal működő halmaz (__set__) és a szótár (asszociatív tömb: __map__), valamint ezek kulcsismétlődést megengedő változatai a __multiset__ és a __multimap__.
 
 __Megjegyzés__: kulcsismétlődés esetén a keresés végehatási ideje lineáris (_O(n)_).
 
-Más a helyzet a __rendezetlen__ (_unordered_) asszociatív konténerek esetében. Ebben az esetben az elemek gyoss elérése érdekében minden elemhez egy hasító érték tárolódik egy _hash_ -táblában. Az elemek elérésekor ismét kiszámítódik a hasító érték, és ez alapján majdnem konstans idő alatt lehet elérni az elemeket.
+Más a helyzet a __rendezetlen__ (_unordered_) asszociatív konténerek esetében. Ebben az esetben az elemek gyors elérése érdekében minden elemhez egy hasító érték tárolódik egy _hash_ -táblában. Az elemek elérésekor ismét kiszámítódik a hasító érték, és ez alapján majdnem konstans idő alatt lehet elérni az elemeket.
 
 ![unorderedHashMemoryMap](img/unorderedHashMemoryMap.png)
 
 A hasító (_kulcstranszformációs_) függvény a kulcsobjektumot egy indexszé (_hasító kód_) alakítja, amely a hasító táblában kijelöl egy elemet (indexeli azt). A hash-tábla minden eleme az objektumok egy csoportjára (bucket – vödör, kosár) hivatkozik, amennyiben az adott hash-kódhoz tartoznak objektumok. Kereséskor a megfelelő kosár objektumait egymás után a kulcshoz hasonlítva találjuk meg a kívánt objektumot, amennyiban az létezik. Látható tehát, hogy a hasító tábla működésének hatékonysága nagyban függ a hasító függvénytől. Egy jó hash-függvény véletlenszerűen és egyenletesen osztja szét az objektumokat a „vödrökbe”, minimalizálva ezzel a lineáris keresés lépéseit.
 
-A C++ nyelv alaptípusaihoz az STL biztosítha a megfelelő ```hash()``` függvényeket (```<functional>``` fejléc). A fentebb látható négy asszociatív konténer nem rendezett változatai az __unordered_set__, __unordered_multiset__, __unordered_map__, __unordered_multimap__.
+A C++ nyelv alaptípusaihoz az STL biztosítja a megfelelő ```hash()``` függvényeket (```<functional>``` fejléc). A fentebb látható négy asszociatív konténer nem rendezett változatai az __unordered_set__, __unordered_multiset__, __unordered_map__, __unordered_multimap__.
 
 Míg a __set__ konténerekben a tárolt adat jelenti a kulcsot, addig a __map__ tárolókban (kulcs/érték) adatpárokat helyezhetünk el. Az adatpárok típusa a ```pair``` struktúrasablon, amely lehetővé teszi, hogy egyetlen objektumban két (akár különböző típusú) objektumot tároljunk. A tárolt objektumok közül az elsőre a ```first```, míg a másodikra a ```second``` névvel hivatkozhatunk. (A ```first``` jelenti a kulcsot a ```second``` a hozzá tartozó értéket.)
 
-```set<>```, ```multiset<>``` - mindkét rendezett halmaz konténer a tárolt adatokat kulcsként használja. A __set__ -ben a kulcsok (tárolt adatok) egyediek kell, legyenek, míg a __multiset__ -ben ismétlődhetnek. A két osztálysablon műveletei a ```count()``` és az ```insert()``` tagfüggvényektől eltekintve megegyeznek. A __set__ esetében a beszúrás logarimtmikus idejű (_O(lon(n))_), abban az esetben, ha az ```insert()``` -et használjuk, iterátorral a beszúrás konstans idejű. A keresés szintén logaritmikus idejű (a műveletek kihasználják a rendezettséget). ([std::set - cppreference.com](https://en.cppreference.com/w/cpp/container/set), [std::multiset - cppreference.com](https://en.cppreference.com/w/cpp/container/multiset))
+[```set```](https://en.cppreference.com/w/cpp/container/set), [```multiset```](https://en.cppreference.com/w/cpp/container/multiset) - mindkét rendezett halmaz konténer a tárolt adatokat kulcsként használja. A __set__ -ben a kulcsok (tárolt adatok) egyediek kell legyenek, míg a __multiset__ -ben ismétlődhetnek. A két osztálysablon műveletei a ```count()``` és az ```insert()``` tagfüggvényektől eltekintve megegyeznek. A __set__ esetében a beszúrás logarimtmikus idejű (_O(log(n))_), abban az esetben, ha az ```insert()``` -et használjuk, iterátorral a beszúrás konstans idejű. A keresés szintén logaritmikus idejű (a műveletek kihasználják a rendezettséget).
 
 ![setMulltiset](img/setMultiset.png)
 
@@ -3431,10 +3450,14 @@ int main()
 ```
 
 > kimenet:
+>
 > 10 20 30 40 50 60
+>
 > 10 20 30 40 50 50 60
 
-```map<>```, ```multimap<>``` - mindkét asszociatív tömb elemei ```pair``` típusúak, és kulcs/érték párokat tartalmaznak. A tárolók elemei a kulcs alapján rendezettek. A kulcsok a __map__ esetén egyediek, míg __multimap__ esetén ismétlődhetnek. A halmazhoz hasonlóan a két osztálysablonnak csak a ```count()``` és az ```insert()``` tagfüggvényei különböznek egymsától. Az elemek indexelve vannak nem feltétlen nullától és nem is  feltétlenül egymás utáni indexek. A kulcsok értékét nem tudjuk módosítani. Keresés logaritmikus idejű (_O(log(n))_). ([std::map - cppreference.com](https://en.cppreference.com/w/cpp/container/map), [std::multimap - cppreference.com](https://en.cppreference.com/w/cpp/container/multimap))
+___
+
+[```map```](https://en.cppreference.com/w/cpp/container/map), [```multimap```](https://en.cppreference.com/w/cpp/container/multimap) - mindkét asszociatív tömb elemei ```pair``` típusúak, és kulcs/érték párokat tartalmaznak. A tárolók elemei a kulcs alapján rendezettek. A kulcsok a __map__ esetén egyediek, míg __multimap__ esetén ismétlődhetnek. A halmazhoz hasonlóan a két osztálysablonnak csak a ```count()``` és az ```insert()``` tagfüggvényei különböznek egymsától. Az elemek indexelve vannak nem feltétlen nullától és nem is  feltétlenül egymás utáni indexek. A kulcsok értékét nem tudjuk módosítani. Keresés logaritmikus idejű (_O(log(n))_).
 
 ![mapMultimap](img/mapMultimap.png)
 
@@ -3487,23 +3510,38 @@ int main()
 > kimenet:
 >
 > 1 40
+>
 > 2 30
+>
 > 3 60
+>
 > 4 20
+>
 > 5 50
+>
 > 6 50
+>
 > 7 10
-
+>
+>
 > 1 40
+>
 > 2 30
+>
 > 3 60
+>
 > 4 20
+>
 > 5 50
+>
 > 6 50
+>
 > 6 10
 
+___
 
-```unordered_set```, ```unordered_multiset```, ```unordered_map```, ```unordered_multimap``` - jó hash-függvény esetén egy rendezetlen konténerben a keresés konstans idejű (_O(1)_). A beszúrás szintúgy. __unordered_set__ és __unordered_multiset__ esetén az adatok étéke nem változhat. __unordered_map__ és __unordered_multimap__ esetén a kulcsok értéke nem változhat, és nem tudjuk őket indexelni az indexelő operátor (```[]```) segítségével. A használatukhoz az ```<unordered_set>``` és az ```<unordered_map>``` fejlécek használata szükséges.  ([std::unordered_set - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_set), [std::unordered_multiset - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_multiset), [std::unordered_map - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_map), [std::unordered_multimap - cppreference.com](https://en.cppreference.com/w/cpp/container/unordered_multimap))
+
+[```unordered_set```](https://en.cppreference.com/w/cpp/container/unordered_set), [```unordered_multiset```](https://en.cppreference.com/w/cpp/container/unordered_multiset), [```unordered_map```](https://en.cppreference.com/w/cpp/container/unordered_map), [```unordered_multimap```](https://en.cppreference.com/w/cpp/container/unordered_multimap) - jó hash-függvény esetén egy rendezetlen konténerben a keresés konstans idejű (_O(1)_). A beszúrás szintúgy. __unordered_set__ és __unordered_multiset__ esetén az adatok étéke nem változhat. __unordered_map__ és __unordered_multimap__ esetén a kulcsok értéke nem változhat, és nem tudjuk őket indexelni az indexelő operátor (```[]```) segítségével. A használatukhoz az ```<unordered_set>``` és az ```<unordered_map>``` fejlécfájl használata szükséges.
 
 
 Az alábbi összehasonlítás megállja a helyét mind a négy, rendezett, illetve nem rendezett asszociatív konténer esetén:
@@ -3518,7 +3556,7 @@ Az alábbi összehasonlítás megállja a helyét mind a négy, rendezett, illet
 ### Bejárók - Iterátorok
 
 
-Az iterátorok elkülönítik egymástól a konténerelemekhez való hozzáférés módját a konténer fajtájától. Ezzel a megoldással lehetővé vált olyan általánosított algoritmusok készítése, amelyek függetlenek a konténerek eltérő elemhozzáférési megoldásaitól (```push_back()```, ```insert()```). Az iterátor egy pozíciót határoz meg a tárolóban. Használatához az ```<iterator>``` fejlállomány szükséges. Az iterátorokra tekinthetünk úgy, mint mutatókra, amik egy konténer adott elemére mutatnak.
+Az iterátorok elkülönítik egymástól a konténerelemekhez való hozzáférés módját a konténer fajtájától. Ezzel a megoldással lehetővé vált olyan általánosított algoritmusok készítése, amelyek függetlenek a konténerek eltérő elemhozzáférési megoldásaitól (```push_back()```, ```insert()```). Az iterátor egy pozíciót határoz meg a tárolóban. Használatához az ```<iterator>``` fejállomány szükséges. Az iterátorokra tekinthetünk úgy, mint mutatókra, amik egy konténer adott elemére mutatnak.
 
 __Megjegyzés__: az iterátorosztályokat ellátták a hagyományos mutatók operátoraival, az iterátorokat paraméterként fogadó algoritmus függvénysablonok többsége C tömbökkel is működik.
 
@@ -3527,7 +3565,7 @@ Mivel a konténerek működése lényeges eltéréseket mutat, egyetlen általá
 Legyenek ```p``` és ```q``` iterátorok és ```n``` pedig egy nemnegatív egész szám.
 
 * a ```*p``` kifejezés megadja a konténer ```p``` által jelölt pozícióján álló elemet. Amennyiben az elem egy objektum, akkor annak tagjaira a ```(*p).memberName``` vagy a ```p->memberName``` formában hivatkozhatunk.
-* a ```p[n]``` kifejezés megadja a konténer ```p + n``` kifejezés által kijelölt pzícióján álló elemet - megegyezik a ```(*p+n)``` kfejezéssel, ami a [pointer aritmetikából](#t%c3%b6mb-elemeinek-el%c3%a9r%c3%a9se) isemrős lehet.
+* a ```p[n]``` kifejezés megadja a konténer ```p + n``` kifejezés által kijelölt pozícióján álló elemet - megegyezik a ```(*p+n)``` kifejezéssel, ami a [pointer aritmetikából](#t%c3%b6mb-elemeinek-el%c3%a9r%c3%a9se) ismerős lehet.
 * a ```p++```, illetve ```p--```  kifejezések hatására a ```p``` iterátor az aktuális pozíciót követő, illetve megelőző elemre lép. (Prefixes alakban is használható ```++p```, ```--p```.)
 * a ```p == q``` és a ```p != q``` kifejezések segítségével ellenőrizhetjük, hogy ```p``` és ```q``` iterátorok a tárolón belül ugyanarra az elemre hivatkoznak-e vagy sem.
 * a ```p < q```, ```p <= q```, ```p > q``` és a ```p >= q``` kifejezések segítségével ellenőrizhetjük, hogy a tárolón belül ```p``` által mutatott elem megelőzi-e a ```q``` által mutatott elemet, illetve fordítva.
@@ -3643,7 +3681,7 @@ int main()
 ##### Bidirectioanl Iterátor
 
 
-A bidirectional iterátorral a konténerben tárolt adtokon előre és visszafelé is lépkedhetünk. Több algoritmus is kétirányú iterátorokat vár paraméterként, mint például az adatok sorrendjét megfordító ```reverse()``` algoritmus.
+A bidirectional iterátorral a konténerben tárolt adatokon előre és visszafelé is lépkedhetünk. Több algoritmus is kétirányú iterátorokat vár paraméterként, mint például az adatok sorrendjét megfordító ```reverse()``` algoritmus.
 
 ```cpp
 #include <iostream>
@@ -3706,7 +3744,7 @@ Normál és konstans iterátorokkal térnek vissza a konténerek ```begin()``` �
 
 ![beginEndIterators](img/beginEndIterators.png)
 
-Az ```array```, ```vector```, ```deque```, ```list```, ```set```, ```multiset```, ```map```, ```multimap``` konténerek esetén fordított irányú bejárást is lehetővé tesznek az ```rbegin()```, ```crbegin()```, illetve az ```rend()```, ```crend()``` tagfüggvények álltal visszaadott iterátorok. Ezek a függvények ```reverse_iterator```, illetve ```const_reverse_iterator``` típusú értékkel térnek vissza. A bejáráshoz ebben az esetben előre kell léptetnünk (__++__) az ```rbegin()```, ```crbegin()``` tagok hívásával megkapott iterátorokat.
+Az ```array```, ```vector```, ```deque```, ```list```, ```set```, ```multiset```, ```map```, ```multimap``` konténerek esetén fordított irányú bejárást is lehetővé tesznek az ```rbegin()```, ```crbegin()```, illetve az ```rend()```, ```crend()``` tagfüggvények által visszaadott iterátorok. Ezek a függvények ```reverse_iterator```, illetve ```const_reverse_iterator``` típusú értékkel térnek vissza. A bejáráshoz ebben az esetben előre kell léptetnünk (__++__) az ```rbegin()```, ```crbegin()``` tagok hívásával megkapott iterátorokat.
 
 ![rBeginREndIterators](img/rBeginREndIterators.png)
 
@@ -3714,7 +3752,7 @@ Az ```array```, ```vector```, ```deque```, ```list```, ```set```, ```multiset```
 ### STL Algoritmusok
 
 
-Az STL algoritmusok az ```<algorithm>``` könyvtárban találhatóak, és számos jól ismert fontos függvényt foglalnak megukba, mint pl. adott tulajdonságú elem keresése, törlése stb. Numerikus algorismusok esetén a ```<numeric>``` deklarációs fájlra van szükség.
+Az STL algoritmusok az ```<algorithm>``` könyvtárban találhatóak, és számos jól ismert fontos függvényt foglalnak magukba, mint pl. adott tulajdonságú elem keresése, törlése stb. Numerikus algorismusok esetén a ```<numeric>``` deklarációs fájlra van szükség.
 
 Az egyik legnagyobb erősségük, hogy nagyon jól olvasható kódot eredményez a használatuk. Nagyon hasznosak és megbízhatóvá tehetik a C++ programok fejlesztését. Az algoritmusok egy részét arra tervezték, hogy módosítsák egy kijelölt adatsor elemeit, azonban soha nem változtatják meg magukat az adatokat tároló konténereket.
 
@@ -3751,7 +3789,7 @@ Ezek az algoritmusok nem változtatják meg sem az adatelemeket, sem pedig azok 
 #### Módosító algoritmusok
 
 
-Az adatmódosító algoritmusoka arra tervezték, hogy megváltoztassák a konténerekben tárolt adatelemek értékét. Ez megtörténhet közvetlenül, magában a konténerben, vagy pedig az elemek más konténerbe való másolásával. Néhány algoritmus csupán az elemek sorrendjét modosítja, és ezért került ide.
+Az adatmódosító algoritmusokat arra tervezték, hogy megváltoztassák a konténerekben tárolt adatelemek értékét. Ez megtörténhet közvetlenül, magában a konténerben, vagy pedig az elemek más konténerbe való másolásával. Néhány algoritmus csupán az elemek sorrendjét modosítja, és ezért került ide.
 
 * [```copy()``` ```copy_if()```](https://en.cppreference.com/w/cpp/algorithm/copy)
 * [```copy_backward()```](https://en.cppreference.com/w/cpp/algorithm/copy_backward)
@@ -3857,18 +3895,18 @@ Számokat tároló konténerek elemein műveleteket végző algoritmusok csoport
 * [```partial_sum()```](https://en.cppreference.com/w/cpp/algorithm/partial_sum)
 
 
-Néhány tároló rendelkezik az algoritmusok némelyikével megegyező nevű tagfüggvénnyel. Ezek léte- zésnek oka, hogy kihasználva a konténerek speciális adottságait, hatékonyabb és biztonságosabb tagfüggvény készíthető, mint az általános algoritmus. Egyetemes szabályként megfogalmazható, hogy részesítsük előnyben a taggfüggvényeket a program készítése során.
+Néhány tároló rendelkezik az algoritmusok némelyikével megegyező nevű tagfüggvénnyel. Ezek létezésnek oka, hogy kihasználva a konténerek speciális adottságait, hatékonyabb és biztonságosabb tagfüggvény készíthető, mint az általános algoritmus. Egyetemes szabályként megfogalmazható, hogy részesítsük előnyben a taggfüggvényeket a program készítése során.
 
 
 #### Az algortimusok végrehajtási ideje
 
 
-A konténerműveletek időigénye mellett a felhasznált algoritmusok időigénye együtt határozza meg az adott programrész futásidejét. Az algoritmusok vérehajtásához szükséges időigényt a feldolgozandó adatsor elemeinek számával (_n_) jellemezhetjük:
+A konténerműveletek időigénye mellett a felhasznált algoritmusok időigénye együtt határozza meg az adott programrész futásidejét. Az algoritmusok végrehajtásához szükséges időigényt a feldolgozandó adatsor elemeinek számával (_n_) jellemezhetjük:
 
 * __O(1)__ - ```swap()```, ```iter_swap()```
 * __O(log(n))__ - ```lower_bound()```, ```upper_bund()```, ```equal_range()```, ```binary_search()```, ```push_heap()```, ```pop_heap()```
 * __O(n log(n))__ - ```inplace_merge()``` (legrosszabb esetben), ```stable_partition()``` (legrosszabb esetben),
-* __O($n^2$)__ - ```find_end()```, ```find_first_of()```, ```search()```, ```search_n()```
+* __O(n<sup>2</sup>)__ - ```find_end()```, ```find_first_of()```, ```search()```, ```search_n()```
 * __O(n)__ - minden más algoritmus
 
 
@@ -3883,13 +3921,13 @@ int a = []{ return 12 * 23; } ();
 
 A bevezető szögletes zárójel jelzi, hogy lambda következik. Ez után áll a függvény törzse, ahol a ```return``` utasításból a fordító meghatározza a függvény értékét és típusát. Az utasítást záró kerek zárójelpár a függvényhívást jelenti.
 
-Amennyiben paraméterezni kívánjuk a lambdát, a szögeltes és a kapcsos zárójelek közé egy hagyományos paraméterlista is beékelődik:
+Amennyiben paraméterezni kívánjuk a lambdát, a szögletes és a kapcsos zárójelek közé egy hagyományos paraméterlista is beékelődik:
 
 ```cpp
 int a = [](int x, int y){ return x * y; } (12, 23);
 ```
 
-Szükség esetén a függvény visszatérési zípusát is megadhatjuk a C++11-ben bevezetett formában:
+Szükség esetén a függvény visszatérési típusát is megadhatjuk a C++11-ben bevezetett formában:
 
 ```cpp
 int a = [](int x, int y) -> int { return x * y; } (12, 23);
@@ -3919,7 +3957,7 @@ int main()
 
 Első lépésként megszámoljuk a ```data``` vektor páratlan elemeit, majd minden elemet a duplájára növelünk, csökkenő sorrendben rendezzük a vektort, végül pedig megjelenítjük az elemeket. Ezekben a példákban a lambda függvények csak a paramétereken keresztül tartották a kapcsolatot a környezetükben elérhető változókkal. Ellentétben a hagyományos függvényekkel, a lambda kifejezésekben elérhetjük a lokális hatókör változóit.
 
-A fájl szintű és lokális statikus élettartamú nevek elére minden további nélkül működik:
+A fájl szintű és lokális statikus élettartamú nevek elelérése minden további nélkül működik:
 
 ```cpp
 const double PI = 3.1415;
@@ -3958,14 +3996,14 @@ A fordító nem engedi az érték szerint elkapott változó módosítását.
 Amennyiben a lambda függvényt többször szeretnénk használni, hozzárendelhetjük egy függvény mutatóhoz.
 
 ```cpp
-void (*myLambda) (int) = [](int i){ i *= i; }; // C++11 óta függvény mutató helyett auto kulcsszó használható
+void (*myLambda) (int) = [](int i){ i *= i; };
 
-auto myLambda = [](int i){ i *= i; };
+auto myLambda = [](int i){ i *= i; }; // C++11 auto kulcsszó
 
 std::for_each(data.begin(), data.end(), myLambda);
 ```
 
-Nézzünk egy példát, ahol egy vektor elemeit négyzetre emeljük először egy funtor segítségével, majd egy lambda segítségével:
+Nézzünk egy példát, ahol egy vektor elemeit négyzetre emeljük először egy funktor segítségével, majd egy lambda segítségével:
 
 ```cpp
 #include <iostream>
@@ -3987,3 +4025,677 @@ int main()
   std::for_each(data.begin(), data.end(), [](int& i){ i *= i; }); // lambdával
 }
 ```
+
+
+## Sablon - template
+
+
+A C++ sablonok alatt olyan __osztálysablonokat__ (_class template_) és __függvénysablonokat__ (_function template_) értünk, melyek esetében az adott osztály, illetve függvény definiálásakor bizonyos elemeket nem adunk meg, hanem __paraméterként__ kezelünk. Ezen paraméterek megadása explicit vagy implicit módon az adott osztálysablon, illetve függvénysablon __felhasználásakor__ történik. Egy osztályt osztálysablonná alakítva az elemek típusát paraméterként kezelhetjük, és a kívánt elemtípust az osztálysablon felhasználása során adhatjuk meg.
+
+Gondolhatunk a sablonokra úgy, mint olyan osztályokra, illetve függvényekre, melyek nem teljesek, és a felhasználásukkor a paraméterek megadásával válnak teljes értékű osztályokká vagy függvényekké.
+
+A C++ sablonok tulajdonképpen a generikus típusok a C++ nyelvbeli megfelelői. Jellemző alkalmazási területük olyan tárolóosztályok létrehozása, amelyek tetszőleges típusú elem tárolására szolgálnak, mégpedig típusbiztos (_type safe_) módon. A fordító egészen addig ignorálja a sablonokat - nem fordítja bele az assembly kódba - , amíg azok a kód valamely részén felhasználásra nem kerülnek. Részletesebben a [Sablonok fordítása](#sablonok-ford%c3%adt%c3%a1sa) fejezet foglalkozik ezzel.
+
+
+### Függvénysablon - function template
+
+
+Legyen a felada két függvény megírása: az első két egész szám (```int```), a második két lebegőpontos szám (```double```) közül a nagyobbat adja vissza.
+
+```cpp
+inline int max(int lhs_, int rhs_)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+
+inline double max(double lhs_, double rhs_)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+```
+
+Jól látható, hogy a két függvény törzse pontosan megegyezik. Ha újabb típusokra szeretnénk használni a ```max()``` függvényünket, akkor azokra is külön meg kellene írni. Ezen kódduplikálás elkerülésére eddigi ismereteink szerint egyetlen megoldás kínálkozik, a makrok használata. (kerülendő!) A makrókkal kapcsolatos gondokat a korábbi fejezetekben már láthattuk. A C++ nyelvben a probléma hatékony és biztonságos megoldására a __függvénysablonokat__ használhatjuk. A ```max()``` függvényre vonatkozóan ez azt jelenti, hogy olyan függvénysablonná alakítjuk át, amelyben a típus, amelyen dolgozik, nincs rögzítve, paraméterként kezeljük, és ezt a paramétert a függvénysablon felhasználsakor adjuk meg. A ```max()``` függvénysablon implementációja a következő:
+
+```cpp
+template <typename T>
+inline T max(T lhs_, T rhs_)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+```
+
+A függvény átalakítását a következő lépésekben végezzük:
+
+* a függvénysablon fejlécét a ```template``` kulcsszóval kell kezdeni. Ezt követően ```< >``` között kell felsorolni a sablonparamétereket, vesszővel elválasztva. A példában egy sablonpraméter szerepel, ```T```. A sablonparamétereknek tetszőleges nevet adhatunk. Példnánkban ```T``` egy típust jelöl, ezt a ```typename``` kulcsszóval jelezzük a fordító felé. A ```typename``` helyett a ```class``` kulcsszó is használható. Sablonok esetében a kettő teljesen ekvivalens. A ```class``` kulcsszó némiképp megtévesztő lehet, az adott paraméter nem csak osztály, hanem tetszőleges típus lehet. Sablon paraméter konstans is lehet.
+* mindenhol, ahol eddig az ```int``` vagy ```double``` beégetett típust használtuk, a ```T``` paramétert szerepeltetjük. Ez esetünkben a függvény visszatérési értékének és bemeneti paramétereinek típusát jelenti. Használhatnánk lokálisan definiált vagy dinamikusan lefoglalt változók létrehozására is.
+
+__Megjegyzés__: a ```typename``` kulcsszó később került be a nyelvbe, mint a ```class```, ezért eleinte azt használták sablonparaméterek megadásánál.
+
+A példában a függvény, illetve a függvénysablon a függvénytörzs rövidsége miatt célszerűen ```inline```, de természetesen nem ```inline``` függvénysablonok írására is van lehetőség.
+
+Eddig csak arról esett szó. hogyan lehet függvénysablont __létrehozni__. A következőkben arra lesz példa, hogyan lehet a függvénysablonokat __felhasználni__. A legegyszerűbb mód a __függvénysablon implicit példányosítása__ (_implicit function templale instantiation_):
+
+```cpp
+int i = max(3, 5);
+double d = max(2.3, 4.2);
+```
+
+A kódrészlet első sora ```int```, a második sora ```double``` típussal __példányosítja__ a függvénysablont. Ennek semmi köze az objektumok példányosításához. Ez azt jelenti, hogy __fordítás során__ az első esetben a ```T``` paraméter helyébe ```int```, a második esetben ```double``` típus helyettesítődik. A behelyettesítést követően a függvénysablonből közönséges függvény készül, melyet a fordító gépi kódra fordít. Jelen esetben azért beszélünk implicit példányosításról, mert a fordító a paraméterek típusából kikövetkezteti, milyen típust kell behelyettesíteni a sablonparaméterek helyére, vagyis a paramétereket nem adtuk meg explicit módon. Ezt a fajta kikövetkeztetést nevezzük __template argumentum dedukciónak__ (_template argument deduction_).
+
+Implicit példányosítás esetén egy adott sablonparaméter csak egy típust jelölhet. A példára vonatkozóan ez azt jelenti, hogy a fordító kikényszeríti, hogy a ```max()``` függvény mindkét paraméterének típusa pontosan megegyezzen. Ennek megfelelően például a
+
+```cpp
+double d = max(1, 3.5);
+```
+
+kód nem fordul le, mert az első függvényparaméter esetében a ```T``` ```int```, a második esetében ```double``` típust jelentene. A fordító a függvénysablon implicit példányosítása eseten nem engedélyezi az automatikus konverziót. Természetesen ugyanígy fordítási hibát eredményezne, ha a függvényparaméterek nem konstansok, hanem változók lennének. Sőt, az ```unsigned``` és a ```signed``` típusok közötti konverzió sem megengedett. A probléma megoldása a következő lehet:
+
+```cpp
+double d = max(1.0, 3.5);
+```
+
+Itt mindkét paraméter típusa ```double```. Változókkal szemléltetve:
+
+```cpp
+int i;
+double d;
+...
+double d = max((double)i, d);
+```
+
+A másik megoldást a konverziós problémára az jelenti, ha a ```max()``` függvénysablont __explicit módon példányosítjuk__ (_explicit function template instantiation_):
+
+```cpp
+double d = max<double>(1, 3.5);
+```
+
+Ebben az esetben a függvénysablon használatkor a függvénysablon neve utána ```< >``` között, vesszővel elválasztva felsoroljuk a paraméterekbehelyettesítési értékét. A példában ez a ```T``` helyére ```double``` megadását jelenti. Az expliciten példányosított függvények esetében a paraméterekre működik az automatikus konverzió, vagyis a ```max<double>(1, 3.5)``` nem okoz fordítási hibát: az első ```int``` paraméter automatikusan ```double```-ra konvertálódik. Ez logikus következménye annak, hogy az explicit módon példányosított függvénysablonok ugyanúgy viselkednek, mint a közönséges függvények, ennek megfelelően pontosan ugyanazok a konverziós szabályok érvényesek rájuk is.
+
+Felmerülhet a kérdés, hogy a ```max()``` függvénysablonunk ténylegesen bármilyen típussal használható-e? Vessünk egy pillantást a függvénysablonunk implementációjára, ami magában rejti a választ.
+
+```cpp
+template <typename T>
+inline T max(T lhs_, T rhs_)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+```
+
+Ebben az implementációban két megkötés él a ```T``` sablonparaméterre vonatkozóan:
+
+1. a függvény törzsében használhatjuk rá a ```>``` operátort, így a ```T``` típusra értelmezettnek kell lennie, és az általunk elvárt módon kell megvalósítania az összehasonlítást. Így ha ```T``` egy saját osztály vagy stuktúra, akkor gondoskodnunk kell a ```>``` operátor megfelelő megírásáról.
+2. A függvény az ```lhs_``` és ```rhs_``` paramétereket érték szerint veszi át, valamint nem referencia típusssal tér vissza, így a függvény hívásakor meghívódik a ```T``` másolókonstruktora. Ha ```T``` saját típus, gondoskodjunk megfelelő másolókonstruktor megírásáról, amennyiben a beépített másolókonstruktor nem biztosít megfelelő működést.
+
+Nagyobb objektumok esetében a ```max()``` függvénysablon hatékonyabb működést eredményez, ha referencia szerint történik a paraméterátadás:
+
+```cpp
+template <typename T>
+inline const T& max(const T& lhs_, const T& rhs_)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+```
+
+
+### Függvénysablon-specializáció
+
+
+Mint azt az előzőekben láthattuk a ```max()``` függvénysablon teljesen jól működött egész és lebegőpontos számok esetében, de mi a helyzet más típusokkal? Tekintsük az alábbi kódrészletet:
+
+```cpp
+const char* text = max("abc", "bcd");
+```
+
+Ez a program hibás, ugyanis a ```max()``` függvény két string összehasonlítására nem alkalmas. Ennek oka, hogy két ```char*``` mutató közül a nagyobbikat adja vissza, vagyis a stringeket nem a tartalmazott karakterek, hanem a memóriabeli elhelyezkedésük alapján hasonlítja össze. Szerencsére van megoldás: __függvénysablon-specializációt__ (_function template specialization_) kell alkalmazni. Ennek a lényege, hogy az általános függvénysablon definíción kívül bizonyos paraméterek behelyettesítésére az általnostól eltérő implementációt adunk meg. A példánkra vonatkozóan ez azt jelenti, hogy megírjuk ugyan a fenti általános ```max()``` függvénysablont, de emelett meg kell írni egy ```const char*```-ra specializált implementációt is. Ez szintaktikailag két módon is megtehető. Az első a "klasszikus" megoldás:
+
+```cpp
+const char* max(const char* lhs_, const char* rhs_)
+{
+  return (std::strcmp(lhs_, rhs_) > 0) ? lhs_ : rhs_;
+}
+```
+
+[```strcmp()```](https://en.cppreference.com/w/cpp/string/byte/strcmp) - beépített függvény a ```<string.h>``` fejállományban, amely paraméterül vár két ```string``` (vagy ```char*```) típusú argumentumot, majd lexikografikusan összehasonlítja őket.
+
+A második a C++ gondolkodásmódjának jobban megfelelő megoldás:
+
+```cpp
+template<>
+const char* max<const char*>(const char* lhs_, const char* rhs_)
+{
+  return (std::strcmp(lhs_, rhs_) > 0) lhs_ : rhs_;
+}
+```
+
+Ez esetben a következő szabályok érvényekes:
+
+* a függvénysablon elé a ```template<>``` kifejezést kell írni, üres paraméterlistával.
+* a függvénysablon neve után ```< >``` között fel kell sorolni valamennyi sablonparaméterre vonatkozóan a specializált behelyettesítési értéket, vesszővel elválasztva. A példánkra vonatkozóan ez a ```const char*```.
+* egy függvénysablonhoz több specializáció is készíthető, természetesen különböző paraméterbehelyettesítésekkel.
+* a fordító a függvénysablon felhasználásakor egy adott specializációt alkalmaz, amennyiben a sablonparaméterek __pontosan__ megegyeznek a specializációban megadottakkal. A specializációk "illesztése" során a fordító semmiféle konverziót nem alkalmaz, így például nem konstansról konstans konverzziót sem.
+* függvénysablonokra vonatkozóan csak teljes, valamennyi paraméterre vonatkozó specializáció írható.
+
+Felmerülhet kérdésként, hogy miért a ```const char*```-ra való specializációt írtuk meg és miért nem a ```char*```-ra? A specializációk illesztésekor a fordító a sablonparaméterekre vonatkozóan szigorú típusegyezőséget alkalmaz. Az ```"abc"``` és ```"bcd"``` literálok típusa ```const char*```. Így, ha a ```char*```-ra specializált változatot írtuk volna meg, akkor ezen paraméterekre vonatkozóan az általános ```max()``` implementáció hívódott volna meg.  A gondolatmenetet tovább folytatva kérdéses, hogy ha csak a ```const char*```-ra specializált verziót írjuk meg, akkor a ```char*``` paraméterek esetében alkalmazza-e a fordító a specializált változatot. A válasz ez esetben is nem. A tanulság pedig az, hogy a specializációt ```char*``` és ```const char*``` paraméterekre is meg kell írni, másként az adott helyzetnek megfelelően meglepő eredményeket kaphatunk a ```max()``` függvénysablon alkalmazásakor.
+
+__Fontos__: a sablonspecializáció esetén, ha az érintett paraméter mutató típusú, a konstans és nem konstans paraméterekre is írjunk specializációt.
+
+Sablonparaméter nem csak típus lehet, hanem típusos konstans is. Nézzük meg az alábbi példát:
+
+```cpp
+#include<iostream>
+
+template<int N>
+int square()
+{
+  return N * N;
+}
+
+int main()
+{
+  const int x = 10;
+  std::cout << "square of " << x << " is " << square();
+}
+```
+
+> kimenet: square of 10 is 100
+
+A ```square()``` függvénysablon sablonparaméterként egy ```int``` konstanst vár, amelynek négyzetvel tér vissza. A ```square()``` csak konstans paraméterrel használható, hiszen a sablon kifejtése fordítási időben történik. Ez nagyban korlátozza a használhatóságát, ugyanakkor előnye, hogy négyzetre emelés már fordítási időben megtörténik, ami jelentős futás közbeni sebességnövekedést eredményezhet.
+
+Korábban említésre került, hogy nem csak egy sablon paramétert adhatunk meg. Írjunk egy függvénysablont, ami két sabonparaméterrel rendelkezik, és összehasonlítja a sablonparaméter-típusok memóriabeli méretét: 1-el tér vissza, ha az első paraméterben megadott típus nagyobb, -1-el, ha a második, és 0-val, ha egyenlők.
+
+```cpp
+#include<iostream>
+
+template <typename T1, typename T2>
+int compareTypes()
+{
+  if (sizeof(T1) > sizeof(T2))
+  {
+    return 1;
+  }
+  else if (sizeof(T1) <  sizeof(T2))
+  {
+    return -1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+int main()
+{
+  std::cout << "compare double to int " << compareTypes<double, int>() << std::endl;
+  std::cout << "compare int to long " << compareTypes<int, long>() << std::endl;
+  std::cout << "compare int to int " << compareTypes<int, int>() << std::endl;
+}
+```
+
+> kimenet:
+>
+> compare double to int 1
+>
+> compare int to long -1
+>
+> compare int to int 0
+
+
+### Hívott függvény kiválasztása
+
+
+Amennyiben egy adott függvénynek több implementációja is van, felmerül a kérdés, hogy a függvényhívás során melyik függvény fog meghívódni. A következő szabályok érvényesek a sorszámnak megfelelő prioritási sorrendben:
+
+1. ha létezik olyan közönséges függvény, melynek paraméterei típus szerint pontosan megegyezenek, akkor az adott függvény hívódik meg.
+2. ha létezik olyan függvénysablon, melynek paraméterei típus szerint pontosan megegyeznek, akkor az adott függvény hívódik meg.
+3. ha létezik közönséges függvény vagy függvénysablon, mely esetében típuskonverzióval megegyeznek a paraméterek, akkor az adott függvény hívódik meg. Az automatikus típus konverzó nem érinthet sablonparamétert. Például a ```template <typename T> void myFunc(double a, T b, T c);``` esetében a ```b``` és ```c``` függvényparaméterekre vonatkozóan a korábbi szabályoknak megfelelően csak akkor lehetséges az automatikus konverzió, ha a ```myFunc()``` függvénysablont explicit példányosítjuk, vagyis  míg a ```myFunc(10, 10.1, 11);``` fordítási hibát okoz, mert a harmadik paraméternél automatikus ```int``` -> ```double``` konverzióra volna szükség. Az explicit példányosított ```myFunc<double>(10, 10.1, 11);``` hívás lefordul.
+
+
+### Osztálysablon - class template
+
+
+A fordítónak jeleznünk kell, hogy nem közönséges osztályról, hanem osztálysablonról van szó. Ezt a korábban bemutatott függvénysablonokhoz hasonlóan a ```template``` kulcsszó segítségével tehetjük meg.
+
+```cpp
+template <typename T>
+class MyClass
+{
+public:
+  MyClass(T a_);
+  T getA() const { return _a; }
+  void setA(T a_);
+private:
+  T _a
+};
+```
+
+A ```template``` kulcsszót követően ```< >``` között fel kell sorolni a sablonparamétereket, vesszővel elválasztva. A paraméterekre vonatkozó szabályok megegyeznek a függvénysablonok esetében megadottakkal.
+
+Amennyiben a tagfüggvények implementációját nem az osztálydefiníciós részben, implicit inline módon kívánjuk megadni, a következőképpen tehetjük meg:
+
+```cpp
+// a setA() tagfüggvény definíciója
+template <typename T>
+void MyClass<T>::setA(T a_)
+{
+  _a = a_;
+}
+```
+
+A definíciót a többi tagfüggvény és konstruktor esetében is hasonló módon lehet megadni. Valamennyi tagfüggvény-definíció előtt a ```template``` kulcsszót kell megadni, és ```< >``` között fel kell sorolni a template paramétereket. Ezen túlmenően az osztály neve után ```< >``` között vesszővel elválasztva fel kell sorolni a sablonparaméterek __nevét__. Itt a ```class``` vagy ```typename``` kulcsszókat nem írjuk ki a paraméterek elé. __A konstruktor és destruktor nevének megadására ez az átalakítás nem érvényes.__
+
+```cpp
+// helyes
+template <typename T>
+MyClass<T>::MyClass(T a_): _a(a_) { }
+
+// helytelen
+MyClass<T>::MyClass<T>(T a_): _a(a_) { }
+```
+
+Míg a közönséges osztályok esetében az osztálydefiníciós rész a ```.h``` fejlécfájlba, a tagfüggvények definícióját a ```.cpp``` forrásfájlba szokás tenni, osztálysablonok esetében a tagfüggvények definícióját is a fejlécfájlba kell tenni. Ennek okait a [Sablonok fordítása](#sablonok-ford%c3%adt%c3%a1sa) című fejezet fejti ki részletesen.
+
+
+Azokon a helyeken ahol az osztálysablont metódusparaméterként, tagváltozóként vagy lokális változóként használjuk, régebbi fordítók esetében fel kell sorolni a sablonparaméterek __neveit__ vesszővel elválasztva, a __class__, illetve __typename__ kulcsszó nélkül. A másolókonstruktort vehetjük példánk alapjául:
+
+```cpp
+template <typename T>
+class MyClass
+{
+public:
+  MyClass(const MyClass<T>& rhs_)
+  {
+    ...
+  }
+};
+```
+
+Ezen szabály alkalmazása modern fordítók esetében már nem kötelező. Célszerű emlékezni rá, hogy ha régebbi forráskódban látjuk.
+
+A következőkben arra láthatunk példát, hogy hogyan tudjuk __felhasználni__ az osztálysablont.
+
+```cpp
+int main()
+{
+  MyClass<int> mc1;
+  mc1.setA(1);
+
+  MyClass<char> mc2;
+  mc2.setA('a');
+}
+```
+A felhasználás során az osztálysablon neve után ```< >``` között kell megadni a sablonparaméterek behelyettesítési értékét. Az osztálysablon felhasználására vonatkozó legfontosabb szabály a következő:
+__az osztálysablon paraméterek megadása után ugyanúgy használható, mint egy közönséges osztály. Másképpen fogalmazva: ahol a kódban osztálynév szerepelhet, ott szerepelhet felparaméterezett osztálysablon is.__
+
+Az osztálysablonok felhasználásával kapcsolatban érdemes megjegyezni, hogy amennyiben egy adott módon felparaméterett osztálysablont többször kívánunk használni, kényelmes lehet új típusként való bevezetése a ```typedef```-fel:
+
+```cpp
+typedef MyClass<int> MC;
+...
+MC mc;
+mc.petA(1);
+```
+
+Osztályok esetében is előfordulhat, hogy a sablonparaméter típusos konstans vagy osztálysablon. Abban az estben, ha __felparaméterezett sablon__-t használunk pl. ```MyClass<AnotherClass<int>>``` régebbi fordítók esetén (C++11 előtt) a utolsó ```>>``` közé szóközt kell rakni, mert a fordító __bitshift right__ operátoként ismeri fel. Modernebb fordítók esetén ez már nem jelent problémát.
+
+
+#### Típusos konstans sablonparaméter
+
+
+Mint azt korábban említettük, sablonparaméter lehet típusos konstans is. Nézzünk erre egy példát.
+
+```cpp
+template <typename T, int Size>
+class MyClass
+{
+public:
+  MyClass(T a_, int b_): _a(a_), _b(b_) { }
+private:
+  T _a;
+  int _b;
+};
+
+int main()
+{
+  MyClass<int, 100> mc;
+}
+```
+
+Alternatív megoldásként használhattunk ```const``` kulcsszóval ellátott konstanst.
+
+```cpp
+int main()
+{
+  const int size = 100;
+  MyClass<int, size> mc;
+}
+```
+
+Annak, hogy csak konstans adható meg elvi oka van. A sablonok a felhasználásuk során __fordítási időben fejtődnek ki__, így a sablonparaméterek behelyettesítési értékeinek már fordítási időben eldönthetőnek kell lenniük.
+
+
+#### Alapértelmezett sablonparaméter
+
+
+Akárcsak a függvénysablonok esetében, osztálysablonoknál is lehetőségünk van __alapértelmezett értéket__ megadni sablonparaméternek.
+
+```cpp
+template <typename T = int>
+class MyClass { ... }
+
+int main()
+{
+  MyClass<> mc;
+  MyClass<char> mc2;
+}
+```
+
+A ```T``` paraméternek az ```int``` alapértelmezett értéket adtuk. Így, ha az osztálysablon felhasználásakor nem adunk neki értéket, akkor az ```int``` értéket veszi fel. Az alapértelmezett osztálysablonok megadására ugyanazok a szabályok érvényesek, mint az alapértelmezett függvénysablonokra: jobbról balra sorban haladva kihagyás nélkül tetszőleges számú paraméternek adható alapértelmezett érték. Az alapértelmezett sablonparaméterek lehetővé teszik olyan asblonok készítését, melyek széles körben testre szabhatóak, ugyanakkor legtöbb helyzetben könnyen felhasználhatók.
+
+
+#### Mutatók és referenciák, mint sablonparaméterek
+
+
+Amennyiben az elemtípus, vagyis a ```T``` összetett, nagyobb méretű objektumokat erdeményező típus, akkor ezeket az objektumokat referenciaként érdemes paraméterben átadni a függvénynek annak érdekében, hogy elkerüljük a paraméterátadáskori másolat készítését, s így a másolókonstruktor hívását. Ezt úgy tudjuk elérni, hogy a ```T``` sablonparaméternek ```T&```-t adunk meg. Hasonló az helyzet mutatók esetében is, ```T*```.
+
+
+#### Tagfüggvénysablonok
+
+
+Függvénysablonok nemcsak globális függvények lehetnek, hanem tagfüggvények is. Ezek közönséges osztályok vagy osztálysablonok tagfüggvényei egyaránt lehetnek.
+
+```cpp
+class MyClass
+{
+public:
+  template <typename T>
+  void print(T val)
+  {
+    std::cout << val;
+  }
+};
+```
+
+A ```print()``` függvényből a fordítás során annyi különböző verzió keletkezik, ahány különböző típussal használjuk. Tagfüggvénysablon lehet konstruktor is, azon erre van pár megkötés: a sablonkonstruktor sohasem fog másolókonstruktorként viselkedni, ezt mindig meg kell írni közönséges konstruktor formájában.
+
+
+#### Az osztálysablonok és az öröklés
+
+
+Tekinstsük az alábbo programot:
+
+```cpp
+class ClassA { ... };
+
+template <typename T1, typename T2>
+class TemplA
+{
+  T1 a;
+  T2 b;
+};
+```
+
+A ```ClassA``` közönséges osztály, a ```TemplA``` két sablonparaméterrel rendelkező osztálysablon. __Ősosztályként minden esetben csak közönséges osztály vagy felparaméterezett osztálysablon használható.__ Először nézzünk példát  a ```TemplA```-ból, mint ős osztálysablonból egy közönséges osztályt származtatunk:
+
+```cpp
+class ClassB: public TemplA<int, ClassA>
+{ ... };
+```
+
+Az ős osztálysablonnál a ```T1``` paraméter helyébe az ```int``` kerül, a ```T2``` helyébe a ```ClassA``` osztályt helyettesítjük.  A következő esetben a ```ClassA```-ból mint közönséges osztályból osztálysablont származtatunk le:
+
+```cpp
+template <typename T1>
+class TemplB: public ClassA
+{
+  T1 t; // T1 típusú tagváltozó
+}
+```
+
+A legösszetettebb esetnek az osztálysablonból új osztálysablon leszármaztatása tekinthető. Például:
+
+```cpp
+template <typename T3, typename T4>
+class TemplC: public TemplA<int, T3>
+{
+  T3 t; // T3 típusú tagváltozó
+}
+```
+
+A leszármaztatott ```TemplC``` osztálysablonnak két paramétere van: ```T3``` és ```T4```. A szabálynak megfelelően az ős sablonosztályt itt is felparaméterezve használtuk fel. A ```T1``` paraméternek a fix ```int``` értéked adtuk meg, ```T2```-nek azonban a leszármaztatott osztály ```T3``` paraméterét adtuk "tovább".
+
+
+#### Osztálysablon-specializáció
+
+
+Akárcsak a függvénysablonok esetében, az osztálysablonoknál is előfordulhatnak olyan esetek, amikor az általános implementáció nem megfelelő egy adott típusra.
+
+Az osztálysablon-specializáció megírására a következő szabályok érvényekes:
+
+* az osztálysablon neve előtt a ```template``` kulcsszó után ```< >``` között csak azokat a maradó sablonparamétereket kell felsorolni, amelyeket a továbbiakban is paraméterként kívánunk kezelni, vagyis amelyeket nem kívánunk specializálni.
+* az osztálysablon neve után ```< >``` között fel kell sorolni valamennyi sablonparamétert: a nem spcializáltakat a sablonparaméter nevének megadásával, a specializáltakat a paraméter értékével.
+* egy osztálysablonhoz több specializáció is készíthető, természetesen különböző, a paraméterekre vonatkozó megkötésekkel.
+* a fordító a sablon felhasználásakor mindig a lehető legspeciálisabban illeszkedő sablonverziót alkalmazza.
+* a fordító az illesztés során semmiféle konverziót nem alkalmaz, így például ```const```<-> nem ```const``` verziót sem.
+
+
+__Részleges sablonspecializáció__-nak (_partial template specialization_) nevezzük azt, amikor csak részben kötjük meg a sablonparamétereket.
+
+__Teljes specializáció__-nak (_(full) template specialization_) nevezzük, amikor minden sablonparaméterre adunk megkötést.
+
+
+### Sablonok fordítása
+
+
+A sablonok használatával kapcsolatban alapvető fontosságú annak ismerete, hogy a __sablonok fordítási időben fejtődnek ki__. Amikor a fordító a fordítás során először "találkozik" az osztály- vagy függvénysablon egy adott példányosításával, megfelelően behelyettesíti a sablonparamétereket, és legenerálja a behelyettesítésnek megfelelő kódot. __Osztálysablonok esetében a kódgenerálás tagfüggvényenként történik__, vagyis egy tagfüggvény kódja csak akkor generálódik le, ha legalább egy helyen használjuk.  Vizsgáljuk meg a korábban bevezetett ```MyClass``` osztálysablont.
+
+```cpp
+template <typename T>
+class MyClass
+{ ... };
+
+int main()
+{
+  MyClass<int> mc1;
+  mc1.setA(2);
+  mc1.getA();
+
+  MyClass<double> mc2;
+  mc2.setA(3.14);
+}
+```
+
+Amikor a fordító a ```MyClass<int> mc1;``` sorhoz ér, veszi a ```MyClass``` osztálysablont, a ```T``` paraméter helyébe ```int```-et helyettesít, legenerálja az alapértelmezett konstruktorának a kódját, és ennek hívására vonatkozóan generál kódot. A ```mc1.setA(2);``` sorhoz érve a fordító veszi a ```MyClass``` osztálysablont, a ```T``` helyére ```int```-et helyettesít, legenerálja a ```setA()``` metódus kódját, és most ennek a hívására vonatkozóan generál kódot. A ```getA()```  metódus kódja a ```setA()```-hoz hasonló módon generálódik. Hasonló a helyzet lép fel a ```MyClass<double> mc2;``` esetében is, csak ```int``` helyett ```double``` típust fog behelyettesíteni a fordító.
+
+A sablonok ezen fordítási mechanizmusának számos kellemes és kellemetlen következménye van:
+
+1. __Optimalizáció__: ha egy adott osztálysablon tagfüggvényét sehol sem használjuk, akkor nem fog legenerálódni a kód. Ennek következtében a generált kód mérete lényegesen kisebb lehet, mint a közönséges osztályokkal vagy függvényekkel dolgoznánk. Így alkalmazásuk a háttértáron és a memóriában is a lehető legkisebb helyet foglalja el.
+2. __Kódburjánzás__: ha egy sablon - akár osztály akár függvény - több paraméterkombinációval használunk, valamennyire vonatkozóan legenerálódik a sablon tagfüggvényeinek kódja, ami a generált kód méretének növekedéséhez vezet. Ezt szokás __kódburjánzás__-nak vagy __kódfelfúvódás__-nak nevezni (_code bloat_).
+3. __Fordítási hibák__: a fordítási modell talán legmeghökkentőbb következménye, hogy a __fordítási hibák rejtve maradnak__. Könnyen megeshet, hogy egy osztály- vagy függvénysablon megírását követően a fordítás során semmilyen hibát sem kapunk, és a kód mégis tele van szintaktikai és egyéb hibákkal. Valójában nem is várhatunk mást, mert a sablonok tagfüggvényei csak akkor fordulnak le, ha használjuk őket. Mindaddig nem esnek át teljes szintaktikai ellenőrzésen. Ilyen esetekben az osztálysablonok __explicit példányosítása__ (_explicit template instantiation_) lehet a válasz. Az explicit példányosítás a megadott paraméterekkel valamennyi tagfüggvényre vonatkozóan kikényszeríti a kód generálást. Például ```template class MyClass<int>;``` Ez a sor a ```MyClass``` osztálysablont a ```T = int``` paraméter-behelyettessítéssel példányosítja.
+
+Függvénysablonok esetén is van lehetőségünk explicit példányosításra. Ehhez az adott függvénysablont a ```template``` kulcsszót követően az adott paraméter-behelyettesítésekkel deklarálni kell:
+
+```cpp
+template<typename T>
+inline T max(T lhs_, T rhs,)
+{
+  return lhs_ > rhs_ ? lhs_ : rhs_;
+}
+// példányosítás T=int behelyettesítéssel
+template inline int max<int>(int lhs_, int rhs_);
+```
+
+A fenti példában a ```max()``` függvény ```inline```, így az explicit példányosítás legenerálja ugyan a kódját, a hívás helyére azonban, amennyiben lehetséges, a törzse fog behelyettesítődni.
+
+Az explicit példányosítás jól használható arra, hogy "előcsaljuk" a fordítási hibákat, de a kód részletes tesztelését önmagában nyilvánvalóan nem oldja meg.
+
+Az explicit példányosítást sablon osztálykönyvtárak készítésekor is felhasználhatjuk.
+
+Ha egy sablon a paraméterek adott kombinációjával jól lefordul és működik, még nem jelenti azt, hogy más paraméterek esetén is jól fog működni.
+
+
+#### Fejléc- és forrásfájlok
+
+
+A közönséges függvények sé osztályok esetében a következő elvet használjuk:
+
+* a függvények deklarációit a fejléc- (```.h```), a definícióit a forrásfájlokba (```.cpp```) tesszük.
+* a osztályok deklarációit a fejléc- (```.h```), a tagfüggvények definícióit a forrásfájlokba (```.cpp```) tesszük.
+
+Ez az elv sablonok esetében nem használható. Tekintsük a következő kódot:
+
+```cpp
+// MyClass.h
+template <typename T>
+class MyClass
+{
+public:
+  void setA(T a_);
+private:
+  T _a;
+};
+
+// MyClass.cpp
+#include "MyClass.h"
+
+// a setA() tagfüggvény definíciója
+template <typename T>
+void MyClass<T>::setA(T a_)
+{
+  _a = a_;
+}
+
+// main.cpp
+#include "MyClass.h"
+
+int main()
+{
+  MyClass<int> mc;
+  mc.setA(10);
+}
+```
+
+A kód fordítási hibát okoz. Mit lát a fordító a __main.cpp__ feldolgozása során? A preproceszzor kifejlti az ```#include "MyClass.h"```-t, és mivel ez gyakorlatilag egy egyszerű szövegszerű behelyettesítést jelent, a fordító a következő fájlon "dolgozik":
+
+```cpp
+// main.cpp
+// MyClass.h
+template <typename T>
+class MyClass
+{
+public:
+  void setA(T a_);
+private:
+  T _a;
+};
+
+int main()
+{
+  MyClass<int> mc;
+  mc.setA(10);
+}
+```
+
+A sablonokról tudjuk, hogy __fordítási__ (és __nem linkelési__) időben fejtődnek ki. A fordító a forrásfájlokat egyesével dolgozza fel, így a __main.cpp__ feldolgozásakor kizárólag a fenti forráskódot látja. A sablon kifejtéséhez a teljes forráskódjának a fordító rendelkezsére kell állnia. Így az ```mc.setA(10);``` hívásakor ez a feltétel nem teljesül, hiszen az egy másik forrásfájlban van kifejtve. Ennek következtében a linket "_Unresolved external symbol..._" vagy valami hasonló hibaüzenetet ad. A tanulság az, hogy __az osztálysablonok esetében a felhasználás során a tagfüggvények definícióját is elérhetővé kell tenni a fordtó számára__. Ezt kétféle képpen tehetjük meg. Az első megoldás szerint a tagfüggvényeket az osztálysablon-definíciójában "inline módon" adjuk meg.
+
+```cpp
+// MyClass.h
+template <typename T>
+class MyClass
+{
+public:
+  void setA(T a_)
+  {
+    _a = a_;
+  }
+private:
+  T _a;
+};
+```
+
+A másik megoldás szerint a tagfüggvényeket az osztálydefiníciós fejlécfájlban de nem "inline módon" adjuk meg.
+
+```cpp
+// MyClass.h
+template <typename T>
+class MyClass
+{
+public:
+  void setA(T a_);
+private:
+  T _a;
+};
+
+template <typename T>
+void MyClass<T>::setA(T a_)
+{
+  _a = a_;
+}
+```
+
+__Megjegyzés__: közönséges osztályok tagfüggvényei esetében ez utóbbi megoldás linkelési hibához vezetne a fejlécfájl többszöri ```include```-olása miatt. Osztálysablonok esetében ez nem igaz, mert a linker "okosan" mindig az első definíciót teszi a lefordított kódba, és a hivatkozásokat is erre vonatkozóan oldja fel. Ugyanez igaz a globális függvénysablonokra is, a közönséges fügvényekkel szemben ezek definícióját is a fejlécfájlokba tesszük.
+
+
+## Cast-ok, explicit konverzió
+
+
+Implicit konverziókkal számtalanszor találkozunk, például ha egy lebegőpontos számot egy egész számnak adunk értékül, vagy fordítva. Konverzió volt az is, amikor egy konverziós operátor vagy konverziós konstruktor segítségével egy osztályhoz tartozó objektumot egy másik osztály típusúnak adtunk értékül. A pilomorfikus osztályoknál meg számtalanszor éltünk már vele.
+
+
+### dynamic_cast
+
+
+Mutatók és referenciák közötti futásidejű átalakítás, amely downcastra használható, azaz bázispointerből származtatott osztályra mutatót ad vissza. A konverzió mutatók esetén nullpointerrel tér vissza, referenciáknál (egyéb opciók híján) ```bad_cast``` kivételt dob, ha nem lehetséges az átalakítás, azaz a mutatott objektum típusa nem az elvárt.
+
+
+### static_cast
+
+
+Amennyiben teljesen biztosak vagyunk abban, hogy a kasztolás szabályos, a ```static_cast``` is használható mindenhol, ahol a ```dynamic_cast```. Azonban ez az operátor nem végez semmilyen futási idejű ellenőrzést, így sikertelen kasztolás esetén a kapott mutató vagy referencia invalid lesz (használata nem definiált viselkedést eredményez). Fordítási időben konvertál egy típust egy másik típusra. Annak ellenére, hogy nem feltétlen biztonságos a használata polimorfikus osztályoknál, ez a konverzió végez ellenőrzéseket, méghozzá fordítási időben.
+
+
+### const_cast
+
+
+A ```const_cast``` az egyik a két veszélyesebb kaszt közül. Használata csak kivételes esetekben elfogadható, ugyanis nagyon sok galibát okozhat. A ```const_cast``` "leveszi" a ```const``` vagy a ```volatile``` jelzőt egy objektumról.
+
+
+### reinerpret_cast
+
+
+Mind közül a legveszélyesebb a ```reinterpret_cast```: két tetszőleges típus között végez konverziót, ha értelmezhető, ha nem. Az értelmes konverziók közül egyetlen eset kivételével minden esetben a fenti 3 kaszt végre tudja hajtani a konverziót helyesen és sokkal biztonságosabban. Ez azt jelenti, hogy a ```reinterpret_cast``` használata közel kivétel nélkül elkerülendő. Az egyetlen konverzió, mely értelmes, és a fentiek nem képesek végrehajtani, amikor polimorfikus osztályoknál egy leszármazottat egy privát ősosztály típusra konvertálunk.
+
+
+### C-szerű cast
+
+
+A C-szerű kasztok, vagy más néven _C-style casts_ olyan konverziók, melyek a fenti konverziókat próbálják meghívni, a ```dynamic_cast``` kivételével. Amennyiben az egyik nem sikerül, a következőre haladnak. Ennek az értelemszerű hátránya az, hogy ha mind a ```static_cast```, mind a ```const_cast``` sikertelen, akkor a ```reinterpret_cast```-ot fogja használni.
+
+
+## Imlicit konverzió
+
+
+Implicit konverzióról akkor beszélünk, ha egy adott típusú objektumnak egy másik típusú objektumot adunk értékül, és az egyik objektum a másik típusára konvertálódik anélkül, hogy mi ezt a konverziót külön (explicit módon, pl. cast-ok segítségével) „kértük” volna.
+
+A nyelv egyik érdekessége, hogy lévén a ```char``` típusok tudnak számokat tárolni, így egy ```char``` objektum könnyedén át tud konvertálni ```int``` típusúra. Példaképp, az ```’a’ + ’b’``` összeadásnál a karakterek összeadása nem definiált, azonban ```int```-ek között igen, így a fordító implicit módon átkonvertálja azokat ```int```-é.
+
+
+Amennyiben a fordító megpróbál egy műveletet elvégezni, de típushiba miatt ez meghiúsul, megpróbálja az objektumokat átkonvertálni, lehetőleg veszteségmentesen. A fordító először implicit konverzióval próbálkozik, aztán egy felhasználó által definiált konverzióval, majd ismét egy implicit konverzióval. Amennyiben ezek után sem megvalósítható a művelet típushiba miatt, fordítási hibát kapunk.
+
+
+### Aritmetikai konverziók
+
+
+1. ha az egyik operandus ```long double```, akkor a másikat is ```long double```-ra konvertáljuk.
+2. különben, ha az egyik operandus ```double```, akkor a másik is ```dobule``` lesz.
+3. különben, ha az egyik ```float```, akkor a másik is ```float``` lesz.
+4. amennyiben egyik operandus sem lebegőpontos, akkor haz az egyik operandus ```unsigned long```, akkor a másik is az lesz.
+5. ha az egyik operandus ```long```, a másik pedig ```unsigned int```, akkor előfordulhat az, hogy a két típus ugyanakkora tárterületen van tárolva. Ha az ```int``` és a ```long``` mérete megegyezik, akkor ```unsigned long``` lesz mindkét operandus. Különben ha a ```long``` nagyobb, akkor ```long```-gá konvertálódik a másik.
+6. különben, ha az egyik ```long``` a másik pedig nem ```unsignem int```, akkor ```long```-gá konvertálódik a másik operandus.
+7. különben, ha az egyik operandus ```unsigned int```, a másik is kovertálódik ```unsigned int```-té.
+8. különben minden ```int```-té konvertálódik, ha egyik korábbi sem teljesül.
+
+
+### Logikai konverzió
+
+
+Amikor ```for``` ciklusban vagy ```if``` ágban meg kell adnunk egy logikai értéket, akkor ott gyakran történhet implicit konverzió. Példaképp minden lebegőpontos vagy egész szám ami nullától különböző ```true``` értékre konvertálódik, míg a nulla érték ```false```-ra. Mutatóknál minden nem ```nullpointer``` ```true```.
