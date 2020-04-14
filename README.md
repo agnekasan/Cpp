@@ -3844,7 +3844,7 @@ Ezek is módosító algoritmusok, azonban kimondottan az elemsorrend megváltozt
 #### Rendező algoritmusok
 
 
-Az itt található módosító algortimusok feladata a teljes konténerben, vagy tároló egy tartományában található elemek rendezése.
+Az itt található módosító algoritmusok feladata a teljes konténerben, vagy tároló egy tartományában található elemek rendezése.
 
 * [```is_heap()```](https://en.cppreference.com/w/cpp/algorithm/is_heap)
 * [```is_heap_until()```](https://en.cppreference.com/w/cpp/algorithm/is_heap_until)
@@ -3898,7 +3898,7 @@ Számokat tároló konténerek elemein műveleteket végző algoritmusok csoport
 Néhány tároló rendelkezik az algoritmusok némelyikével megegyező nevű tagfüggvénnyel. Ezek létezésnek oka, hogy kihasználva a konténerek speciális adottságait, hatékonyabb és biztonságosabb tagfüggvény készíthető, mint az általános algoritmus. Egyetemes szabályként megfogalmazható, hogy részesítsük előnyben a taggfüggvényeket a program készítése során.
 
 
-#### Az algortimusok végrehajtási ideje
+#### Az algoritmusok végrehajtási ideje
 
 
 A konténerműveletek időigénye mellett a felhasznált algoritmusok időigénye együtt határozza meg az adott programrész futásidejét. Az algoritmusok végrehajtásához szükséges időigényt a feldolgozandó adatsor elemeinek számával (_n_) jellemezhetjük:
@@ -3985,7 +3985,7 @@ A lambdát és az elért változókat együtt szokás __closure__-nek nevezni, m
 * ```[a, b]``` csak az ```a``` és ```b``` változókat kapjuk el érték szerint
 * ```[a, &b]``` az ```a``` változót érték, míg ```b```-t referencia szerint kapjuk el
 * ```[=, &b]``` az összes helyi változót érték szerint kapjuk el, kivéve ```b```-t, őt referenciával
-* ```[&, a]``` az összes helyi változót referencijukkal kapjuk el, kivéve ```a```-t, amelyet érték szerint
+* ```[&, a]``` az összes helyi változót referenciával kapjuk el, kivéve ```a```-t, amelyet érték szerint
 * ```[this]``` osztályon belül definiált lambda kifejezésekben használhatjuk a ```this``` mutatót, vagyis elérhetjük az osztály adattagjait
 
 
@@ -4054,7 +4054,7 @@ inline double max(double lhs_, double rhs_)
 }
 ```
 
-Jól látható, hogy a két függvény törzse pontosan megegyezik. Ha újabb típusokra szeretnénk használni a ```max()``` függvényünket, akkor azokra is külön meg kellene írni. Ezen kódduplikálás elkerülésére eddigi ismereteink szerint egyetlen megoldás kínálkozik, a makrok használata. (kerülendő!) A makrókkal kapcsolatos gondokat a korábbi fejezetekben már láthattuk. A C++ nyelvben a probléma hatékony és biztonságos megoldására a __függvénysablonokat__ használhatjuk. A ```max()``` függvényre vonatkozóan ez azt jelenti, hogy olyan függvénysablonná alakítjuk át, amelyben a típus, amelyen dolgozik, nincs rögzítve, paraméterként kezeljük, és ezt a paramétert a függvénysablon felhasználsakor adjuk meg. A ```max()``` függvénysablon implementációja a következő:
+Jól látható, hogy a két függvény törzse pontosan megegyezik. Ha újabb típusokra szeretnénk használni a ```max()``` függvényünket, akkor azokra is külön meg kellene írni. Ezen kódduplikálás elkerülésére eddigi ismereteink szerint egyetlen megoldás kínálkozik, a makrók használata. (kerülendő!) A makrókkal kapcsolatos gondokat a korábbi fejezetekben már láthattuk. A C++ nyelvben a probléma hatékony és biztonságos megoldására a __függvénysablonokat__ használhatjuk. A ```max()``` függvényre vonatkozóan ez azt jelenti, hogy olyan függvénysablonná alakítjuk át, amelyben a típus, amelyen dolgozik, nincs rögzítve, paraméterként kezeljük, és ezt a paramétert a függvénysablon felhasználsakor adjuk meg. A ```max()``` függvénysablon implementációja a következő:
 
 ```cpp
 template <typename T>
@@ -4066,21 +4066,21 @@ inline T max(T lhs_, T rhs_)
 
 A függvény átalakítását a következő lépésekben végezzük:
 
-* a függvénysablon fejlécét a ```template``` kulcsszóval kell kezdeni. Ezt követően ```< >``` között kell felsorolni a sablonparamétereket, vesszővel elválasztva. A példában egy sablonpraméter szerepel, ```T```. A sablonparamétereknek tetszőleges nevet adhatunk. Példnánkban ```T``` egy típust jelöl, ezt a ```typename``` kulcsszóval jelezzük a fordító felé. A ```typename``` helyett a ```class``` kulcsszó is használható. Sablonok esetében a kettő teljesen ekvivalens. A ```class``` kulcsszó némiképp megtévesztő lehet, az adott paraméter nem csak osztály, hanem tetszőleges típus lehet. Sablon paraméter konstans is lehet.
+* a függvénysablon fejlécét a ```template``` kulcsszóval kell kezdeni. Ezt követően ```< >``` között kell felsorolni a sablonparamétereket, vesszővel elválasztva. A példában egy sablonpraméter szerepel, ```T```. A sablonparamétereknek tetszőleges nevet adhatunk. Példánkban ```T``` egy típust jelöl, ezt a ```typename``` kulcsszóval jelezzük a fordító felé. A ```typename``` helyett a ```class``` kulcsszó is használható. Sablonok esetében a kettő teljesen ekvivalens. A ```class``` kulcsszó némiképp megtévesztő lehet, az adott paraméter nem csak osztály, hanem tetszőleges típus lehet. Sablon paraméter konstans is lehet.
 * mindenhol, ahol eddig az ```int``` vagy ```double``` beégetett típust használtuk, a ```T``` paramétert szerepeltetjük. Ez esetünkben a függvény visszatérési értékének és bemeneti paramétereinek típusát jelenti. Használhatnánk lokálisan definiált vagy dinamikusan lefoglalt változók létrehozására is.
 
 __Megjegyzés__: a ```typename``` kulcsszó később került be a nyelvbe, mint a ```class```, ezért eleinte azt használták sablonparaméterek megadásánál.
 
 A példában a függvény, illetve a függvénysablon a függvénytörzs rövidsége miatt célszerűen ```inline```, de természetesen nem ```inline``` függvénysablonok írására is van lehetőség.
 
-Eddig csak arról esett szó. hogyan lehet függvénysablont __létrehozni__. A következőkben arra lesz példa, hogyan lehet a függvénysablonokat __felhasználni__. A legegyszerűbb mód a __függvénysablon implicit példányosítása__ (_implicit function templale instantiation_):
+Eddig csak arról esett szó, hogyan lehet függvénysablont __létrehozni__. A következőkben arra lesz példa, hogyan lehet a függvénysablonokat __felhasználni__. A legegyszerűbb mód a __függvénysablon implicit példányosítása__ (_implicit function template instantiation_):
 
 ```cpp
 int i = max(3, 5);
 double d = max(2.3, 4.2);
 ```
 
-A kódrészlet első sora ```int```, a második sora ```double``` típussal __példányosítja__ a függvénysablont. Ennek semmi köze az objektumok példányosításához. Ez azt jelenti, hogy __fordítás során__ az első esetben a ```T``` paraméter helyébe ```int```, a második esetben ```double``` típus helyettesítődik. A behelyettesítést követően a függvénysablonből közönséges függvény készül, melyet a fordító gépi kódra fordít. Jelen esetben azért beszélünk implicit példányosításról, mert a fordító a paraméterek típusából kikövetkezteti, milyen típust kell behelyettesíteni a sablonparaméterek helyére, vagyis a paramétereket nem adtuk meg explicit módon. Ezt a fajta kikövetkeztetést nevezzük __template argumentum dedukciónak__ (_template argument deduction_).
+A kódrészlet első sora ```int```, a második sora ```double``` típussal __példányosítja__ a függvénysablont. Ennek semmi köze az objektumok példányosításához. Ez azt jelenti, hogy __fordítás során__ az első esetben a ```T``` paraméter helyébe ```int```, a második esetben ```double``` típus helyettesítődik. A behelyettesítést követően a függvénysablonból közönséges függvény készül, melyet a fordító gépi kódra fordít. Jelen esetben azért beszélünk implicit példányosításról, mert a fordító a paraméterek típusából kikövetkezteti, milyen típust kell behelyettesíteni a sablonparaméterek helyére, vagyis a paramétereket nem adtuk meg explicit módon. Ezt a fajta kikövetkeztetést nevezzük __template argumentum dedukciónak__ (_template argument deduction_).
 
 Implicit példányosítás esetén egy adott sablonparaméter csak egy típust jelölhet. A példára vonatkozóan ez azt jelenti, hogy a fordító kikényszeríti, hogy a ```max()``` függvény mindkét paraméterének típusa pontosan megegyezzen. Ennek megfelelően például a
 
@@ -4088,7 +4088,7 @@ Implicit példányosítás esetén egy adott sablonparaméter csak egy típust j
 double d = max(1, 3.5);
 ```
 
-kód nem fordul le, mert az első függvényparaméter esetében a ```T``` ```int```, a második esetében ```double``` típust jelentene. A fordító a függvénysablon implicit példányosítása eseten nem engedélyezi az automatikus konverziót. Természetesen ugyanígy fordítási hibát eredményezne, ha a függvényparaméterek nem konstansok, hanem változók lennének. Sőt, az ```unsigned``` és a ```signed``` típusok közötti konverzió sem megengedett. A probléma megoldása a következő lehet:
+kód nem fordul le, mert az első függvényparaméter esetében a ```T``` ```int```, a második esetében ```double``` típust jelentene. A fordító a függvénysablon implicit példányosítása esetén nem engedélyezi az automatikus konverziót. Természetesen ugyanígy fordítási hibát eredményezne, ha a függvényparaméterek nem konstansok, hanem változók lennének. Sőt, az ```unsigned``` és a ```signed``` típusok közötti konverzió sem megengedett. A probléma megoldása a következő lehet:
 
 ```cpp
 double d = max(1.0, 3.5);
@@ -4146,7 +4146,7 @@ Mint azt az előzőekben láthattuk a ```max()``` függvénysablon teljesen jól
 const char* text = max("abc", "bcd");
 ```
 
-Ez a program hibás, ugyanis a ```max()``` függvény két string összehasonlítására nem alkalmas. Ennek oka, hogy két ```char*``` mutató közül a nagyobbikat adja vissza, vagyis a stringeket nem a tartalmazott karakterek, hanem a memóriabeli elhelyezkedésük alapján hasonlítja össze. Szerencsére van megoldás: __függvénysablon-specializációt__ (_function template specialization_) kell alkalmazni. Ennek a lényege, hogy az általános függvénysablon definíción kívül bizonyos paraméterek behelyettesítésére az általnostól eltérő implementációt adunk meg. A példánkra vonatkozóan ez azt jelenti, hogy megírjuk ugyan a fenti általános ```max()``` függvénysablont, de emelett meg kell írni egy ```const char*```-ra specializált implementációt is. Ez szintaktikailag két módon is megtehető. Az első a "klasszikus" megoldás:
+Ez a program hibás, ugyanis a ```max()``` függvény két string összehasonlítására nem alkalmas. Ennek oka, hogy két ```char*``` mutató közül a nagyobbikat adja vissza, vagyis a stringeket nem a tartalmazott karakterek, hanem a memóriabeli elhelyezkedésük alapján hasonlítja össze. Szerencsére van megoldás: __függvénysablon-specializációt__ (_function template specialization_) kell alkalmazni. Ennek a lényege, hogy az általános függvénysablon definíción kívül bizonyos paraméterek behelyettesítésére az általánostól eltérő implementációt adunk meg. A példánkra vonatkozóan ez azt jelenti, hogy megírjuk ugyan a fenti általános ```max()``` függvénysablont, de emelett meg kell írni egy ```const char*```-ra specializált implementációt is. Ez szintaktikailag két módon is megtehető. Az első a "klasszikus" megoldás:
 
 ```cpp
 const char* max(const char* lhs_, const char* rhs_)
@@ -4167,15 +4167,15 @@ const char* max<const char*>(const char* lhs_, const char* rhs_)
 }
 ```
 
-Ez esetben a következő szabályok érvényekes:
+Ez esetben a következő szabályok érvényesek:
 
 * a függvénysablon elé a ```template<>``` kifejezést kell írni, üres paraméterlistával.
 * a függvénysablon neve után ```< >``` között fel kell sorolni valamennyi sablonparaméterre vonatkozóan a specializált behelyettesítési értéket, vesszővel elválasztva. A példánkra vonatkozóan ez a ```const char*```.
 * egy függvénysablonhoz több specializáció is készíthető, természetesen különböző paraméterbehelyettesítésekkel.
-* a fordító a függvénysablon felhasználásakor egy adott specializációt alkalmaz, amennyiben a sablonparaméterek __pontosan__ megegyeznek a specializációban megadottakkal. A specializációk "illesztése" során a fordító semmiféle konverziót nem alkalmaz, így például nem konstansról konstans konverzziót sem.
+* a fordító a függvénysablon felhasználásakor egy adott specializációt alkalmaz, amennyiben a sablonparaméterek __pontosan__ megegyeznek a specializációban megadottakkal. A specializációk "illesztése" során a fordító semmiféle konverziót nem alkalmaz, így például nem konstansról konstans konverziót sem.
 * függvénysablonokra vonatkozóan csak teljes, valamennyi paraméterre vonatkozó specializáció írható.
 
-Felmerülhet kérdésként, hogy miért a ```const char*```-ra való specializációt írtuk meg és miért nem a ```char*```-ra? A specializációk illesztésekor a fordító a sablonparaméterekre vonatkozóan szigorú típusegyezőséget alkalmaz. Az ```"abc"``` és ```"bcd"``` literálok típusa ```const char*```. Így, ha a ```char*```-ra specializált változatot írtuk volna meg, akkor ezen paraméterekre vonatkozóan az általános ```max()``` implementáció hívódott volna meg.  A gondolatmenetet tovább folytatva kérdéses, hogy ha csak a ```const char*```-ra specializált verziót írjuk meg, akkor a ```char*``` paraméterek esetében alkalmazza-e a fordító a specializált változatot. A válasz ez esetben is nem. A tanulság pedig az, hogy a specializációt ```char*``` és ```const char*``` paraméterekre is meg kell írni, másként az adott helyzetnek megfelelően meglepő eredményeket kaphatunk a ```max()``` függvénysablon alkalmazásakor.
+Felmerülhet kérdésként, hogy miért a ```const char*```-ra való specializációt írtuk meg és miért nem a ```char*```-ra? A specializációk illesztésekor a fordító a sablonparaméterekre vonatkozóan szigorú típusegyezősséget alkalmaz. Az ```"abc"``` és ```"bcd"``` literálok típusa ```const char*```. Így, ha a ```char*```-ra specializált változatot írtuk volna meg, akkor ezen paraméterekre vonatkozóan az általános ```max()``` implementáció hívódott volna meg.  A gondolatmenetet tovább folytatva kérdéses, hogy ha csak a ```const char*```-ra specializált verziót írjuk meg, akkor a ```char*``` paraméterek esetében alkalmazza-e a fordító a specializált változatot. A válasz ez esetben is nem. A tanulság pedig az, hogy a specializációt ```char*``` és ```const char*``` paraméterekre is meg kell írni, másként az adott helyzetnek megfelelően meglepő eredményeket kaphatunk a ```max()``` függvénysablon alkalmazásakor.
 
 __Fontos__: a sablonspecializáció esetén, ha az érintett paraméter mutató típusú, a konstans és nem konstans paraméterekre is írjunk specializációt.
 
@@ -4199,9 +4199,9 @@ int main()
 
 > kimenet: square of 10 is 100
 
-A ```square()``` függvénysablon sablonparaméterként egy ```int``` konstanst vár, amelynek négyzetvel tér vissza. A ```square()``` csak konstans paraméterrel használható, hiszen a sablon kifejtése fordítási időben történik. Ez nagyban korlátozza a használhatóságát, ugyanakkor előnye, hogy négyzetre emelés már fordítási időben megtörténik, ami jelentős futás közbeni sebességnövekedést eredményezhet.
+A ```square()``` függvénysablon sablonparaméterként egy ```int``` konstanst vár, amelynek négyzetével tér vissza. A ```square()``` csak konstans paraméterrel használható, hiszen a sablon kifejtése fordítási időben történik. Ez nagyban korlátozza a használhatóságát, ugyanakkor előnye, hogy négyzetre emelés már fordítási időben megtörténik, ami jelentős futás közbeni sebességnövekedést eredményezhet.
 
-Korábban említésre került, hogy nem csak egy sablon paramétert adhatunk meg. Írjunk egy függvénysablont, ami két sabonparaméterrel rendelkezik, és összehasonlítja a sablonparaméter-típusok memóriabeli méretét: 1-el tér vissza, ha az első paraméterben megadott típus nagyobb, -1-el, ha a második, és 0-val, ha egyenlők.
+Korábban említésre került, hogy nem csak egy sablon paramétert adhatunk meg. Írjunk egy függvénysablont, ami két sablonparaméterrel rendelkezik, és összehasonlítja a sablonparaméter-típusok memóriabeli méretét: 1-el tér vissza, ha az első paraméterben megadott típus nagyobb, -1-el, ha kisebb, és 0-val, ha egyenlők.
 
 ```cpp
 #include<iostream>
@@ -4245,9 +4245,9 @@ int main()
 
 Amennyiben egy adott függvénynek több implementációja is van, felmerül a kérdés, hogy a függvényhívás során melyik függvény fog meghívódni. A következő szabályok érvényesek a sorszámnak megfelelő prioritási sorrendben:
 
-1. ha létezik olyan közönséges függvény, melynek paraméterei típus szerint pontosan megegyezenek, akkor az adott függvény hívódik meg.
+1. ha létezik olyan közönséges függvény, melynek paraméterei típus szerint pontosan megegyezzenek, akkor az adott függvény hívódik meg.
 2. ha létezik olyan függvénysablon, melynek paraméterei típus szerint pontosan megegyeznek, akkor az adott függvény hívódik meg.
-3. ha létezik közönséges függvény vagy függvénysablon, mely esetében típuskonverzióval megegyeznek a paraméterek, akkor az adott függvény hívódik meg. Az automatikus típus konverzó nem érinthet sablonparamétert. Például a ```template <typename T> void myFunc(double a, T b, T c);``` esetében a ```b``` és ```c``` függvényparaméterekre vonatkozóan a korábbi szabályoknak megfelelően csak akkor lehetséges az automatikus konverzió, ha a ```myFunc()``` függvénysablont explicit példányosítjuk, vagyis  míg a ```myFunc(10, 10.1, 11);``` fordítási hibát okoz, mert a harmadik paraméternél automatikus ```int``` -> ```double``` konverzióra volna szükség. Az explicit példányosított ```myFunc<double>(10, 10.1, 11);``` hívás lefordul.
+3. ha létezik közönséges függvény vagy függvénysablon, mely esetében típuskonverzióval megegyeznek a paraméterek, akkor az adott függvény hívódik meg. Az automatikus típus konverzió nem érinthet sablonparamétert. Például a ```template <typename T> void myFunc(double a, T b, T c);``` esetében a ```b``` és ```c``` függvényparaméterekre vonatkozóan a korábbi szabályoknak megfelelően csak akkor lehetséges az automatikus konverzió, ha a ```myFunc()``` függvénysablont explicit példányosítjuk, vagyis  míg a ```myFunc(10, 10.1, 11);``` fordítási hibát okoz, mert a harmadik paraméternél automatikus ```int``` -> ```double``` konverzióra volna szükség. Az explicit példányosított ```myFunc<double>(10, 10.1, 11);``` hívás lefordul.
 
 
 ### Osztálysablon - class template
@@ -4326,7 +4326,7 @@ int main()
 A felhasználás során az osztálysablon neve után ```< >``` között kell megadni a sablonparaméterek behelyettesítési értékét. Az osztálysablon felhasználására vonatkozó legfontosabb szabály a következő:
 __az osztálysablon paraméterek megadása után ugyanúgy használható, mint egy közönséges osztály. Másképpen fogalmazva: ahol a kódban osztálynév szerepelhet, ott szerepelhet felparaméterezett osztálysablon is.__
 
-Az osztálysablonok felhasználásával kapcsolatban érdemes megjegyezni, hogy amennyiben egy adott módon felparaméterett osztálysablont többször kívánunk használni, kényelmes lehet új típusként való bevezetése a ```typedef```-fel:
+Az osztálysablonok felhasználásával kapcsolatban érdemes megjegyezni, hogy amennyiben egy adott módon felparaméterezett osztálysablont többször kívánunk használni, kényelmes lehet új típusként való bevezetése a ```typedef```-fel:
 
 ```cpp
 typedef MyClass<int> MC;
@@ -4335,7 +4335,7 @@ MC mc;
 mc.petA(1);
 ```
 
-Osztályok esetében is előfordulhat, hogy a sablonparaméter típusos konstans vagy osztálysablon. Abban az estben, ha __felparaméterezett sablon__-t használunk pl. ```MyClass<AnotherClass<int>>``` régebbi fordítók esetén (C++11 előtt) a utolsó ```>>``` közé szóközt kell rakni, mert a fordító __bitshift right__ operátoként ismeri fel. Modernebb fordítók esetén ez már nem jelent problémát.
+Osztályok esetében is előfordulhat, hogy a sablonparaméter típusos konstans vagy osztálysablon. Abban az estben, ha __felparaméterezett sablon__-t használunk pl. ```MyClass<AnotherClass<int>>``` régebbi fordítók esetén (C++11 előtt) a utolsó ```>>``` közé szóközt kell rakni, mert a fordító __bitshift right__ operátorként ismeri fel. Modernebb fordítók esetén ez már nem jelent problémát.
 
 
 #### Típusos konstans sablonparaméter
@@ -4389,7 +4389,7 @@ int main()
 }
 ```
 
-A ```T``` paraméternek az ```int``` alapértelmezett értéket adtuk. Így, ha az osztálysablon felhasználásakor nem adunk neki értéket, akkor az ```int``` értéket veszi fel. Az alapértelmezett osztálysablonok megadására ugyanazok a szabályok érvényesek, mint az alapértelmezett függvénysablonokra: jobbról balra sorban haladva kihagyás nélkül tetszőleges számú paraméternek adható alapértelmezett érték. Az alapértelmezett sablonparaméterek lehetővé teszik olyan asblonok készítését, melyek széles körben testre szabhatóak, ugyanakkor legtöbb helyzetben könnyen felhasználhatók.
+A ```T``` paraméternek az ```int``` alapértelmezett értéket adtuk. Így, ha az osztálysablon felhasználásakor nem adunk neki értéket, akkor az ```int``` értéket veszi fel. Az alapértelmezett osztálysablonok megadására ugyanazok a szabályok érvényesek, mint az alapértelmezett függvénysablonokra: jobbról balra sorban haladva kihagyás nélkül tetszőleges számú paraméternek adható alapértelmezett érték. Az alapértelmezett sablonparaméterek lehetővé teszik olyan sablonok készítését, melyek széles körben testre szabhatóak, ugyanakkor legtöbb helyzetben könnyen felhasználhatók.
 
 
 #### Mutatók és referenciák, mint sablonparaméterek
@@ -4415,13 +4415,13 @@ public:
 };
 ```
 
-A ```print()``` függvényből a fordítás során annyi különböző verzió keletkezik, ahány különböző típussal használjuk. Tagfüggvénysablon lehet konstruktor is, azon erre van pár megkötés: a sablonkonstruktor sohasem fog másolókonstruktorként viselkedni, ezt mindig meg kell írni közönséges konstruktor formájában.
+A ```print()``` függvényből a fordítás során annyi különböző verzió keletkezik, ahány különböző típussal használjuk. Tagfüggvénysablon lehet konstruktor is, azonban erre van pár megkötés: a sablonkonstruktor sohasem fog másolókonstruktorként viselkedni, ezt mindig meg kell írni közönséges konstruktor formájában.
 
 
 #### Az osztálysablonok és az öröklés
 
 
-Tekinstsük az alábbo programot:
+Tekinstsük az alábbi programot:
 
 ```cpp
 class ClassA { ... };
@@ -4461,7 +4461,7 @@ class TemplC: public TemplA<int, T3>
 }
 ```
 
-A leszármaztatott ```TemplC``` osztálysablonnak két paramétere van: ```T3``` és ```T4```. A szabálynak megfelelően az ős sablonosztályt itt is felparaméterezve használtuk fel. A ```T1``` paraméternek a fix ```int``` értéked adtuk meg, ```T2```-nek azonban a leszármaztatott osztály ```T3``` paraméterét adtuk "tovább".
+A leszármaztatott ```TemplC``` osztálysablonnak két paramétere van: ```T3``` és ```T4```. A szabálynak megfelelően az ős sablonosztályt itt is felparaméterezve használtuk fel. A ```T1``` paraméternek a fix ```int``` értéket adtuk meg, ```T2```-nek azonban a leszármaztatott osztály ```T3``` paraméterét adtuk "tovább".
 
 
 #### Osztálysablon-specializáció
@@ -4469,10 +4469,10 @@ A leszármaztatott ```TemplC``` osztálysablonnak két paramétere van: ```T3```
 
 Akárcsak a függvénysablonok esetében, az osztálysablonoknál is előfordulhatnak olyan esetek, amikor az általános implementáció nem megfelelő egy adott típusra.
 
-Az osztálysablon-specializáció megírására a következő szabályok érvényekes:
+Az osztálysablon-specializáció megírására a következő szabályok érvényesek:
 
 * az osztálysablon neve előtt a ```template``` kulcsszó után ```< >``` között csak azokat a maradó sablonparamétereket kell felsorolni, amelyeket a továbbiakban is paraméterként kívánunk kezelni, vagyis amelyeket nem kívánunk specializálni.
-* az osztálysablon neve után ```< >``` között fel kell sorolni valamennyi sablonparamétert: a nem spcializáltakat a sablonparaméter nevének megadásával, a specializáltakat a paraméter értékével.
+* az osztálysablon neve után ```< >``` között fel kell sorolni valamennyi sablonparamétert: a nem specializáltakat a sablonparaméter nevének megadásával, a specializáltakat a paraméter értékével.
 * egy osztálysablonhoz több specializáció is készíthető, természetesen különböző, a paraméterekre vonatkozó megkötésekkel.
 * a fordító a sablon felhasználásakor mindig a lehető legspeciálisabban illeszkedő sablonverziót alkalmazza.
 * a fordító az illesztés során semmiféle konverziót nem alkalmaz, így például ```const```<-> nem ```const``` verziót sem.
@@ -4510,7 +4510,7 @@ A sablonok ezen fordítási mechanizmusának számos kellemes és kellemetlen k�
 
 1. __Optimalizáció__: ha egy adott osztálysablon tagfüggvényét sehol sem használjuk, akkor nem fog legenerálódni a kód. Ennek következtében a generált kód mérete lényegesen kisebb lehet, mint a közönséges osztályokkal vagy függvényekkel dolgoznánk. Így alkalmazásuk a háttértáron és a memóriában is a lehető legkisebb helyet foglalja el.
 2. __Kódburjánzás__: ha egy sablon - akár osztály akár függvény - több paraméterkombinációval használunk, valamennyire vonatkozóan legenerálódik a sablon tagfüggvényeinek kódja, ami a generált kód méretének növekedéséhez vezet. Ezt szokás __kódburjánzás__-nak vagy __kódfelfúvódás__-nak nevezni (_code bloat_).
-3. __Fordítási hibák__: a fordítási modell talán legmeghökkentőbb következménye, hogy a __fordítási hibák rejtve maradnak__. Könnyen megeshet, hogy egy osztály- vagy függvénysablon megírását követően a fordítás során semmilyen hibát sem kapunk, és a kód mégis tele van szintaktikai és egyéb hibákkal. Valójában nem is várhatunk mást, mert a sablonok tagfüggvényei csak akkor fordulnak le, ha használjuk őket. Mindaddig nem esnek át teljes szintaktikai ellenőrzésen. Ilyen esetekben az osztálysablonok __explicit példányosítása__ (_explicit template instantiation_) lehet a válasz. Az explicit példányosítás a megadott paraméterekkel valamennyi tagfüggvényre vonatkozóan kikényszeríti a kód generálást. Például ```template class MyClass<int>;``` Ez a sor a ```MyClass``` osztálysablont a ```T = int``` paraméter-behelyettessítéssel példányosítja.
+3. __Fordítási hibák__: a fordítási modell talán legmeghökkentőbb következménye, hogy a __fordítási hibák rejtve maradnak__. Könnyen megeshet, hogy egy osztály- vagy függvénysablon megírását követően a fordítás során semmilyen hibát sem kapunk, és a kód mégis tele van szintaktikai és egyéb hibákkal. Valójában nem is várhatunk mást, mert a sablonok tagfüggvényei csak akkor fordulnak le, ha használjuk őket. Mindaddig nem esnek át teljes szintaktikai ellenőrzésen. Ilyen esetekben az osztálysablonok __explicit példányosítása__ (_explicit template instantiation_) lehet a válasz. Az explicit példányosítás a megadott paraméterekkel valamennyi tagfüggvényre vonatkozóan kikényszeríti a kód generálást. Például ```template class MyClass<int>;``` Ez a sor a ```MyClass``` osztálysablont a ```T = int``` paraméter-behelyettesítéssel példányosítja.
 
 Függvénysablonok esetén is van lehetőségünk explicit példányosításra. Ehhez az adott függvénysablont a ```template``` kulcsszót követően az adott paraméter-behelyettesítésekkel deklarálni kell:
 
@@ -4536,10 +4536,10 @@ Ha egy sablon a paraméterek adott kombinációjával jól lefordul és működi
 #### Fejléc- és forrásfájlok
 
 
-A közönséges függvények sé osztályok esetében a következő elvet használjuk:
+A közönséges függvények és osztályok esetében a következő elvet használjuk:
 
 * a függvények deklarációit a fejléc- (```.h```), a definícióit a forrásfájlokba (```.cpp```) tesszük.
-* a osztályok deklarációit a fejléc- (```.h```), a tagfüggvények definícióit a forrásfájlokba (```.cpp```) tesszük.
+* az osztályok deklarációit a fejléc- (```.h```), a tagfüggvények definícióit a forrásfájlokba (```.cpp```) tesszük.
 
 Ez az elv sablonok esetében nem használható. Tekintsük a következő kódot:
 
@@ -4574,7 +4574,7 @@ int main()
 }
 ```
 
-A kód fordítási hibát okoz. Mit lát a fordító a __main.cpp__ feldolgozása során? A preproceszzor kifejlti az ```#include "MyClass.h"```-t, és mivel ez gyakorlatilag egy egyszerű szövegszerű behelyettesítést jelent, a fordító a következő fájlon "dolgozik":
+A kód fordítási hibát okoz. Mit lát a fordító a __main.cpp__ feldolgozása során? A preprocesszor kifejti az ```#include "MyClass.h"```-t, és mivel ez gyakorlatilag egy egyszerű szövegszerű behelyettesítést jelent, a fordító a következő fájlon "dolgozik":
 
 ```cpp
 // main.cpp
@@ -4595,7 +4595,7 @@ int main()
 }
 ```
 
-A sablonokról tudjuk, hogy __fordítási__ (és __nem linkelési__) időben fejtődnek ki. A fordító a forrásfájlokat egyesével dolgozza fel, így a __main.cpp__ feldolgozásakor kizárólag a fenti forráskódot látja. A sablon kifejtéséhez a teljes forráskódjának a fordító rendelkezsére kell állnia. Így az ```mc.setA(10);``` hívásakor ez a feltétel nem teljesül, hiszen az egy másik forrásfájlban van kifejtve. Ennek következtében a linket "_Unresolved external symbol..._" vagy valami hasonló hibaüzenetet ad. A tanulság az, hogy __az osztálysablonok esetében a felhasználás során a tagfüggvények definícióját is elérhetővé kell tenni a fordtó számára__. Ezt kétféle képpen tehetjük meg. Az első megoldás szerint a tagfüggvényeket az osztálysablon-definíciójában "inline módon" adjuk meg.
+A sablonokról tudjuk, hogy __fordítási__ (és __nem linkelési__) időben fejtődnek ki. A fordító a forrásfájlokat egyesével dolgozza fel, így a __main.cpp__ feldolgozásakor kizárólag a fenti forráskódot látja. A sablon kifejtéséhez a teljes forráskódjának a fordító rendelkezésére kell állnia. Így az ```mc.setA(10);``` hívásakor ez a feltétel nem teljesül, hiszen az egy másik forrásfájlban van kifejtve. Ennek következtében a linker "_Unresolved external symbol..._" vagy valami hasonló hibaüzenetet ad. A tanulság az, hogy __az osztálysablonok esetében a felhasználás során a tagfüggvények definícióját is elérhetővé kell tenni a fordtó számára__. Ezt kétféle képpen tehetjük meg. Az első megoldás szerint a tagfüggvényeket az osztálysablon-definíciójában "inline módon" adjuk meg.
 
 ```cpp
 // MyClass.h
@@ -4632,7 +4632,7 @@ void MyClass<T>::setA(T a_)
 }
 ```
 
-__Megjegyzés__: közönséges osztályok tagfüggvényei esetében ez utóbbi megoldás linkelési hibához vezetne a fejlécfájl többszöri ```include```-olása miatt. Osztálysablonok esetében ez nem igaz, mert a linker "okosan" mindig az első definíciót teszi a lefordított kódba, és a hivatkozásokat is erre vonatkozóan oldja fel. Ugyanez igaz a globális függvénysablonokra is, a közönséges fügvényekkel szemben ezek definícióját is a fejlécfájlokba tesszük.
+__Megjegyzés__: közönséges osztályok tagfüggvényei esetében ez utóbbi megoldás linkelési hibához vezetne a fejlécfájl többszöri ```include```-olása miatt. Osztálysablonok esetében ez nem igaz, mert a linker "okosan" mindig az első definíciót teszi a lefordított kódba, és a hivatkozásokat is erre vonatkozóan oldja fel. Ugyanez igaz a globális függvénysablonokra is, a közönséges függvényekkel szemben ezek definícióját is a fejlécfájlokba tesszük.
 
 
 ## Cast-ok, explicit konverzió
