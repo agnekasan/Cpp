@@ -472,20 +472,286 @@ Mindezek az előnyök eltörpülnek amellett, hogy az ```std::cin``` és az ```s
 ## Névterek
 
 
-A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a neveket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
+Egy függvény vagy osztály írásakor könnyen előfordulhat, hogy az általunk választott név ütközik egy meglevővel. Különösen igaz ez, ha más fejlesztők kódjával dolgozunk. A problémára a megoldást a __névterek__ (_namespace_) alkalmazása jelenti. A névterek felhasználásával különböző (függvény, osztály, típus (typedef), globális változó és konstans) definíciók névhierarchiába szervezhetők. Így nem csak a névüzközés kerülhető el, de megvalósítható a definíciók _logikai_ csoportosítása is. Ez természetesen akkor nyer létjogosultságot, ha több fejlesztő nagyobb projekten dolgozik. A névterekkel tetszőleges mélységű névtér-hierarchia alakítható ki.
+
+
+### Bevezetés a névterek használatába
+
+
+Tekintsük meg az alábbi névtér definíciókat:
+
+```cpp
+namespace A
+{
+  class MyClass {};
+}
+
+namespace B
+{
+  class MyClass {};
+  typedef int* PInt;
+}
+
+namespace C
+{
+  namespace D
+  {
+    void sort(void* p) {}
+  }
+}
+
+int main()
+{
+  A::MyClass mcA1;
+  B::MyClass mcB2;
+  // ...
+  C::D::sort(data)
+}
+```
+
+Névtér definíciót a ```namespace``` kulcsszóval kell kezdeni, ezt követően kell megadni a névtér nevét, majd ```{}``` között a névtérbe tartozó definíciókat.
+
+A példában a ```MyClass``` osztály az ```A``` és a ```B``` névtérben is definiált, de ez nem okoz névütközést, hiszen a tartalmazó névtér különböző. A ```sort()``` függvény definíciója beágyazott névtér-definícióra mutat példát: a ```C``` névtér tartalmaz egy ```D``` névteret, a ```sort()``` pedig ebben definiált.
+
+A névterekben lévő definíciók felhasználása során a ```::``` hatókör operátor (_scope operator_) felhasználásával meg kell adni a teljes "elérési utat", vagyis a definíció __minősített nevét__ (_qualified name_). Erre a ```main()``` függvényben láthatunk példát. Amennyiben egy névtérből több definíciót is kívánunk használni, körülményes minden esetben a névtér megadása. Ekkor a ```using namespace névtérnév``` direktívával a névtérben levő definíciókat az adott __deklarációs régió__-ban (_declaration region_) közvetlenül elérhetővé tehetjük. Nézzünk példát a _using namespace_ használatrára:
+
+```cpp
+using namespace B;
+using namespace C::D;
+
+int main()
+{
+  MyClass mc1; // B::MyClass-nak felel meg
+  A::MyClass mc2;
+  PInt pI; // B::PInt-nek felel meg
+  // ...
+  sort(data); // C::D::sort-nak felel meg
+}
+```
+
+A ```using namespace``` használata nem zárja ki a minősített nevek használatát az egyértelműség vagy jobb olvashatóság érdekében. Sőt, ha a példánkban az ```A``` névteret a ```using namespace``` utasítással elérhetővé tettük volna, akkor a ```MyClass mc1;``` sor névütközéshez vezetne, mely esetben csak a minősített nevek használatával fejezhetnénk ki egyértelműen a szándékunkat.
+
+A javasolt kódszervezést (osztálydefiníciók ```.h``` fejléc-, tagfüggvények definíciója ```.cpp``` forrásfájlokban) követve felmerül a kérdés, hogy a ```using namespace```-t a fejléc, vagy pedig a forrásfájlba tegyük. Az irányelv a következő:
+__Kerüljük a ```using namespace``` fejlécfájlokban való alkalmazását__
+
+A ```using namespace``` fejlécfájlokba való alkalmazásával a következő a probléma: soha nem tudhatjuk előre, hogy az adott fejlécfájl mely forrásfájlokba kerül utólag az ```include``` alkalmazásával. Az ```include``` által közvetve beágyazott ```using namespace``` következtében az adott forrásfájlban a névtérben lévő definíciók közvetlenül elérhetővé válnak, ami nem várt névütközésekhez vezethet.
+
+A ```using namespace``` hatása az adott __deklarációs régió__-ra terjed ki. Globálisan alkalmazott ```using namespace``` esetén a deklaráció sorától a forrásfájl végéig, lokálisan pedig az adott függvénytörzs (_scope_) végéig terjed ki.
+
+Ha egy névtérbe több fájlban is teszünk definíciókat, akkor a felhasználás során csak azok a névtérbeli elemek érhetőek el, amelyeket deklarálunk: ez számunkra általában azt jelenti, hogy a megfelelő definíciókat/deklarációkat tartalmazó fejlécfájlokat ```include```-olnunk kell. például:
+
+```cpp
+// sorter.h
+namespace Math
+{
+  class Sorter { ... };
+}
+
+// finder.h
+namespace Math
+{
+  class Finder { ... };
+}
+
+// main.cpp
+#include "Sorter.h"
+
+using namespace Math;
+
+int main()
+{
+  Sorter sorter; // OK
+  Finder dinder; // fordítási hiba, használatához include-olni kell
+                 // a "finder.h" fejlécfájlt
+}
+```
+
+
+### Globális hatókör elérése
+
+
+Tekintsük az alábbi kódrészletet:
+
+```cpp
+class MyClass {};
+
+namespace A
+{
+  class MyClass {};
+
+  void f()
+  {
+    MyClass mc1; // A::MyClass
+    ::MyClass mc2; // globális MyClass
+  }
+}
+```
+
+Az ```f()``` függvény az ```A``` névtérben található. Ennek első sorában a ```MyClass``` típushivatkozás az ```A``` névtérben lévő ```MyClass``` definíciót jelenti. A globális ```MyClass``` osztály eléréséhez a ```::``` hatókör operátort a típus neve elé kell írni:
+
+```cpp
+::MyClass mc2;
+```
+
+A hatókör operátor ebben a formában bármilyen esetben felhasználható, amikor egyértelművé kívánjuk tenni, hogy  az adott definíció a globális hatókörre vonatkozik, vagy csak a kódunkat szeretnénk kifejezőbbé tenni.
+
+
+### Tagfüggvények definiálasa
+
+
+Tekintsük az alábbi programot:
+
+```cpp
+// myclass.h
+#ifndef MYCLASS_H
+#define MYCLASS_H
+
+namespace MyNameSpace
+{
+  class MyClass
+  {
+    void f();
+  }
+}
+#endif
+```
+
+A tagfüggvények megadásának legegyszerűbb módja:
+
+```cpp
+// myclass.cpp
+
+#include "myclass.h"
+
+namespace MyNameSpace
+{
+  void MyClass::f() { ... }
+}
+```
+
+Alternatív megoldásként használhatjuk a ```using namespace``` utasítást a forrásfájlban:
+
+```cpp
+// myclass.cpp
+
+#include "myclass.h"
+
+using namespace MyNameSpace;
+
+void MyClass::f() { ... }
+```
+
+A következő megoldás is megfelelő, bár több tagfüggvény esetén körülményesebb a használata:
+
+```cpp
+// myclass.cpp
+
+#include "myclass.h"
+
+void MyNameSpace::MyClass::f() { ... }
+```
+
+
+### Using deklarációk
+
+
+A ```using namespace``` lehetővé teszi a névtérben található valamennyi definíció közvetlen elérését. A ```using``` önmagában is használható a nnévtérben levő egyedi nevek közvetlenül elérhetővé tételéhez. A ```using``` ezen használatát __using deklaráció__-nak nevezzük. Például:
+
+```cpp
+namespace NA
+{
+  void f() { ... }
+}
+
+namespace NB
+{
+  void f() { ... }
+}
+
+using NA::f;
+
+int main()
+{
+  f(); // NA::f-nek felel meg
+  using NB::f;
+  f(); // NB::f-nek felel meg
+}
+```
+
+Az ```f()``` függvény az ```NA``` és ```NB``` névterekben is definiált. A ```using NA::f;``` sor az ```NA``` névtérből az ```f()``` függvényt az adott deklarálási régióban közvetlenül elérhetővé teszi. Így a ```main()``` függvény első sorában az ```f()``` az ```NA::f``` függvényt jelenti. Az ezt követő sorban a ```using NB::f;``` utasítással az ```f()``` szimbólum jelentését az adott deklarálási régióra felüldefiniáljuk, így az utolsó sorban ```f()``` az ```NB::f``` függvényt jelenti.
+
+
+### Argumentumfüggő névfeloldás
+
+
+Az __argumentumfüggő (Koening) névfeloldás__ (_Koening lookup_) lényegét a következő példában szemléltetjük:
+
+```cpp
+namespace NS
+{
+  struct X
+  {
+    ...
+  };
+
+  void f(X& x_) { ... }
+}
+
+int main()
+{
+  NS::X x;
+  NS::f(x); // OK
+  f(x); // OK
+}
+```
+
+Az ```NS``` névtérben egy ```X``` nevű struktúrát és egy ```X&``` paraméterrel rendelkező, ```f()``` nevű függvényt definiáltunk. A ```main()``` függvény második sorában az ```f()``` függvényt minősített nevével, az utolsó sorában pedig közvetlen névmegadással használjuk. Az utolsó sornak fordítási hibát kellene eredményeznie, hiszen az ```f()``` függvényt nem tettük a ```using namespace``` vagy a ```using``` használatával közvetlenül elérhetővé.  A C++ nyelv által támogatott argumentumfüggő névfeloldásnak köszönhetően azonban az ```f()``` függvénynév minősítés nélkül is használható, mert az ```x``` paramétere az ```NS``` névtérben definiált, így az ```f()``` szimbólum felhasználásakor a fordító az ```NS``` névtérben is végez keresést.
+
+Az argumentumfüggő névfeloldás előnyei az operátorok használatakor válnak nyilvánvalóvá.
+
+
+
+A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál, mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a őket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
 
 ```cpp
 #include <iostream>
 
 int main(int argc, const char* argv[])
 {
-  std::cout << "Hello World!" << std::endl;
+  std::cout << "Hello World!";
   return 0;
 }
 ```
 
-__FONTOS__: a ```using namespace ...;``` SOHA nem kerülhet header állományba. Ezzel ugyanis a header állomány összes felhasználójánál potenciálisan nevütközéseket okozunk. Fentebb explicit módon jeleztük a fordítónak, hogy az ```std``` névtérben keresse a ```cout``` és az ```endl``` változókat. 
- 
+Argumentumfüggő névfeloldás hiányában a következő formában lehetne megadni a fenti kifejezést:
+
+```cpp
+std::operator<<(std::cout, "Hello World!");
+```
+
+
+### Névtér alias
+
+
+Ritkán, de előfordulhat, hogy egy hosszú névtérnév, illetve hosszú, egymásba ágyazott névtérnevek helyett egy rövid nevet kívánunk bevezetni. Erre van mód a __namespace új-névtér = meglévő-hosszú-névtérnév__ alkalmazásával. Például:
+
+```cpp
+namespace LongLongOuterNamespaceName
+{
+  namespace LongInnerNamespaceName
+  {
+    void f() {}
+  }
+}
+
+namespace NS = LongLongOuterNamespaceName::LongInnerNamespaceName;
+
+int main()
+{
+  NS::f();
+}
+```
+
 
 ### Névtelen névtér (_unnamed namespace_) 
 
@@ -525,7 +791,7 @@ namespace A
 Ebben az esetben az ```i``` változót a következő módon tudjuk elérni: ```A::B::i```. C++17 óta lehetőség van egymásba ágyazott névtereket egy rövidebb formában írni:
 
 ```cpp
-A::B { int i = 0; }
+namespace A::B { int i = 0; }
 ```
 
 A két kódrészlet funkcionalitásban teljesen megegyezik.
@@ -4635,40 +4901,190 @@ void MyClass<T>::setA(T a_)
 __Megjegyzés__: közönséges osztályok tagfüggvényei esetében ez utóbbi megoldás linkelési hibához vezetne a fejlécfájl többszöri ```include```-olása miatt. Osztálysablonok esetében ez nem igaz, mert a linker "okosan" mindig az első definíciót teszi a lefordított kódba, és a hivatkozásokat is erre vonatkozóan oldja fel. Ugyanez igaz a globális függvénysablonokra is, a közönséges függvényekkel szemben ezek definícióját is a fejlécfájlokba tesszük.
 
 
-## Cast-ok, explicit konverzió
+## Típuskonverziók
 
 
-Implicit konverziókkal számtalanszor találkozunk, például ha egy lebegőpontos számot egy egész számnak adunk értékül, vagy fordítva. Konverzió volt az is, amikor egy konverziós operátor vagy konverziós konstruktor segítségével egy osztályhoz tartozó objektumot egy másik osztály típusúnak adtunk értékül. A pilomorfikus osztályoknál meg számtalanszor éltünk már vele.
+Az eddigiek során többször is észrevehettük, hogy a C++ típuskonverziói nagyban hasonlítanak a C nyelvre, mégis vannak különbségek. Ennek egyik oka, hogy a C++ fejlesztői már a kezdetektől fogva törekedtek rá, hogy a C-nél biztonságosabb nyelvet alkossanak. Másfelől a C++-ban megjelennek teljesen új, objektumorientált nyelvi elemek, amelyekhez új típuskonverziók tartoznak. A típustámogatás C++ alapelvét követve lehetőségünk van arra, hogy beépített automatikus típuskonverziókat írjunk. A C++ finomítja a C konverziós operátort: annak funkciója szerint négy konverziós operátort különböztet meg.
 
 
-### dynamic_cast
+### Beépített típusok közötti típuskonverzió
 
 
-Mutatók és referenciák közötti futásidejű átalakítás, amely downcastra használható, azaz bázispointerből származtatott osztályra mutatót ad vissza. A konverzió mutatók esetén nullpointerrel tér vissza, referenciáknál (egyéb opciók híján) ```bad_cast``` kivételt dob, ha nem lehetséges az átalakítás, azaz a mutatott objektum típusa nem az elvárt.
+A C nyelvben az ```enum``` és az ```int``` típus között létezik automatikus oda-vissza létezik implicit konverzió. Ezzel szemben C++-ban, ha ```enum``` típusra konvertálunk, ki kell írnunk a típuskonverziót.
+
+```cpp
+enum days {Mon, Tue, Wed, Thu, Fri};
+
+int main()
+{
+  enum days day = Mon; //*
+  int d;
+
+  // C/C++ OK
+  d = Mon;
+
+  // C OK, C++ hiba
+  day = d;
+
+  // C/C++ OK
+  day = (enum days)d; //*
+}
+```
+
+A C++-ban az ```enum``` felhasználásakor (a ```*```-al jelölt sorokban) természetesen elhagyhatjuk az ```enum``` kulcsszót, mert az ```enum```  neve önmagában is típusértékű, de itt a C-vel való kompatibilitás miatt kiírtuk.
+
+A C automatikus konverziót biztosít a ```void*``` típusú mutató és tetszőleges típusú mutató között oda-vissza, a C++-ban ezt a konverziót is ki kell írnunk.
+
+A referenciája a következő szabályok érvényesek. Nem konstans referenciára nincs automatikus konverzió inkompatibilis típusok referenciáiról. Tekintsük az alábbi programot:
+
+```cpp
+void f(double& d)
+{
+  d = 1;
+}
+
+int main()
+{
+  int m = 2;
+  f(m); // 1. hiba
+  f((double)m) // 2. hiba
+  f((double&)m) // 3. lefordul, de hibás
+}
+```
+
+```int``` és ```double``` között van automatikus típuskonverzió. Referencia esetén azonban ugyanaz a helyzet, mint a mutatóknál: mindkettő memóriacímet jelent. A mutatóhoz hasonlóan két típus kötődik hozzá: a referencia típusa, amelyet megadunk deklarációként, illetve az adott memóriaterületen található változó típusa. Ez nem meglepő hiszen referenciára is működik a polimorfizmus.
+
+Amikor egy ```int``` típusú változóval inicializálunk egy referenciát, a fordító hibát jelez, hiszen az ```int``` memóriareprezentációja eltér a ```double``` memóriareprezentációjától, és az a kísérlet, hogy ```int```-re jellemző memóriaterületet ```double```-ként kezelünk, nagy valószínűséggel programozói hiba. Nem is szólva arról, hogy a ```sizeof(int)``` kisebb lehet, mint a ```sizeof(double)```. vagyis az ```f()``` függvény a memóriában az ```m``` után következő változók értékét is elronthatja.
+
+A második esetben az ```m``` változót konvertáljuk ```double``` típusúra. Ennek eredménye egy ideiglenes ```double``` érték, amely konstans, így nem adható át paraméterként olyan függvénynek, amely nem konstans referenciát vár. Ideiglenes értéket amúgy sem túl ésszerű változtatni, hiszen változtatás után nem férünk hozzá.
+
+A harmadik esetben bemutatott "erőszakos" típuskonverzóval fordítási időben mindig sikerrel járunk.
 
 
-### static_cast
+### A felhasználói típusok konverziói
 
 
-Amennyiben teljesen biztosak vagyunk abban, hogy a kasztolás szabályos, a ```static_cast``` is használható mindenhol, ahol a ```dynamic_cast```. Azonban ez az operátor nem végez semmilyen futási idejű ellenőrzést, így sikertelen kasztolás esetén a kapott mutató vagy referencia invalid lesz (használata nem definiált viselkedést eredményez). Fordítási időben konvertál egy típust egy másik típusra. Annak ellenére, hogy nem feltétlen biztonságos a használata polimorfikus osztályoknál, ez a konverzió végez ellenőrzéseket, méghozzá fordítási időben.
+#### Konverzió független típusok között
 
 
-### const_cast
+Tegyül fel, hogy szeretnénk egy olyan __String__ osztályt írni, amely a C-beli lehetőségeknél könnyebbé teszi a szöveges műveleteket. A eddigiek alapján egyszerűen megírhatunk egy dinamikus karaktersorozatot tartalmazó osztályt, és az összeadás operátor megfelelő túlterhelésével lehetőséget biztosíthatunk sztringek kényelmes összefűzésére. Ugyanakkor szeretnénk, ha ez az osztály kompatibilis lenne az eddig C függvényekkel, ugyanis számos programozási felület C-ben íródott. A kompatibilitást kétféle módon szeretnénk megoldani:
+
+1. ha egy függvény nullterminált karaktertömböt ad vissza vissza, akkor az automatikusan konvertálható legyen a __String__ osztályra. Pl. ha van egy függvényünk, amely __String__ argumentumot vár, akkor ott átadhassunk egy ```char*``` típusú, nullterminált, C stílusú sztringet.
+2. ha van egy __String__ objektumunk, szeretnénk, hogy átadható legyen bárhol, ahol konstans C stílusú sztringet kell átadni.
+
+Erre a két problémára a C++ két nyelvi elemet kínál. Ha egy __másik__ - esetleg beépített - __típusról__ szeretnénk konvertálni a mi __osztályunk típusára__, a __konverziós konstruktor__ jelent megoldást. Ha az __osztályunkról__ szeretnénk egy __másik típusra__ konvertálni, akkor a __konverziós operátor__ a megfelelő eszköz.
+
+A konverziós konstruktor olyan egyparaméteres konstruktor, amelynek a paramétere olyan típusú, amilyen típusról konvertálni szeretnénk.
+
+A konverziók leggyakoribb problémája, hogy bizonyos kifejezések esetén több megoldás is létezik, és a fordító nem tud választani. Ha a típuskonerziós útvonal nem egyértelmű, fordítási hibát jelent.
+
+__Útmutató__:
+
+* csak akkor írjunk konverziót, ha természetes. Sose erőltessük a konverziót.
+* nagyon vigyázzunk a védett (_private_, _protected_) tagváltozók kiadására konverziós operátorok esetén, mert lehetőséget adhatunk objektumaink inkonzisztensé tételére. Ha kiadjuk ezeket a paramétereket konstansként tegyük, és írjuk elő az osztály felhasználóinak, hogy ne tárolják el a kapott értéket.
+* konverziós operátor helyett használjuk a konverziós konstruktort. Az egységbe zárás alapelve miatt érdemesebb egy másik adatszerkezet alapján felépíteni az osztályt, mint kiadni az elrejtett tagváltozóit.
+* mindig csak a legszükségesebb konverziót írjuk meg, mert minél több a konverzió, annal valószínűbb a kétértelműség.
 
 
-A ```const_cast``` az egyik a két veszélyesebb kaszt közül. Használata csak kivételes esetekben elfogadható, ugyanis nagyon sok galibát okozhat. A ```const_cast``` "leveszi" a ```const``` vagy a ```volatile``` jelzőt egy objektumról.
+#### Konverzió az öröklési hierarchia mentén
 
 
-### reinerpret_cast
+Tekintsük a leszármazottról szülőre történő típuskonverziót. Elékezzünk vissza a ```Person```-```Employee``` példájára.
+
+```cpp
+  Employee employee("John", 28, 3);
+  Person p = (Person)employee;
+```
+
+Vagy az imént említett konstruktorszintaktikával:
+
+```cpp
+Person p = Person(employee);
+```
+
+A példa második fele jól illusztrálja, hogy itt konsruktor fog meghívódni. Felmerül a kérdés, hogy melyik konstruktor. A válasz a másolókonstruktor, hiszen a behelyettesíthetőség elve miatt a ```Person&``` típusú paraméter esetén megadhatunk ```Employee``` típusú objektumot. A másolókonstruktor viszont csak  az ősosztály részével "foglalkozik", így az __employee__ változó "alja" nem másolódik át, elveszik a konverzió során.
+
+![objectOnTheFly](img/objectOnTheFly.png)
+
+A C++ élénk fantáziájú úttörői ezt a konverzió közben történő jelenséget "szeletelés kapásból" (__slicing-on-the-fly__) névvel illették. Az eredeti, konvertált obejktum megmarad, mindössze a konverzió során nem másolódik át egy rész, bár az új objektu kétségkívül úgy néz ki, mintha a réginek levágták volna az alját. Mindezt a fenti ábra szemlélteti.
+
+__Fontos__: __polimorf viselkedést csak mutatón és referencián keresztül adhatunk.__
 
 
-Mind közül a legveszélyesebb a ```reinterpret_cast```: két tetszőleges típus között végez konverziót, ha értelmezhető, ha nem. Az értelmes konverziók közül egyetlen eset kivételével minden esetben a fenti 3 kaszt végre tudja hajtani a konverziót helyesen és sokkal biztonságosabban. Ez azt jelenti, hogy a ```reinterpret_cast``` használata közel kivétel nélkül elkerülendő. Az egyetlen konverzió, mely értelmes, és a fentiek nem képesek végrehajtani, amikor polimorfikus osztályoknál egy leszármazottat egy privát ősosztály típusra konvertálunk.
+## A C++ típuskonverziós operátorai
 
 
-### C-szerű cast
+Az explicit típuskonverziót C nyelven a kifejezés elé ```()``` zárójelek közé írt új típus megadásával definiálhatjuk.
 
+```cpp
+double d = (int)3.14;
+```
 
-A C-szerű kasztok, vagy más néven _C-style casts_ olyan konverziók, melyek a fenti konverziókat próbálják meghívni, a ```dynamic_cast``` kivételével. Amennyiben az egyik nem sikerül, a következőre haladnak. Ennek az értelemszerű hátránya az, hogy ha mind a ```static_cast```, mind a ```const_cast``` sikertelen, akkor a ```reinterpret_cast```-ot fogja használni.
+Ezt a típuskonverziót használjuk például mutatók között, egészek között, a konstans változókat ezzel konvertáljuk nem konstanssá. A nagyobb biztonság és átláthatóság érdekében a C++ saját konverziós operátorokat definiál, amelyek jobban kifejezik a típuskonverzió jelentését. A C megoldás ugyanis egy kalap alá vesz bizonyos konverziós szándékokat. Jobb lenne, ha pontosabban meg tudnánk adni a konverzió célját. Ezeket a C++ nyelvben az alábbi operátorok segítik:
+
+* ```static_cast``` (statikus típuskonverzió)
+* ```const_cast``` (konstans típuskonverzió)
+* ```dynamic_cast``` (dinamikus típuskonverzió)
+* ```reinterpret_cast``` (újraértelmező típuskonverzió)
+
+Ezek az operátorok a 2. precedenciaszinten helyezkednek el. szintaxisuk az alábbi:
+
+```static_cast <típusnév> (kifejezés)```
+
+```const_cast <típusnév> (kifejezés)```
+
+```dynamic_cast <típusnév> (kifejezés)```
+
+```reinterpret_cast <típusnév> (kifejezés)```
+
+A C stílusú típsukonverzió helyett leggyakrabban a __statikus típuskonverziót__ használjuk. Vagyis a lefelekerekítés végett eddig azt írtuk, hogy
+
+```cpp
+double d1 = (int) d2;
+```
+
+a C++-ban ez az alábbi formát ölti:
+
+```cpp
+double d1 = static_cast<int>(d2);
+```
+
+Ősosztály típusú mutatóról leszármazott típusú mutatóra is ezt a konverziós operátort használjuk, ha biztosak vagyunk a konverzióban. Ha nem ez a helyzet, akkor a ```dynamic_cast``` operátor futási időben megállapítja, hogy helyes-e a konverzió, és csak akkor hajtja végre.
+
+A statikus típuskonverziónak megmaradtak azok a megkötései, amely a C stílusú elődjének, valamint nem konvertálhat konstans típust sem nem konstanssá, ekkor fordítási idejű hibát kapunk. Erre ugyanis egy kifejezetten erre a célra létrehozott típuskonverziós operátor áll a rendelkezésre.
+
+A __konstans típuskonverzó__ képes egyedül konstans típust nem konstanssá tenni, illetve ```volatile``` típust nem azzá. Ez ugyanis olyan veszélyes művelet, amelyet külön át kell gondolni, és feltűnően megjelölni a kódban. Egyéb konverziókra nem alkalmazható. Más C++ konverziós operátor nem képes végrehajtani ezt a konverziót. Példaként tekintsük meg az alábbi függvényt, amely egy vásárolt osztálykönyvtár része és nincs jogunkban módosítani a forráskódját.
+
+```cpp
+void AddToStream(char* buff, unsigned len) { ... }
+```
+
+Ez a függvény egy ismeretlen formátumú állományhoz adja a változót. Mivel mentésről van szó, a ```buff``` változót konstansként kellett volna definiálni. Így, ha ki szeretnénk írni egy konstans tagváltozót, mert az állomány formátuma előírja, akkor típuskonverzióhoz kell folyamodnunk, amely nem konstanssá teszi az elmentendő változót. C++ nyelven erre az alábbi kódrészlet a legmegfelelőbb megoldás:
+
+```cpp
+class Data
+{
+public:
+  const char _c;
+  Data(char c_): _c(c_) { }
+  void Save()
+  {
+    AddToStream(const_cast<char*>(&_c), sizeof(_c));
+  }
+};
+```
+
+A __dinamikus típsukonverzió__ szintén speciális típuskonverziót valósít meg: az öröklési hierarchián lefelé történő konverzióhoz szükséges. Az osztályoknak polimorfoknak kell lenniük, azaz a konvertálandó típusnak legalább egy virtuális függvényt kell tartalmazni. Mivel futási időben ellenőrzni, hogy tényleg végrehajtható-e a típuskonverzió, használatához a futásidejű típusinformációk kezelését be kell kapcsolnunk a fordításkor. Ezen típusinformáció segítségével a keresztbe konverziót is megoldja többszörös öröklés esetén, vagyis biztonságos. Ha a kívánt konverzió nem sikerül, akkor az operátor ```bad_cast``` kivételt dob. Privát öröklésnél nem használható az osztályhierarchián lefele való konverzióra, mert futási idejű hibát kapunk.
+
+Az __újraértelmező típuskonverzió__ az implementációfüggő konverziók esetén használható. Általában mutatókra alkalmazzuk, amikor lényegében csak a mutató típusát változtatjuk, vagyis azt, hogy milyen műveletek értelmezhetők egy memóriaterületen. Ezért hatása sokszor fordítófüggő. Mivel az egész típusok és a mutatók mérete fordítófüggő, ezért az egész típusok és a mutatók közötti konverziók esetén is ezt az operátort használjuk. Ugyanakkor konstans típust nem konstanssá ez az oeprátor sem képes átkonvertálni.
+
+Összegezve a C++-ban explicit típuskonverzió végett használható a konstruktorszintaxisú típuskonverzió, a régi C szintaktikájú típuskonverzió,illetve az útóbbit érdemes felváltanunk a ```static_cast```, ```const_cast```, ```reinterpret_cast``` valamelyikével. A ```dynamic_cast``` egyedülálló: a többi típuskonverziós operátor nem képes ellátni, viszont ennek az ára, hogy futásidejű típusinformációval és annak lekérdezésével lassítjuk programunkat.
+
+__Útmutató__:
+
+* ha a konverziónak tobb argumentuma van, mindig a konstruktorszintaxist alkalmazzuk
+* C stílusú konverzió helyett használjuk a leginkább odaillő C++ konverziós operátort
+* a dinamikus típuskonverziót lehetőleg kerüljük el.
 
 
 ## Imlicit konverzió
