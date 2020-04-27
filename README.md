@@ -1114,7 +1114,7 @@ A __heapen__ létrehozott változókat __dinamikus változóknak__ (_dynamic var
 int main()
 {
   int* ptr = new int(0);
-  delete p;
+  delete ptr;
 }
 ```
 
