@@ -46,7 +46,7 @@ A C++ filozófiájának fontos eleme, hogy ha nem használunk egy adott nyelvi e
 ### C++ adattípusok
 
 
-A C++ szigorúan típusos nyelv, ami azt jelenti, hogy már fordítási időben ismert kell a változók típusát. Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
+A C++ szigorúan típusos nyelv, ami azt jelenti, hogy már fordítási időben ismerni kell a változók típusát. Az összes változó adattípust használ a deklaráció során a tárolni kívánt adatok típusának korlátozására. Ezért azt mondhatjuk, hogy az adattípusokat arra használják, hogy megmondják a változóknak, hogy milyen típusú adatot tárolhatnak. Ha egy változót a C++-ban definiálnak, a fordító memóriát allokál ehhez a változóhoz azon adattípus alapján, amellyel azt deklarálják. Minden adattípushoz eltérő mennyiségű memória szükséges.
 
 Adattípusok C++-ban:
 
@@ -58,7 +58,7 @@ Adattípusok C++-ban:
 	* __Double floating point__ (```double```): dupla pontosságú (__double precision__) tizedes értékek tárolására szolgál. Általában __8 bájt__ memóriahelyet igényelnek. 1 bit az előjelnek, 11 bit a szám egész részének és 52 bit a tizedes résznek van fenntartva, azaz 15 tizedesjegyig képes tárolni az adatokat.
 	* __Void__ (```void```): azt jelenti: érték nélkül. A ```void``` adattípus értéktelen entitást jelent. Azoknál a függvényeknél használják, amelyek nem adnak vissza értéket.
 	* __Wide character__ (```wchar_t```): szintén egy karakter adattípus, de ennek az adattípusnak a mérete meghaladja a normál 8 bites adattípust. Általában __2 vagy 4 bájt__ hosszú.
-* __Származtatott__: a primitív vagy beépített adattípusokból származó adattípusokat származtatott adattípusoknak nevezzük. Ezek négyféle lehetnek, nevezetesen:
+* __Származtatott__: a primitív vagy beépített adattípusokból származó adattípusokat származtatott adattípusoknak nevezzük. Ezek négyfélék lehetnek, nevezetesen:
 	* __Function__
 	* __Array__
 	* __Pointer__
@@ -202,7 +202,7 @@ int main()
 
 > kimenet: 12 10 8
 
-Rekurzív ```include```-oknál a preprocesszor egy bizonyos mélységi limit után leállítja az előfeldolgozást. Ezt egy trükk segítségével megakadályozhatjuk, hogy ugyan az a fájl többször is beillesztésre kerüljön többszörös include esetén.
+Rekurzív ```include```-oknál a preprocesszor egy bizonyos mélységi limit után leállítja az előfeldolgozást. Ezt egy trükk segítségével megakadályozhatjuk, hogy ugyanaz a fájl többször is beillesztésre kerüljön többszörös include esetén.
 
 ```cpp
 #ifndef __H_HPP__
@@ -711,7 +711,7 @@ Az argumentumfüggő névfeloldás előnyei az operátorok használatakor válna
 
 
 
-A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál, mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel ezeket a őket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
+A ```using namespace std;``` segítségével a standard névtér globális használatát tesszük lehetővé. Ennek hatására az ```std``` névtérben található típusok, függvények és változók oly módon is elérhetővé válnak, mintha a globális névtérben lettek volna deklarálva. A standard könyvtárban található implementációk az ```std``` névtérben találhatók. Ennek az az oka, hogy a standard könyvtár gazdag eszközkészletet biztosít, amelynek során számos gyakran használt nevet is felhasznál, mint pl. ```find()```, ```max()``` stb. Ha nem az ```std``` névtérben lennének ezek a nevek, akkor bizonyos kontextusokban nem használhatnánk fel őket a saját programunkban. Éppen ezért gyakran kihagyjuk ezt a sort a programunkból. A standard könyvtárbeli elemekre minősített nevek megadásával hivatkozhatunk:
 
 ```cpp
 #include <iostream>
@@ -1124,7 +1124,7 @@ A heapen nincs a lefoglalt területeknek nevük, így mindig szükségünk lesz 
 
 Bár az operációs rendszer megpróbál minden, a program által lefoglalt memóriát felszabadítani a futás befejeztével, de nem mindenható. Előfordulhat, hogy egyes platformokon újraindításig nem szabadul fel a memória. Emelett, addig amíg a program fut, több memóriát használ fel, mint amennyire szükség van.
 
-A dinamikusan lefoglalt memória szabályos felszabadítsát számos dolog nehezíti. Jó példa erre a kivételkezelés, melynél hamarabb megszakadhat a függvény végrehajtása, mint ahogy felszabadítaná a memóriát. Előfordulhat, hogy egy memória területet kétszer (vagy többször) szeretnénk felszabadítani, ekkor nem definiált viselkedése lesz a programunknak.
+A dinamikusan lefoglalt memória szabályos felszabadítását számos dolog nehezíti. Jó példa erre a kivételkezelés, melynél hamarabb megszakadhat a függvény végrehajtása, mint ahogy felszabadítaná a memóriát. Előfordulhat, hogy egy memória területet kétszer (vagy többször) szeretnénk felszabadítani, ekkor nem definiált viselkedése lesz a programunknak.
 
 Lehetésges olyan eset, hogy egy már felszabadított memóriaterületet akarunk írni vagy onnan szeretnénk olvasni. Ilyen jellegű hibát könnyű véteni, hisz a ```delete``` a ```ptr``` által mutatott memóriaterületet, nem pedig a ```ptr```-t fogja törölni.
 
@@ -1158,7 +1158,7 @@ int* p = malloc(sizeof(char));
 
 Mivel a C / C++ szabvány csak annyit követel meg, hogy a ```char``` mérete legalább 8 bit, az ```int``` pedig minimum 16 bit legyen, ezért nincs arra garancia, hogy a hívás után a ```*p``` mutató "elég nagy" memóriaterületre mutat.
 
-C++-al ezzel szemben a ```new``` operátor már típusozott - így az
+C++-ban ezzel szemben a ```new``` operátor már típusozott - így az
 
 ```cpp
 int* p = new char;
@@ -1192,7 +1192,7 @@ delete[] pArray;
 # A ```const``` kulcsszó
 
 
-A C++ lehetőséget ad a programozó számára, hogy olyan értékeket definiáljon, amelyek a program futása során nem változtathatják meg az értéküket. Kvázi egy _read-only_ változókként tekinthetük rájuk. Konstansokat C++-ban a ```const``` kulcsszó segítségével adhatunk meg. 
+A C++ lehetőséget ad a programozó számára, hogy olyan értékeket definiáljon, amelyek a program futása során nem változtathatják meg az értéküket. Kvázi egy _read-only_ változóként tekinthetünk rájuk. Konstansokat C++-ban a ```const``` kulcsszó segítségével adhatunk meg. 
 
 __Fontos__, hogy már deklaráláskor értéket kell adnunk nekik, azaz definiálnunk is kell őket. Amennyiben ezt nem tesszük meg fordítási idejű hibát fogunk kapni.
 
@@ -1293,7 +1293,7 @@ int main()
 }
 ```
 
-Példaképp ```q```-n keresztül meg tudjuk változni, hogy ```p``` hova mutasson.
+Példaképp ```q```-n keresztül meg tudjuk változtatni, hogy ```p``` hova mutasson.
 
 ```cpp
 int main()
@@ -1331,7 +1331,7 @@ int main()
 # Referenciák
 
 
-A referencia egy létező objektum alternatív neve. Definiálásakor meg kell adni azt az objektumot is, amelyet alternatív névvel látunk el. A referencia nem egy változó, mint a mutató, hanem csak egy azonosító, ezért nem is változtatható meg, amíg a referencia létezik mindig ugyan oda referál. Már létrehozásakor értéket kell adnunk neki, ami a program futása során nem változhat. Két leggyakoribb felhasználása:
+A referencia egy létező objektum alternatív neve. Definiálásakor meg kell adni azt az objektumot is, amelyet alternatív névvel látunk el. A referencia nem egy változó, mint a mutató, hanem csak egy azonosító, ezért nem is változtatható meg, amíg a referencia létezik mindig ugyanoda referál. Már létrehozásakor értéket kell adnunk neki, ami a program futása során nem változhat. Két leggyakoribb felhasználása:
 
 * függvény bemeneti paraméter
 * függvény visszatérési érték
@@ -1385,7 +1385,7 @@ Abban az esetben, ha a ```*``` bal oldalán van a ```const``` kulcszsó, akkor _
 ```cpp
 int main()
 {
-  // a két változat ugyan azt a viselkedést produkálja, a fordító nem tesz különbséget
+  // a két változat ugyanazt a viselkedést produkálja, a fordító nem tesz különbséget
   // aközött, hogy az int-et vagy a const kulcsszót írjuk ki előbb
   const int* i = nullptr;
   int const* ii = nullptr;
@@ -1478,7 +1478,7 @@ A sanitizerek csak abban az esetben találnak meg egy hibát, ha a probléma el�
 ## Tömbök méretének meghatározása
 
 
-Mint azt korábban láthattuk a tömb tiszta adat. A ```sizeof()``` operátor segítségével megtudjuk határozni a méretét. Egy olyan tömbben amelyben _n_ darab _T_ típusú elemet tárolunk a tömb mérete _n * sizeof(T)_. Ezt már csak le kellene osztanunk _sizeof(T)_-vel, azaz a tömbben tárol típus méretével tehát a képlet: ```sizeof(array) / sizeof(T)```. Azonban nem biztos, hogy tudjuk, hogy milyen elemek vannak az ```array``` tömbben, így kicsit generikusabban megfogalmazva az előző képletet a _sizeof(T)_ helyett osztjunk le a tömb első elemének méretével, _sizeof(array[0])_. Ezt megtehetjük, mert tudjuk, hogy a tömb azonos típusú elemeket tartalmaz. Tehát a helyes képlet a következő:
+Mint azt korábban láthattuk a tömb tiszta adat. A ```sizeof()``` operátor segítségével megtudjuk határozni a méretét. Egy olyan tömbben amelyben _n_ darab _T_ típusú elemet tárolunk a tömb mérete _n * sizeof(T)_. Ezt már csak le kellene osztanunk _sizeof(T)_-vel, azaz a tömbben tárolt típus méretével, tehát a képlet: ```sizeof(array) / sizeof(T)```. Azonban nem biztos, hogy tudjuk, hogy milyen elemek vannak az ```array``` tömbben, így kicsit generikusabban megfogalmazva az előző képletet a _sizeof(T)_ helyett osztjuk le a tömb első elemének méretével, _sizeof(array[0])_. Ezt megtehetjük, mert tudjuk, hogy a tömb azonos típusú elemeket tartalmaz. Tehát a helyes képlet a következő:
 
 ```sizeof(array) / sizeof(array[0]);```
 
@@ -1490,9 +1490,9 @@ Egy tömb adott elemére többféle módon is hivatkozhatunk:
 
 ```*(p+3)``` == ```*(3+p)``` == ```p[3]``` == ```3[p]```
 
-Ahhoz, hogy megértsük a fentebb látható egyenlősséget tudni kell, hogy a tömbök nevei C++-ban konvertálódnak a tömb első elemére mutató mutatóra és, mivel - ahogy az fentebb említettük - a tömbök sorfolytonosan helyezkednek el a memóriában ezért tudunk a ```+``` operátor segítségével ugrálni az adattagjaikon.
+Ahhoz, hogy megértsük a fentebb látható egyenlőséget tudni kell, hogy a tömbök nevei C++-ban konvertálódnak a tömb első elemére mutató mutatóra és, mivel - ahogy az fentebb említettük - a tömbök sorfolytonosan helyezkednek el a memóriában ezért tudunk a ```+``` operátor segítségével ugrálni az adattagjaikon.
 
-__Megjegyzés__: a fentebb látható egyenlősséget nevezzük __pointer aritmetikának__.
+__Megjegyzés__: a fentebb látható egyenlőséget nevezzük __pointer aritmetikának__.
 
 Tekintsük az alábbi két dimenziós tömböt:
 
@@ -1664,7 +1664,7 @@ int main()
 >
 > 2 1
 
-Vegyük észre, hogy ilyenkor nem kell jelezni, hogy memóriacímet akarunk átadni, ezért ```swapReference(c, d)```-t kell írnunk. Hátulütője a dolognak, hogy ha más valaki által írt függvényt akarunk használni, aminek nem ismerjük a szignatúráját nem tudjuk explicit megállapítani a hívásból, hogy az átadott paraméterek refenrecia vagy érték szerint lesznek átadca. C#-ban ennek a jelzésére van a ```ref``` kulcsszó.
+Vegyük észre, hogy ilyenkor nem kell jelezni, hogy memóriacímet akarunk átadni, ezért ```swapReference(c, d)```-t kell írnunk. Hátulütője a dolognak, hogy ha más valaki által írt függvényt akarunk használni, aminek nem ismerjük a szignatúráját nem tudjuk explicit megállapítani a hívásból, hogy az átadott paraméterek refenrecia vagy érték szerint lesznek átadva. C#-ban ennek a jelzésére van a ```ref``` kulcsszó.
 
 __Megjegyzés__: bár referencia szerinti értékátadásnak nevezzük, de itt is történik másolás, a memóriacímet itt is érték szerint vesszük át.
 
